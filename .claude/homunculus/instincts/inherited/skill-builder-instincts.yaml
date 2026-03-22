@@ -1,0 +1,101 @@
+# Curated instincts for the claude_kit repository
+# Import with: /instinct-import .claude/homunculus/instincts/inherited/skill-builder-instincts.yaml
+
+---
+id: claude-kit-wat-format
+trigger: "when creating or editing a skill file in the claude_kit repository"
+confidence: 0.95
+domain: code-style
+source: repo-curation
+source_repo: claude_kit
+---
+
+# claude_kit WAT Format
+
+## Action
+
+Always use the WAT format: YAML frontmatter (name + description only), one-line intro, numbered sections with `---` separators, second-person imperative instructions, bold `**Rule:**` callouts. Never use `allowed-tools` in frontmatter — it is unsupported.
+
+## Evidence
+
+- All 52 skills in the library follow this format consistently.
+- `allowed-tools` was removed from every file during the ECC integration as it caused validation errors.
+
+---
+id: claude-kit-root-structure
+trigger: "when adding files or folders to the claude_kit repository"
+confidence: 0.92
+domain: workflow
+source: repo-curation
+source_repo: claude_kit
+---
+
+# claude_kit Root Structure
+
+## Action
+
+Keep `.claude/` minimal — only `package-manager.json`, `homunculus/instincts/`, and `skills/claude-kit/SKILL.md`. All distributable content (skills, agents, commands, rules, contexts, hooks, mcp-configs) belongs at the root level.
+
+## Evidence
+
+- The repo mirrors ECC's library architecture: root = distributable content, `.claude/` = repo meta only.
+- Moving distributable content into `.claude/` would break the pure-library model.
+
+---
+id: claude-kit-generate-claude-md-update
+trigger: "when adding a new skill to the claude_kit repository"
+confidence: 0.90
+domain: workflow
+source: repo-curation
+source_repo: claude_kit
+---
+
+# claude_kit generate-claude-md Update
+
+## Action
+
+After adding any new skill, always update `skills/core/generate-claude-md/SKILL.md` to include the new skill in its category table. Also update `CLAUDE.md` if the skill represents a new category.
+
+## Evidence
+
+- `generate-claude-md` is the orchestrator — it must know about every skill to select correctly.
+- Stale skill tables cause consumers to miss newly added skills.
+
+---
+id: claude-kit-merge-before-create
+trigger: "when considering creating a new skill in the claude_kit repository"
+confidence: 0.88
+domain: workflow
+source: repo-curation
+source_repo: claude_kit
+---
+
+# claude_kit Merge Before Create
+
+## Action
+
+Before creating a new skill, check all 52 existing skills for overlap. If an existing skill covers >50% of the new content, merge instead of creating a separate file.
+
+## Evidence
+
+- During ECC integration, many ECC skills were merged into existing ones (e.g., exa-search → research, deep-research → research, deployment-patterns → terminal-cli-devops).
+- Duplicate skills fragment knowledge and make the library harder to navigate.
+
+---
+id: claude-kit-conventional-commits
+trigger: "when making a commit in the claude_kit repository"
+confidence: 0.90
+domain: git
+source: repo-curation
+source_repo: claude_kit
+---
+
+# claude_kit Conventional Commits
+
+## Action
+
+Use conventional commit prefixes: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`. Keep subjects under 70 characters.
+
+## Evidence
+
+- Consistent commit history aids changelog generation and skill attribution.

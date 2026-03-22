@@ -1,0 +1,2 @@
+"Update my existing claude_kit setup to use junctions and @ imports. The kit is at C:/Users/Hp/Desktop/Experiment/claude_kit."
+
