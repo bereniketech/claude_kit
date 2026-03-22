@@ -181,6 +181,7 @@ If any field is unknown or not applicable, write "TBD" or "N/A". This file is re
 | Document OCR / PDF processing | `nutrient-document-processing` |
 | Visa / translation documents | `visa-doc-translate` |
 | WhatsApp messaging automation | `whatsapp-automation` |
+| GitHub Copilot autonomous task loop | `copilot-autonomous-tasks` |
 
 ### Domain
 | If the project involves… | Include skill |

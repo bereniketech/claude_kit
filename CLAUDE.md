@@ -110,7 +110,7 @@ When working inside the Skill Builder repository itself:
 
 ## Available Content
 
-### Skills (53)
+### Skills (54)
 
 **Core / Meta**
 `generate-claude-md` · `new-features-updates` · `skill-stocktake` · `configure-ecc` · `continuous-learning` · `strategic-compact` · `eval-harness`
@@ -143,7 +143,7 @@ When working inside the Skill Builder repository itself:
 `presentations-ui-design`
 
 **Integrations**
-`x-api` · `fal-ai-media` · `video-editing` · `videodb` · `nutrient-document-processing` · `visa-doc-translate` · `whatsapp-automation`
+`x-api` · `fal-ai-media` · `video-editing` · `videodb` · `nutrient-document-processing` · `visa-doc-translate` · `whatsapp-automation` · `copilot-autonomous-tasks`
 
 **Domain**
 `logistics-supply-chain` · `trade-compliance` · `energy-procurement`
