@@ -11,7 +11,7 @@ Use this skill when GitHub Copilot agent mode should complete a project's task q
 
 ## 1. VSCode Setup (One-Time)
 
-Add to `.vscode/settings.json` (project-level, commit this file):
+Create `.vscode/settings.json` at the project root (commit this file):
 
 ```json
 {
@@ -26,32 +26,44 @@ Switch the Copilot Chat input to **Agent** mode via the dropdown next to the cha
 
 ---
 
-## 2. Activation Prompt
+## 2. copilot-instructions.md — Autonomous Loop Directive
 
-Paste this into the Copilot Chat input to start an autonomous session:
+The loop lives in `.github/copilot-instructions.md`, not the activation prompt. Copilot auto-loads this file on every new chat, so the loop persists across `/clear` context resets.
 
+Replace `## Start Here` in every project's `copilot-instructions.md` with:
+
+```markdown
+## Autonomous Loop — Begin Immediately on Session Start
+On session start, do not wait for user input. Start from step 1 now.
+
+1. Read `Current task:` from `## Active Feature` above. If it reads `ALL TASKS COMPLETE`, stop and notify the user.
+2. Open that task file — it is self-contained with all acceptance criteria.
+3. Read the skill files listed in `## Skills` above (once per session, not per task).
+4. Implement all acceptance criteria. Zero clarifying questions mid-task — resolve unknowns from the task file, skills, or existing code. If genuinely blocked, write `BLOCKED: <reason>` in the task file's `## Status` and stop.
+5. Run `/verify` — all phases must pass before continuing. On failure, fix the root cause. If the same phase fails 3× in a row, write `VERIFY_FAIL: <phase> — <error>` in `## Status` and stop.
+6. Run `/task-handoff` — updates `Current task:` in this file and commits.
+7. Run `/clear` — mandatory between every task to reset context. This file auto-loads in the new chat; the loop restarts from step 1 automatically.
 ```
-Read .github/copilot-instructions.md and .claude/CLAUDE.md. Find Current task under
-## Active Feature in .claude/CLAUDE.md. Read that task file. Implement it autonomously
-— zero questions mid-task. When done, run /verify then /task-handoff, then /clear,
-then repeat for the next task.
-```
 
-Copilot will:
-1. Read `.github/copilot-instructions.md` for the skill list and project context.
-2. Read `.claude/CLAUDE.md` → `## Active Feature > Current task:` for the task file path.
-3. Read the task file (e.g. `.spec/tasks/task-002.md`) for acceptance criteria.
-4. Implement all acceptance criteria — no clarifying questions mid-task.
-5. Run `/verify` — execute all 6 phases (build, types, lint, tests, secrets, git status).
-6. Run `/task-handoff` — update handoff notes, advance the pointer, commit.
-7. Run `/clear` — wipe context window and screen.
-8. Read the new `Current task:` from `.claude/CLAUDE.md` and repeat from step 1.
+**Rule:** The "Begin Immediately on Session Start" header is what drives auto-continuation after `/clear`. Copilot re-reads this file in the new chat and starts the loop without any user re-prompt.
 
-**Rule:** Always read `.claude/CLAUDE.md` for `Current task:` — not `copilot-instructions.md`, which becomes stale after `/task-handoff` updates the pointer.
+**Rule:** Always read `Current task:` from `copilot-instructions.md` — it is auto-loaded and always reflects the latest pointer after `/task-handoff`.
 
 ---
 
-## 3. Behavioral Rules
+## 3. Activation Prompt
+
+Paste this once to start a session. The loop then runs autonomously:
+
+```
+Read .github/copilot-instructions.md. Follow the ## Autonomous Loop instructions exactly.
+```
+
+That's all. The full loop logic is in `copilot-instructions.md` and persists across context resets.
+
+---
+
+## 4. Behavioral Rules
 
 When operating as an autonomous Copilot agent:
 
@@ -59,13 +71,13 @@ When operating as an autonomous Copilot agent:
 - **Never skip `/verify`.** All 6 phases must pass before `/task-handoff`.
 - **On verify failure:** fix the root cause. If the same phase fails 3 consecutive times, write `VERIFY_FAIL: <phase> — <error summary>` in `## Status` and stop. Do not commit.
 - **On destructive operations** (drop table, force push to main, delete untracked files): stop and ask the user explicitly. Never auto-approve destructive ops regardless of agent mode settings.
-- **Always `/clear` between tasks.** Accumulated context from a completed task degrades output quality on the next one.
+- **Always `/clear` between tasks.** Mandatory after every `/task-handoff`. `copilot-instructions.md` auto-loads in the new chat and restarts the loop.
 
 **Rule:** Never modify test files to make tests pass. Fix the code under test.
 
 ---
 
-## 4. Loading Skills
+## 5. Loading Skills
 
 `.github/copilot-instructions.md` lists absolute skill file paths under `## Skills`. Read each listed skill file before writing any code. Skills contain the coding standards, test patterns, and security rules for this codebase.
 
@@ -73,7 +85,7 @@ Do NOT use `@` imports — Copilot cannot resolve them. Use the explicit paths i
 
 ---
 
-## 5. Termination Conditions
+## 6. Termination Conditions
 
 Stop the loop and notify the user when:
 
@@ -87,21 +99,19 @@ Stop the loop and notify the user when:
 
 ---
 
-## 6. After Each Task — Clear and Continue
+## 7. After Each Task — Clear and Continue
 
-After each `/task-handoff` commit:
+After `/task-handoff` commits:
 
-1. Run `/clear` — clears context window and screen.
-2. Read `.claude/CLAUDE.md` → `## Active Feature > Current task:` for the next task path.
-3. Begin the cycle again from Section 2.
+1. Run `/clear` — mandatory. Resets stale context from the completed task.
+2. Copilot auto-loads `copilot-instructions.md` in the new chat.
+3. The "Begin Immediately on Session Start" directive triggers the loop from step 1 — no user re-prompt needed.
 
-In Claude Code agent mode, `/clear` is a built-in command. In GitHub Copilot Chat, click **New Chat** to achieve the same context reset, then paste the activation prompt from Section 2.
-
-**Rule:** Always clear before the next task. Context from a completed task contains stale file state and resolved-but-remembered errors that pollute the next implementation.
+**Rule:** Do not re-paste the activation prompt after `/clear`. `copilot-instructions.md` carries the full loop and auto-starts it.
 
 ---
 
-## 7. Resume Mid-Task
+## 8. Resume Mid-Task
 
 If interrupted (context window hit, network error, manual stop), paste this to resume:
 

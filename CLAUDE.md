@@ -17,14 +17,14 @@ claude_kit/
 │   ├── homunculus/instincts/inherited/   # Curated instincts for this repo
 │   └── skills/claude-kit/SKILL.md    # Meta-skill for working in this repo
 │
-├── skills/          # 53 skill modules organized by category
-│   ├── core/            # generate-claude-md, continuous-learning, eval-harness, ...
+├── skills/          # 55 skill modules organized by category
+│   ├── core/            # generate-claude-md, continuous-learning, eval-harness, wrapup, ...
 │   ├── development/     # code-writing, build-website, api-design, ...
 │   ├── planning/        # planning-specification, autonomous-agents, multi-model
 │   ├── testing-quality/ # tdd-workflow, security-review, security-scan, e2e-testing
 │   ├── data-backend/    # postgres-patterns, database-migrations, clickhouse-io
 │   ├── languages/       # golang, python, kotlin, java, swift, cpp, android, perl
-│   ├── ai-platform/     # claude-developer-platform
+│   ├── ai-platform/     # claude-developer-platform, notebooklm
 │   ├── research-docs/   # research, document-writing, knowledge-management
 │   ├── devops/          # terminal-cli-devops
 │   ├── ui-design/       # presentations-ui-design
@@ -110,10 +110,10 @@ When working inside the Skill Builder repository itself:
 
 ## Available Content
 
-### Skills (54)
+### Skills (56)
 
 **Core / Meta**
-`generate-claude-md` · `new-features-updates` · `skill-stocktake` · `configure-ecc` · `continuous-learning` · `strategic-compact` · `eval-harness`
+`generate-claude-md` · `new-features-updates` · `skill-stocktake` · `configure-ecc` · `continuous-learning` · `strategic-compact` · `eval-harness` · `wrapup`
 
 **Development**
 `code-writing-software-development` · `build-website-web-app` · `ide-integration-pair-programming` · `api-design` · `content-hash-cache-pattern`

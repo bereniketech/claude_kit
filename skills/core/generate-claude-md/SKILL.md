@@ -104,6 +104,7 @@ If any field is unknown or not applicable, write "TBD" or "N/A". This file is re
 | Extracting patterns from sessions | `continuous-learning` |
 | Context window compaction | `strategic-compact` |
 | Eval-driven AI development | `eval-harness` |
+| End-of-session knowledge capture | `wrapup` |
 
 ### Development
 | If the project involves… | Include skill |
@@ -197,7 +198,7 @@ If any field is unknown or not applicable, write "TBD" or "N/A". This file is re
 | Large RFC multi-agent features | `ralphinho-rfc-pipeline` |
 
 Planning CLAUDE.md always includes `planning-specification-architecture`.
-Execution CLAUDE.md always includes these six skills regardless of project type — they are the foundation of structured AI-assisted development:
+Execution CLAUDE.md always includes these eight skills regardless of project type — they are the foundation of structured AI-assisted development:
 
 | Skill | What it enforces |
 |---|---|
@@ -207,6 +208,8 @@ Execution CLAUDE.md always includes these six skills regardless of project type 
 | `code-writing-software-development` | Coding standards, read-before-edit discipline, and the 6-phase verification loop (build → type → lint → test → security → diff) |
 | `security-review` | OWASP Top 10 checklist on every feature touching auth, input, secrets, or APIs — catches issues before code review |
 | `autonomous-agents-task-automation` | Parallel execution, model routing, and subagent delegation — faster feature completion with less context switching |
+| `notebooklm` | Second brain — every session's knowledge is queryable; "check Brain first" reduces token burn by leveraging pre-summarized context |
+| `wrapup` | Session persistence — captures decisions, learnings, and open threads at session end and pushes them to the NotebookLM Brain |
 
 Execution CLAUDE.md includes all other selected skills — never `planning-specification-architecture`.
 
@@ -325,6 +328,8 @@ Always-include skills for every project (add their absolute paths):
 - `continuous-learning` (`skills/core/continuous-learning/SKILL.md`)
 - `strategic-compact` (`skills/core/strategic-compact/SKILL.md`)
 - `autonomous-agents-task-automation` (`skills/planning/autonomous-agents-task-automation/SKILL.md`)
+- `notebooklm` (`skills/ai-platform/notebooklm/SKILL.md`)
+- `wrapup` (`skills/core/wrapup/SKILL.md`)
 
 Add from Step 3 selections (examples):
 - `tdd-workflow` → `skills/testing-quality/tdd-workflow/SKILL.md`
@@ -347,6 +352,17 @@ Example CLAUDE.md (adjust skills per project):
 @C:/Users/Hp/Desktop/Experiment/claude_kit/skills/planning/autonomous-agents-task-automation/SKILL.md
 @C:/Users/Hp/Desktop/Experiment/claude_kit/skills/testing-quality/tdd-workflow/SKILL.md
 @C:/Users/Hp/Desktop/Experiment/claude_kit/skills/development/build-website-web-app/SKILL.md
+@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/ai-platform/notebooklm/SKILL.md
+@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/core/wrapup/SKILL.md
+
+## Second Brain — NotebookLM
+**ALWAYS check the AI Brain notebook BEFORE searching the codebase.**
+When you need context about past decisions, patterns, architecture, or session history:
+1. Read Brain notebook ID from memory files (`reference_brain_notebook.md`)
+2. Query: `notebooklm ask "your question" --notebook <BRAIN_NOTEBOOK_ID>`
+3. If the Brain returns relevant context → use it directly, DO NOT search the codebase
+4. Only if the Brain has no match → fall back to codebase search, memory files, and .spec/ artifacts
+This is mandatory. Skipping the Brain check wastes tokens re-reading files that have already been summarized.
 
 ## Active Feature
 Feature: {feature-name or "initial build"}
@@ -359,10 +375,11 @@ Branch: main
 2. Open the current task file — it is self-contained.
 3. Skills are already loaded via @imports above — no need to load them manually.
 4. Implement. Run `/task-handoff` when done.
+5. Run `/wrapup` at end of session to save context to the AI Brain.
 
 ## Reference (load on demand — do not read at session start)
 - Agents: `.claude/agents/` — invoke with `@agent-name`; use only when task specifies
-- Commands: `.claude/commands/` — key ones: `/verify`, `/task-handoff`, `/save-session`, `/tdd`, `/code-review`
+- Commands: `.claude/commands/` — key ones: `/verify`, `/task-handoff`, `/save-session`, `/tdd`, `/code-review`, `/wrapup`
 - Config: `.claude/project-config.md` — deployment targets, env vars, hosting
 - Rules: `.claude/rules/` — applied automatically
 
@@ -375,6 +392,9 @@ Append to `bug-log.md` immediately after any fix:
 2. Hardcoded values that should be env vars?
 3. Upstream/downstream breakage?
 4. `bug-log.md` updated if errors occurred?
+
+## End of Session
+Run `/wrapup` after `/task-handoff` or when ending any work session. This captures decisions, learnings, and open threads into the AI Brain notebook for future retrieval.
 
 ## Output Discipline
 Lead with the action. No preamble, no post-summary. Bullet points over prose.
@@ -430,10 +450,26 @@ When implementing tasks, read these files for detailed coding standards:
 - KIT_PATH/skills/core/continuous-learning/SKILL.md
 - KIT_PATH/skills/core/strategic-compact/SKILL.md
 - KIT_PATH/skills/planning/autonomous-agents-task-automation/SKILL.md
+- KIT_PATH/skills/ai-platform/notebooklm/SKILL.md
+- KIT_PATH/skills/core/wrapup/SKILL.md
 - [one line per project-specific selected skill]
 ```
 
-**Keep all other CLAUDE.md sections unchanged:** `## Active Feature`, `## Reference`, `## Bug Log`, `## Self-Check`, `## Output Discipline`.
+**Add `## Second Brain — NotebookLM` section at the top, before `## Start Here`:**
+
+```markdown
+## Second Brain — NotebookLM
+**ALWAYS check the AI Brain BEFORE searching the codebase.**
+When you need context about past decisions, patterns, architecture, or session history:
+1. Read the Brain notebook ID from `.claude/memory/` files (look for `reference_brain_notebook.md`)
+2. If the NotebookLM CLI is available, query: `notebooklm ask "your question" --notebook <BRAIN_NOTEBOOK_ID>`
+3. Also check memory files in `.claude/memory/` and planning artifacts in `.spec/`
+4. If the Brain or memory files return relevant context → use it directly, DO NOT search the codebase
+5. Only if prior sources have no match → fall back to codebase search
+This minimizes token usage by leveraging pre-summarized knowledge from prior sessions.
+```
+
+**Keep all other CLAUDE.md sections unchanged:** `## Active Feature`, `## Reference`, `## Bug Log`, `## Self-Check`, `## End of Session`, `## Output Discipline`.
 
 **Update `## Start Here` item 3** from:
 `"Skills are already loaded via @imports above — no need to load them manually."`
@@ -465,6 +501,7 @@ When the user types `/command-name`, read the corresponding file and follow its 
 - `/instinct-export` → KIT_PATH/commands/core/instinct-export.md
 - `/instinct-import` → KIT_PATH/commands/core/instinct-import.md
 - `/instinct-status` → KIT_PATH/commands/core/instinct-status.md
+- `/wrapup` → KIT_PATH/skills/core/wrapup/SKILL.md
 
 ### Development
 - `/verify` → KIT_PATH/commands/development/verify.md

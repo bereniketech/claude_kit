@@ -64,7 +64,7 @@ Only if the feature spec explicitly involves one or more of:
 
 ### Baseline mandatory skills (always install if absent)
 
-Regardless of what the new feature involves, every project must have all six of these. Check first and install silently if missing — no user confirmation needed:
+Regardless of what the new feature involves, every project must have all eight of these. Check first and install silently if missing — no user confirmation needed:
 
 | Skill | Outcome it guarantees |
 |---|---|
@@ -74,6 +74,8 @@ Regardless of what the new feature involves, every project must have all six of 
 | `autonomous-agents-task-automation` | Faster feature completion + less context switching — parallel execution, model routing, subagent delegation |
 | `continuous-learning` | Knowledge persistence — patterns and solutions survive across sessions, no repeated debugging |
 | `strategic-compact` | Context rot prevention — compacts at phase boundaries so architectural decisions stay coherent |
+| `notebooklm` | Second brain — session knowledge is queryable; "check Brain first" reduces redundant codebase scanning and token usage |
+| `wrapup` | Session persistence — captures decisions, learnings, and open threads at session end; pushes to NotebookLM Brain |
 
 Copy each missing skill from the skill library and register it in `.claude/CLAUDE.md` under the Skills section.
 
