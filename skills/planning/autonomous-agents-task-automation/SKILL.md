@@ -526,3 +526,42 @@ Before each major action, ask yourself:
 - If this fails, do I have a recovery plan?
 - Am I using the right loop pattern for the complexity of this task?
 - Have I set exit conditions on any automated loop I'm starting?
+
+---
+
+## Plan Execution Checkpoints
+
+When executing a written implementation plan, follow this cycle:
+
+1. **Load and Review** — Read the plan file. Review critically — identify any questions or concerns. If concerns exist, raise them with the user before starting.
+2. **Execute Tasks** — For each task: mark as in_progress, follow each step exactly (plans have bite-sized steps), run verifications as specified, mark as completed.
+3. **Complete Development** — After all tasks complete and verified, present options: merge locally, create PR, keep branch, or discard.
+
+**Rule:** STOP executing immediately when you hit a blocker (missing dependency, test fails, instruction unclear), the plan has critical gaps, you don't understand an instruction, or verification fails repeatedly. Ask for clarification rather than guessing. Never start implementation on main/master branch without explicit user consent.
+
+---
+
+## Two-Stage Subagent Review
+
+When using subagents for plan execution, apply a two-stage review after each task:
+
+**Stage 1 — Spec Compliance Review:** Dispatch a reviewer subagent to confirm the implementation matches the spec. Check: are all requirements met? Is anything extra added that wasn't requested? If issues found, the implementer fixes them and the reviewer re-reviews.
+
+**Stage 2 — Code Quality Review:** Only after spec compliance passes, dispatch a quality reviewer. Check: code correctness, test quality, naming, patterns. If issues found, the implementer fixes them and the reviewer re-reviews.
+
+**Rule:** Never start code quality review before spec compliance is confirmed. Never move to the next task while either review has open issues. Never skip review loops — if a reviewer found issues, the implementer fixes them, and the reviewer reviews again.
+
+### Subagent Dispatch Pattern
+
+Each subagent gets:
+- **Fresh context** — never inherit session history
+- **Full task text** — extracted from the plan, not a reference to it
+- **Scene-setting context** — where the task fits in the overall implementation
+- **Clear output expectations** — what to return (summary of changes, status)
+
+### Handling Subagent Status
+
+- **DONE** — proceed to spec compliance review
+- **DONE_WITH_CONCERNS** — read concerns before proceeding; address correctness/scope issues before review
+- **NEEDS_CONTEXT** — provide the missing context and re-dispatch
+- **BLOCKED** — assess: context problem (provide more), reasoning limitation (use more capable model), task too large (break into pieces), plan wrong (escalate to user)

@@ -691,3 +691,39 @@ Gate prompts:
 - After tasks: "Do the tasks look good? Once approved, the spec is ready for implementation."
 
 Never proceed to the next phase without an affirmative response.
+
+---
+
+## Task Granularity in Implementation Plans
+
+When producing the tasks document, write bite-sized steps that each take 2-5 minutes:
+
+- "Write the failing test" — step
+- "Run it to make sure it fails" — step
+- "Implement the minimal code to make the test pass" — step
+- "Run the tests and make sure they pass" — step
+- "Commit" — step
+
+**Rule:** No placeholders. Every step must contain the actual content an engineer needs. These are plan failures — never write them: "TBD", "TODO", "implement later", "add appropriate error handling", "write tests for the above" (without actual test code), "similar to Task N" (repeat the code).
+
+### File Structure Mapping
+
+Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
+
+- Design units with clear boundaries and well-defined interfaces. Each file should have one clear responsibility.
+- Files that change together should live together. Split by responsibility, not by technical layer.
+- In existing codebases, follow established patterns. If a file has grown unwieldy, including a split in the plan is reasonable.
+
+### Scope Decomposition
+
+**Rule:** If the spec covers multiple independent subsystems, break into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
+
+### Plan Self-Review
+
+After writing the complete plan, review against the spec:
+
+1. **Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
+2. **Placeholder scan:** Search for red flags from the "No Placeholders" list above.
+3. **Type consistency:** Do types, method signatures, and property names used in later tasks match what you defined in earlier tasks?
+
+Fix issues inline. If you find a spec requirement with no task, add the task.

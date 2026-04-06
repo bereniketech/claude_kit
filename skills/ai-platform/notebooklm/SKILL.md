@@ -211,6 +211,29 @@ Tell the user:
 
 ---
 
+## Ensure AI Brain Notebook Exists
+
+Whenever this skill activates in a project context, ensure the project's AI Brain notebook exists. This is the same notebook used by `/wrapup` to store session summaries.
+
+1. Detect the repo name:
+   ```bash
+   basename "$(git rev-parse --show-toplevel 2>/dev/null || basename "$PWD")"
+   ```
+2. The brain notebook is named `<repo-name> AI Brain` (e.g. `my-project AI Brain`)
+3. Check for a saved notebook ID in memory (look for `brain_notebook_id` in the memory index)
+4. If no ID saved, list notebooks: `notebooklm list --json` and look for a match
+5. If not found, create it: `notebooklm create "<repo-name> AI Brain" --json`
+6. Save the notebook ID to memory (`reference_brain_notebook.md`) and update MEMORY.md
+
+**Rule:** Before exploring the codebase for any research task, first check the AI Brain for existing context:
+```bash
+notebooklm use <BRAIN_NOTEBOOK_ID>
+notebooklm ask "What do we know about <topic>?" --json
+```
+Only fall back to codebase exploration if the Brain doesn't have relevant context.
+
+---
+
 ## When This Skill Activates
 
 **Explicit:** User says "/notebooklm", "use notebooklm", "install notebooklm", or mentions the tool by name

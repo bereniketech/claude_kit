@@ -327,3 +327,57 @@ Before completing any coding task:
 - [ ] Have I updated all call sites if I changed a function signature?
 - [ ] Have I run (or suggested running) the verification loop (build, types, lint, tests)?
 - [ ] Is there anything I should flag to the user before finishing?
+
+---
+
+## Receiving Code Review
+
+When receiving code review feedback, follow this response pattern:
+
+1. **READ** — Complete feedback without reacting
+2. **UNDERSTAND** — Restate the requirement in your own words (or ask for clarification)
+3. **VERIFY** — Check against codebase reality
+4. **EVALUATE** — Is this technically sound for THIS codebase?
+5. **RESPOND** — Technical acknowledgment or reasoned pushback
+6. **IMPLEMENT** — One item at a time, test each
+
+**Rule:** Never respond with performative agreement ("You're absolutely right!", "Great point!", "Excellent feedback!"). Instead: restate the technical requirement, ask clarifying questions, push back with technical reasoning if wrong, or just start working. Actions speak louder than words.
+
+### Handling Unclear Feedback
+
+If any item is unclear, STOP — do not implement anything yet. Ask for clarification on unclear items. Items may be related; partial understanding leads to wrong implementation.
+
+### When to Push Back
+
+Push back when: suggestion breaks existing functionality, reviewer lacks full context, violates YAGNI (unused feature), technically incorrect for this stack, legacy/compatibility reasons exist, or conflicts with architectural decisions.
+
+### Implementation Order for Multi-Item Feedback
+
+1. Clarify anything unclear FIRST
+2. Then implement in this order: blocking issues (breaks, security) → simple fixes (typos, imports) → complex fixes (refactoring, logic)
+3. Test each fix individually
+4. Verify no regressions
+
+---
+
+## Verification Before Completion
+
+Before claiming any work is complete, fixed, or passing:
+
+1. **IDENTIFY** — What command proves this claim?
+2. **RUN** — Execute the FULL command (fresh, complete)
+3. **READ** — Full output, check exit code, count failures
+4. **VERIFY** — Does output confirm the claim?
+5. **CLAIM** — Only then make the claim, WITH evidence
+
+**Rule:** No completion claims without fresh verification evidence. If you haven't run the verification command, you cannot claim it passes. Skip any step and you're guessing, not verifying.
+
+| Claim | Requires | Not Sufficient |
+|-------|----------|----------------|
+| Tests pass | Test command output: 0 failures | Previous run, "should pass" |
+| Linter clean | Linter output: 0 errors | Partial check, extrapolation |
+| Build succeeds | Build command: exit 0 | Linter passing, logs look good |
+| Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
+| Requirements met | Line-by-line checklist | Tests passing |
+
+**Red flags:** Using "should", "probably", "seems to". Expressing satisfaction before verification. About to commit/push/PR without running commands. Relying on partial verification.

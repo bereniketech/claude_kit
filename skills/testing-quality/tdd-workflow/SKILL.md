@@ -76,3 +76,53 @@ When using AI to generate implementation code, provide the failing tests as cont
 Run tests in watch mode during development (`npm test -- --watch`). Enforce `npm test && npm run lint` as a pre-commit hook. In CI, run with `--coverage` and upload reports to Codecov or equivalent.
 
 **Rule:** Tests must run in under 30 seconds for the unit suite; flag and fix any test exceeding 50ms.
+
+---
+
+## 10. The Iron Law of TDD
+
+```
+NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+```
+
+Write code before the test? Delete it. Start over.
+
+- Don't keep it as "reference"
+- Don't "adapt" it while writing tests
+- Don't look at it
+- Delete means delete
+
+**Rule:** If you wrote implementation code before a failing test exists, delete the implementation. Implement fresh from tests. Sunk cost is not a reason to keep unverified code.
+
+### Exceptions (Explicit User Permission Only)
+
+- Throwaway prototypes
+- Generated code (scaffolding, config)
+- Configuration files
+
+Thinking "skip TDD just this once"? Stop. That's rationalization.
+
+---
+
+## 11. Common TDD Rationalizations
+
+| Excuse | Reality |
+|--------|---------|
+| "Too simple to test" | Simple code breaks. Test takes 30 seconds. |
+| "I'll test after" | Tests passing immediately prove nothing. |
+| "Tests after achieve same goals" | Tests-after = "what does this do?" Tests-first = "what should this do?" |
+| "Deleting X hours is wasteful" | Sunk cost fallacy. Keeping unverified code is technical debt. |
+| "Keep as reference, write tests first" | You'll adapt it. That's testing after. Delete means delete. |
+| "Need to explore first" | Fine. Throw away exploration, start with TDD. |
+| "TDD will slow me down" | TDD faster than debugging. |
+| "Manual test faster" | Manual doesn't prove edge cases. You'll re-test every change. |
+
+---
+
+## 12. Testing Anti-Patterns
+
+When adding mocks or test utilities, see `testing-anti-patterns.md` in this directory to avoid common pitfalls:
+- Testing mock behavior instead of real behavior
+- Adding test-only methods to production classes
+- Mocking without understanding dependencies
+- Tests that pass for the wrong reasons

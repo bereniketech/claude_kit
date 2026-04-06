@@ -114,6 +114,8 @@ If any field is unknown or not applicable, write "TBD" or "N/A". This file is re
 | IDE pair programming assistance | `ide-integration-pair-programming` |
 | REST API design | `api-design` |
 | Content caching patterns | `content-hash-cache-pattern` |
+| Bug hunting / debugging methodology | `systematic-debugging` |
+| Branch merge / PR / cleanup workflow | `branch-completion` |
 
 ### Planning & Architecture
 | If the project involves… | Include skill |
@@ -121,6 +123,8 @@ If any field is unknown or not applicable, write "TBD" or "N/A". This file is re
 | Requirements / architecture | `planning-specification-architecture` |
 | Autonomous multi-step tasks | `autonomous-agents-task-automation` |
 | Multiple AI models / providers | `multi-model-model-agnostic-platforms` |
+| Design ideation / brainstorming | `brainstorming` |
+| Parallel agent orchestration | `parallel-agent-dispatch` |
 
 ### Testing & Quality
 | If the project involves… | Include skill |
@@ -166,11 +170,19 @@ If any field is unknown or not applicable, write "TBD" or "N/A". This file is re
 | If the project involves… | Include skill |
 |---|---|
 | Shell scripts / CI/CD / DevOps | `terminal-cli-devops` |
+| Git worktree-based isolation | `git-worktrees` |
 
 ### UI & Design
 | If the project involves… | Include skill |
 |---|---|
 | UI components / design system | `presentations-ui-design` |
+| UI/UX design decisions / style selection | `ui-ux-pro-max` |
+| Logo, CIP, icon, or banner design | `design` |
+| Brand identity / voice / guidelines | `brand` |
+| Design tokens / component specs | `design-system` |
+| Banner / social media assets | `banner-design` |
+| HTML presentations / pitch decks | `slides` |
+| shadcn/ui / Tailwind styling | `ui-styling` |
 
 ### Integrations
 | If the project involves… | Include skill |
