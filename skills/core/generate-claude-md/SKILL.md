@@ -183,6 +183,7 @@ If any field is unknown or not applicable, write "TBD" or "N/A". This file is re
 | Banner / social media assets | `banner-design` |
 | HTML presentations / pitch decks | `slides` |
 | shadcn/ui / Tailwind styling | `ui-styling` |
+| Premium websites, cinematic GSAP animations, autonomous site builder | `cinematic-website-builder` |
 
 ### Integrations
 | If the project involves… | Include skill |

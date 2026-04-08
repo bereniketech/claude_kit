@@ -1,6 +1,6 @@
 # claude_kit BRAIN
 
-> **Purpose:** Single-read knowledge base for the entire claude_kit repository. Read this instead of scanning the codebase. Updated: 2026-04-05.
+> **Purpose:** Single-read knowledge base for the entire claude_kit repository. Read this instead of scanning the codebase. Updated: 2026-04-06.
 
 ---
 
@@ -38,45 +38,115 @@ claude_kit/
 │   ├── homunculus/instincts/inherited/   # Curated instincts YAML
 │   └── skills/claude-kit/SKILL.md       # Meta-skill (repo-editing guidance)
 │
-├── skills/                    # 61 SKILL.md files across 14 categories
-│   ├── core/                  # 6: generate-claude-md, continuous-learning, eval-harness,
-│   │                          #    new-features-updates, skill-stocktake, strategic-compact
-│   ├── development/           # 7: code-writing, build-website, api-design, ide-integration,
-│   │                          #    content-hash-cache, systematic-debugging, branch-completion
-│   ├── planning/              # 5: planning-specification, autonomous-agents, multi-model,
-│   │                          #    brainstorming, parallel-agent-dispatch
-│   ├── testing-quality/       # 4: tdd-workflow, security-review, security-scan, e2e-testing
-│   ├── data-backend/          # 3: postgres-patterns, database-migrations, clickhouse-io
-│   ├── languages/             # 8: golang, python, kotlin, java, swift, cpp, android, perl
-│   ├── ai-platform/           # 2: claude-developer-platform, notebooklm
-│   ├── research-docs/         # 3: research, document-writing, knowledge-management
-│   ├── devops/                # 2: terminal-cli-devops, git-worktrees
-│   ├── ui-design/             # 8: presentations-ui-design, ui-ux-pro-max, design, brand,
-│   │                          #    design-system, banner-design, slides, ui-styling
-│   ├── integrations/          # 8: x-api, fal-ai, video-editing, videodb, nutrient,
-│   │                          #    visa-doc-translate, whatsapp-automation, copilot-autonomous-tasks
-│   ├── domain/                # 3: logistics, trade-compliance, energy-procurement
-│   ├── specialized/           # 2: nanoclaw-repl, ralphinho-rfc-pipeline
-│   └── additional/            # (empty — reserved)
+├── skills/                    # 1,207 SKILL.md files across 51 categories
+│   ├── core/                  # (7) generate-claude-md, continuous-learning, eval-harness,
+│   │                          #     new-features-updates, skill-stocktake, strategic-compact, configure-ecc
+│   ├── development/           # (11) code-writing, build-website, api-design, systematic-debugging,
+│   │                          #      branch-completion, api-endpoint-builder, framework-migration, ...
+│   ├── planning/              # (5) planning-specification, autonomous-agents, multi-model,
+│   │                          #     brainstorming, parallel-agent-dispatch
+│   ├── testing-quality/       # (24) tdd-workflow, security-review, e2e-testing, playwright,
+│   │                          #      k6-load-testing, ab-test-setup, acceptance-orchestrator, bats-testing, ...
+│   ├── data-backend/          # (25) postgres-patterns, database-migrations, clickhouse-io, database-admin,
+│   │                          #      nosql-expert, neon-postgres, vector-database, cqrs, event-sourcing, ...
+│   ├── data-science-ml/       # (60) ai-engineer, ml-engineer, rag-*, langchain-*, langgraph,
+│   │                          #      hugging-face-*, llm-app-patterns, prompt-engineering, crewai, ...
+│   ├── languages/             # (41) golang, python, kotlin, java, swift, cpp, rust-pro, typescript,
+│   │                          #      javascript, csharp-pro, scala-pro, haskell-pro, dotnet, android, ...
+│   ├── ai-platform/           # (9) claude-developer-platform, notebooklm, claude-d3js,
+│   │                          #     claude-in-chrome-troubleshooting, ...
+│   ├── research-docs/         # (29) research, document-writing, wiki-*, blog-writing, scientific-writing,
+│   │                          #      changelog-automation, citation-management, ...
+│   ├── devops/                # (20) terminal-cli-devops, git-worktrees, github-actions, gitlab-ci,
+│   │                          #      gitops-workflow, monorepo, cicd-automation, bazel, circleci, ...
+│   ├── devtools/              # (18) git-hooks-automation, jq, tmux, gdb-cli, obsidian,
+│   │                          #      uv-package-manager, busybox-on-windows, file-organizer, ...
+│   ├── ui-design/             # (49) presentations, ui-ux-pro-max, design-system, hig, accessibility,
+│   │                          #      landing-page-generator, cinematic-website-builder, 3d-web-experience, canvas-design, ...
+│   ├── integrations/          # (107) slack, hubspot, jira, zapier, notion, salesforce, airtable,
+│   │                          #       amplitude, asana, bamboohr, activecampaign, ... (107 SaaS integrations)
+│   ├── integrations-scraping/ # (15) apify-*, firecrawl-scraper, web-scraper, ...
+│   ├── frameworks-frontend/   # (49) react-*, angular-*, nextjs-*, sveltekit, tailwind-*, shadcn,
+│   │                          #      threejs-*, tanstack-query, zustand, ...
+│   ├── frameworks-backend/    # (24) django-pro, fastapi-*, laravel, nestjs, prisma, drizzle-orm,
+│   │                          #      nodejs-*, bullmq, bun-development, convex, clerk-auth, ...
+│   ├── frameworks-mobile/     # (11) flutter-expert, react-native-*, ios-*, expo-*, mobile-developer, ...
+│   ├── frameworks-desktop/    # (24) electron, avalonia-*, makepad-*, robius-*, progressive-web-app, ...
+│   ├── agents-orchestration/  # (37) agent-framework-*, agent-memory-*, agent-orchestrator,
+│   │                          #      conductor-*, multi-advisor, subagent-driven-development, ...
+│   ├── architecture/          # (18) microservices-patterns, ddd-*, software-architecture,
+│   │                          #      senior-architect, backend-architect, architecture-decision-records, ...
+│   ├── cloud/                 # (24) aws-serverless, aws-cost-optimizer, gcp-cloud-run, terraform-*,
+│   │                          #      cloudflare-workers, cloudformation-*, appdeploy, ...
+│   ├── cloud-azure/           # (122) Azure SDK skills across all services: AI, identity, storage,
+│   │                          #       cosmos, monitor, keyvault, eventhub, servicebus, search, ...
+│   ├── containers-orchestration/ # (11) docker-expert, kubernetes-*, helm-chart, istio-*,
+│   │                          #        linkerd-*, devcontainer-setup, ...
+│   ├── security-offensive/    # (36) pentesting, burpsuite, metasploit, red-team, sql-injection,
+│   │                          #      xss, api-fuzzing, active-directory-attacks, ...
+│   ├── security-defensive/    # (29) auth-implementation-patterns, secrets-management, incident-response,
+│   │                          #      semgrep, privacy-by-design, threat-modeling, ...
+│   ├── seo/                   # (31) seo-technical, seo-content-*, seo-audit, schema-markup,
+│   │                          #      programmatic-seo, local-legal-seo-audit, ...
+│   ├── marketing-growth/      # (31) content-strategy, growth-engine, cold-email, paid-ads,
+│   │                          #      lead-magnets, churn-prevention, competitor-alternatives, ...
+│   ├── product-business/      # (23) product-manager, startup-*, saas-*, analytics-*,
+│   │                          #      kpi-dashboard-design, billing-automation, ai-product, ...
+│   ├── ecommerce/             # (7) shopify-*, woocommerce, inventory, app-store-optimization, ...
+│   ├── erp-odoo/              # (24) odoo-module-developer, odoo-orm-expert, odoo-migration-helper,
+│   │                          #      odoo-ecommerce, odoo-accounting, odoo-docker, odoo-tests, ...
+│   ├── health-wellness/       # (16) nutrition-analyzer, fitness-analyzer, mental-health-analyzer,
+│   │                          #      sleep-analyzer, tcm-constitution-analyzer, family-health, ...
+│   ├── legal-compliance/      # (15) legal-advisor, fda-*, employment-contracts, gdpr, ...
+│   ├── fintech-payments/      # (7) stripe-integration, paypal, plaid-fintech, payment-integration, ...
+│   ├── blockchain-web3/       # (8) blockchain-developer, defi-protocol, nft-standards,
+│   │                          #     solidity-security, lightning-architecture, ...
+│   ├── game-dev/              # (19) unity-*, godot-*, unreal-engine, bevy-ecs, shader-programming,
+│   │                          #      minecraft-bukkit, game-development, ...
+│   ├── media-video/           # (10) remotion-*, comfyui-gateway, podcast-generation,
+│   │                          #      audio-transcriber, stability-ai, magic-animator, ...
+│   ├── office-documents/      # (11) docx-official, pptx-official, xlsx-official, pdf-official,
+│   │                          #      libreoffice, json-canvas, office-productivity, ...
+│   ├── bots/                  # (7) discord-bot, slack-bot, telegram-bot, alexa, chat-widget, ...
+│   ├── personas/              # (15) bill-gates, elon-musk, andrej-karpathy, geoffrey-hinton,
+│   │                          #      yann-lecun, uncle-bob, explain-like-socrates, ...
+│   ├── team-hr/               # (8) hr-pro, interview-coach, team-collaboration, daily-news-report, ...
+│   ├── scientific/            # (13) astropy, biopython, matplotlib, scikit-learn, plotly,
+│   │                          #      polars, qiskit, networkx, cirq, ...
+│   ├── functional-programming/ # (15) fp-ts patterns: pipe, either, option, taskeither,
+│   │                          #       backend, react, refactor, data-transforms, ...
+│   ├── observability/         # (8) distributed-tracing, prometheus, slo-implementation,
+│   │                          #     observability-engineer, distributed-debugging, ...
+│   ├── search/                # (5) algolia, exa-search, tavily, openapi-spec, search-specialist
+│   ├── performance/           # (4) web-performance, app-performance, performance-engineer, ...
+│   ├── cms/                   # (4) wordpress, wordpress-plugin, wordpress-theme, moodle, ...
+│   ├── domain/                # (5) logistics, trade-compliance, energy-procurement,
+│   │                          #     carrier-relationship, quality-nonconformance
+│   ├── baas/                  # (2) firebase, upstash
+│   ├── salesforce/            # (1) salesforce-development
+│   ├── customer-support/      # (1) customer-support
+│   └── specialized/          # (112) niche/branded skills, reverse-engineering, forensics, ...
 │
-├── agents/                    # 18 agent definitions
+├── agents/                    # 24 agent files across 5 categories
 │   ├── core/                  # planner, architect, chief-of-staff, loop-operator, harness-optimizer
-│   ├── development/           # code-reviewer, refactor-cleaner, doc-updater, build-error-resolver
+│   ├── development/           # code-reviewer, refactor-cleaner, doc-updater, build-error-resolver, cinematic-website-builder
 │   ├── testing-quality/       # tdd-guide, security-reviewer, e2e-runner
 │   ├── data-backend/          # database-reviewer
 │   └── languages/             # go-reviewer, go-build-resolver, kotlin-reviewer, kotlin-build-resolver, python-reviewer
 │
-├── commands/                  # 59 slash command files
-│   ├── core/                  # learn, sessions, instinct-*, eval, checkpoint, task-handoff, wrapup, ...
-│   ├── development/           # code-review, build-fix, refactor-clean, verify, update-*, pm2, ...
-│   ├── testing-quality/       # tdd, e2e, quality-gate, test-coverage
-│   ├── planning/              # plan, orchestrate, model-route, loop-*, multi-*, brainstorm
-│   ├── languages/             # go-*, kotlin-*, gradle-build, python-review
-│   └── specialized/           # claw
+├── commands/                  # 51 slash command files across 6 categories
+│   ├── core/                  # (19) learn, sessions, instinct-*, eval, checkpoint, task-handoff,
+│   │                          #      wrapup, skill-create, evolve, save-session, resume-session, ...
+│   ├── development/           # (8) code-review, build-fix, refactor-clean, verify, update-*, pm2, ...
+│   ├── testing-quality/       # (4) tdd, e2e, quality-gate, test-coverage
+│   ├── planning/              # (11) plan, orchestrate, model-route, loop-*, multi-*, brainstorm
+│   ├── languages/             # (8) go-*, kotlin-*, gradle-build, python-review
+│   └── specialized/           # (1) claw
 │
-├── rules/                     # common/ + 8 language dirs
-│   ├── common/                # 9 files: agents, coding-style, dev-workflow, git, hooks, patterns, perf, security, testing
-│   ├── golang/                # 5 files: coding-style, hooks, patterns, security, testing
+├── rules/                     # common/ + 7 language dirs
+│   ├── common/                # 9 files: agents, coding-style, dev-workflow, git, hooks,
+│   │                          #          patterns, performance, security, testing
+│   ├── golang/                # 5 files
 │   ├── kotlin/                # 5 files
 │   ├── perl/                  # 5 files
 │   ├── php/                   # 5 files
@@ -86,9 +156,8 @@ claude_kit/
 │
 ├── contexts/                  # 3 context files: dev.md, research.md, review.md
 ├── hooks/                     # hooks.json + README.md
-├── mcp-configs/mcp-servers.json  # 22 MCP server configs (tokens sanitized)
+├── mcp-configs/mcp-servers.json  # 23 MCP server configs (tokens sanitized)
 │
-├── new skills/                # 1,337 community skills to be triaged (see Section 8)
 ├── repos/                     # External reference repos
 ├── scripts/                   # Cross-platform hook utilities
 │
@@ -127,14 +196,12 @@ Second-person imperative. ("Do X", "Use Y", "Never Z")
 ```
 
 **Constraints:**
-- Target ≤150 lines (80-120 ideal)
+- Target <=150 lines (80-120 ideal)
 - Omit anything the model knows from training data
 - Tables beat prose for density
 - `**Rule:**` callouts for constraints
 - Numbered sections with `---` separators
 - YAML frontmatter: `name` + `description` only (existing kit skills)
-
-**Community/new skills** have extended frontmatter: `risk`, `source`, `date_added`, `author`, `tags`, `tools`.
 
 ### 4b. Agent Format
 
@@ -200,7 +267,7 @@ Rules use `paths` frontmatter to scope by file pattern. Language rules extend `c
 | `security-review` | OWASP Top 10 on every feature touching auth/input/secrets |
 | `autonomous-agents-task-automation` | Parallel execution, model routing, subagent delegation |
 | `notebooklm` | Second brain — every session's knowledge queryable via NotebookLM |
-| `wrapup` | End-of-session knowledge capture → pushes to NotebookLM Brain |
+| `wrapup` | End-of-session knowledge capture -> pushes to NotebookLM Brain |
 
 ### The Master Skill: `generate-claude-md`
 
@@ -210,14 +277,14 @@ This is the **entry point** for any new project. It:
 3. Creates in the project: `.claude/CLAUDE.md` (with `@` imports), `.claude/CLAUDE.planning.md`, `.claude/project-config.md`, `.spec/` planning artifacts
 4. Creates directory junctions: agents, commands, rules, hooks, contexts
 5. Creates `.github/copilot-instructions.md` (mirrors CLAUDE.md for GitHub Copilot)
-6. Runs the 3-phase gated planning workflow: requirements → design → tasks
+6. Runs the 3-phase gated planning workflow: requirements -> design -> tasks
 7. Generates individual task files in `.spec/tasks/`
 
 **Hard rules:** Never save gated files without user approval. Never write into the kit directory. Never copy skill content.
 
 ---
 
-## 6. MCP Servers Available (22)
+## 6. MCP Servers Available (23)
 
 | Server | Type | Purpose |
 |--------|------|---------|
@@ -260,58 +327,7 @@ From `skills-lock.json` — 7 skills installed from `anthropics/claude-code`:
 
 ---
 
-## 8. New Skills Triage (1,337 skills in `new skills/`)
-
-### Category Breakdown
-
-| Category | Count | Examples | Merge Target / Action |
-|----------|-------|---------|----------------------|
-| **Cloud — Azure** | 116 | azure-ai-projects-py, azure-cosmos-db-py, azure-identity-dotnet | **NEW category:** `skills/cloud/azure/` — group by service |
-| **UI/Design/Frontend** | 114 | react-best-practices, nextjs-app-router, angular, svelte, tailwind, shadcn, threejs | **MERGE** many into existing `ui-design/`. **NEW:** `skills/languages/react-patterns/`, `skills/languages/angular-patterns/` etc. |
-| **Security** | 114 | 007, api-security-testing, burp-suite, pentest-checklist, red-team-tactics | **MERGE** best ones into existing `security-review` + `security-scan`. Keep specialized (pentest, red-team) as new. |
-| **DevOps/Infrastructure** | 101 | docker-expert, kubernetes-architect, terraform-specialist, helm-chart, github-actions | **MERGE** some into existing `terminal-cli-devops`. **NEW category:** `skills/devops/` expansion |
-| **Integrations/Automation** | 82 | slack-automation, jira-automation, hubspot-automation, notion-automation (mostly Composio MCP) | **NEW category:** `skills/integrations/automation/` — Composio-based automations |
-| **Testing/Quality** | 66 | playwright-skill, jest patterns, pytest, bats-testing, k6-load-testing | **MERGE** into existing `tdd-workflow` + `e2e-testing`. Keep specialized ones. |
-| **Research/Docs/Writing** | 65 | wiki-architect, wiki-onboarding, documentation-templates, blog-writing | **MERGE** into existing `research-docs/`. Pick best wiki/doc skills. |
-| **Marketing/SEO** | 60 | seo-content, seo-technical, growth-engine, copywriting, cold-email | **NEW category:** `skills/marketing/` |
-| **AI/ML** | 53 | rag-engineer, langchain, langgraph, hugging-face-*, prompt-engineering | **MERGE** some into existing `ai-platform/`. **NEW:** `skills/ai-platform/rag/`, `skills/ai-platform/langchain/` |
-| **Planning/Architecture** | 50 | ddd-strategic-design, event-sourcing, microservices-patterns, c4-architecture | **MERGE** into existing `planning/`. Keep DDD/event-sourcing as new specialized. |
-| **Data/Backend** | 42 | neon-postgres, vector-database, redis, mongodb, dbt-transformation | **MERGE** into existing `data-backend/`. **NEW:** `skills/data-backend/vector-db/` |
-| **Agents/Orchestration** | 26 | agent-memory-systems, agent-orchestrator, multi-agent-patterns, crewai | **MERGE** into existing `autonomous-agents-task-automation` + `parallel-agent-dispatch` |
-| **Languages** | 24 | rust-pro, ruby-pro, elixir-pro, haskell-pro, dotnet-backend | **NEW skills** for missing languages: rust, ruby, elixir, dotnet, etc. |
-| **Claude Code Meta** | 24 | claude-code-expert, skill-creator, hook-development, agents-md, writing-skills | **MERGE** into existing meta-skill + official installed skills |
-| **Mobile** | 17 | flutter-expert, expo-deployment, react-native-architecture, ios-developer | **MERGE** into existing `android-patterns`. **NEW:** `skills/languages/flutter-patterns/`, `skills/languages/react-native-patterns/` |
-| **Debugging** | 17 | debugger, error-detective, phase-gated-debugging, distributed-debugging | **MERGE** into existing `systematic-debugging` |
-| **Code Quality** | 17 | clean-code, code-reviewer, code-simplifier, legacy-modernizer | **MERGE** into existing `code-writing-software-development` |
-| **Odoo ERP** | 14 | odoo-module-developer, odoo-orm-expert, odoo-performance-tuner | **NEW category:** `skills/domain/odoo/` |
-| **Health Domain** | 14 | nutrition-analyzer, fitness-analyzer, sleep-analyzer, fda-compliance | **NEW category:** `skills/domain/health/` |
-| **Makepad** | 13 | makepad-basics, makepad-widgets, makepad-shaders, makepad-layout | **NEW category:** `skills/languages/makepad-patterns/` |
-| **Git Workflows** | 11 | git-advanced-workflows, create-pr, git-hooks-automation | **MERGE** into existing `branch-completion` + `git-worktrees` |
-| **Blockchain/Web3** | 11 | solidity-security, defi-protocol, nft-standards, web3-testing | **NEW category:** `skills/domain/blockchain/` |
-| **Persona Agents** | 10 | warren-buffett, elon-musk, bill-gates, yann-lecun, andrej-karpathy | **NEW category:** `skills/specialized/personas/` |
-| **Context/Memory** | 10 | context-manager, context-optimization, conversation-memory | **MERGE** into existing `strategic-compact` + `continuous-learning` |
-| **Game Dev** | 7 | unity-developer, unreal-engine-cpp-pro, godot-4-migration, bevy-ecs | **NEW category:** `skills/languages/game-engines/` |
-| **WordPress** | 1 | wordpress (comprehensive) | **NEW:** `skills/languages/wordpress-patterns/` |
-| **Uncategorized** | 258 | Mixed: fal-audio, auth-patterns, bash-linux, bun-dev, clerk-auth, convex, etc. | Needs per-skill triage |
-
-### Exact Name Duplicates (10 — must compare & merge)
-
-| Skill Name | Exists In | Action |
-|------------|-----------|--------|
-| `brainstorming` | `skills/planning/` | Compare quality, merge best content |
-| `e2e-testing` | `skills/testing-quality/` | Compare, likely keep existing |
-| `energy-procurement` | `skills/domain/` | Compare, likely keep existing |
-| `notebooklm` | `skills/ai-platform/` | Compare, keep existing (heavily integrated) |
-| `python-patterns` | `skills/languages/` | Compare, merge any new patterns |
-| `systematic-debugging` | `skills/development/` | Compare, merge best content |
-| `tdd-workflow` | `skills/testing-quality/` | Compare, likely keep existing |
-| `ui-ux-pro-max` | `skills/ui-design/` | Compare, merge best content |
-| `videodb` | `skills/integrations/` | Compare, likely keep existing |
-| `whatsapp-automation` | `skills/integrations/` | Compare, merge if richer |
-
----
-
-## 9. Key Workflows
+## 8. Key Workflows
 
 ### Adding a New Skill
 1. Create `skills/<category>/<skill-name>/SKILL.md` (WAT format)
@@ -331,8 +347,8 @@ From `skills-lock.json` — 7 skills installed from `anthropics/claude-code`:
 
 ### Setting Up a New Project
 1. From project dir: `/generate-claude-md`
-2. Describe the project → skill selection → junctions created
-3. 3-phase planning: requirements → design → tasks (each needs approval)
+2. Describe the project -> skill selection -> junctions created
+3. 3-phase planning: requirements -> design -> tasks (each needs approval)
 4. Individual task files generated in `.spec/tasks/`
 
 ### Commit Convention
@@ -340,10 +356,10 @@ From `skills-lock.json` — 7 skills installed from `anthropics/claude-code`:
 
 ---
 
-## 10. Critical Rules
+## 9. Critical Rules
 
 1. **Never write project files into the kit directory** — always confirm PROJECT_ROOT first
-2. **Skills ≤150 lines** (80-120 ideal) — cut lowest-value sections first
+2. **Skills <=150 lines** (80-120 ideal) — cut lowest-value sections first
 3. **Tables > prose** for density
 4. **Never copy skill content** into projects — always use `@` imports
 5. **Reviewer agents** never get Write/Edit tools
@@ -355,68 +371,66 @@ From `skills-lock.json` — 7 skills installed from `anthropics/claude-code`:
 
 ---
 
-## 11. Current State
-
-All core infrastructure is intact:
-- **Agents:** 18 agent files across 5 categories
-- **Commands:** 59 command files across 6 categories
-- **Rules:** 9 common + 30 language-specific (6 languages)
-- **Contexts:** 3 files (dev, research, review)
-- **Hooks:** hooks.json + README
-- **Skills:** 61 skills across 14 categories
-- The `new skills/` folder contains 1,129 community skills pending triage (208 redundant duplicates removed).
-
----
-
-## 12. Priority Triage Actions for New Skills
-
-### Phase 1: Merge High-Value New Skills
-1. **Security:** Best of 007, api-security-testing, pentest-checklist → merge into security-review/security-scan
-2. **React/Next.js:** react-best-practices, nextjs-app-router-patterns → new `skills/languages/react-patterns/`
-3. **Docker/K8s:** docker-expert, kubernetes-architect → expand devops/
-4. **RAG/LangChain:** rag-engineer, langchain-architecture → expand ai-platform/
-5. **DDD/Architecture:** ddd-strategic-design, event-sourcing → expand planning/
-
-### Phase 2: Create New Categories
-1. `skills/cloud/azure/` — consolidate 116 Azure skills into 3-5 pattern skills
-2. `skills/marketing/` — best of 60 marketing/SEO skills
-3. `skills/domain/odoo/` — 14 Odoo skills
-4. `skills/domain/health/` — select best health skills
-5. `skills/domain/blockchain/` — web3/solidity skills
-6. `skills/languages/rust-patterns/` — from rust-pro, rust-async-patterns
-7. `skills/languages/ruby-patterns/` — from ruby-pro
-8. `skills/languages/dotnet-patterns/` — from dotnet-architect, dotnet-backend
-
-### Phase 3: Discard Low-Value / Non-English / Niche
-- Portuguese-only skills (advogado-*, leiloeiro-*, etc.) — skip unless user needs
-- Famous-person persona agents — move to `skills/specialized/personas/` if wanted
-- Vendor-locked skills (e.g., antigravity-specific) — skip
-- Near-duplicate automations (40+ Composio-based *-automation skills) — consolidate into one pattern skill
-
----
-
-## 13. Quick Reference — Skill Category → Path
+## 10. Quick Reference — Skill Category -> Path
 
 | Category | Kit Path | Count |
 |----------|----------|-------|
-| Core / Meta | `skills/core/` | 6 |
-| Development | `skills/development/` | 7 |
+| Core / Meta | `skills/core/` | 7 |
+| Development | `skills/development/` | 11 |
 | Planning | `skills/planning/` | 5 |
-| Testing & Quality | `skills/testing-quality/` | 4 |
-| Data & Backend | `skills/data-backend/` | 3 |
-| Languages | `skills/languages/` | 8 |
-| AI Platform | `skills/ai-platform/` | 2 |
-| Research & Docs | `skills/research-docs/` | 3 |
-| DevOps | `skills/devops/` | 2 |
-| UI & Design | `skills/ui-design/` | 8 |
-| Integrations | `skills/integrations/` | 8 |
-| Domain | `skills/domain/` | 3 |
-| Specialized | `skills/specialized/` | 2 |
-| **TOTAL** | | **61** |
+| Testing & Quality | `skills/testing-quality/` | 24 |
+| Data & Backend | `skills/data-backend/` | 25 |
+| Data Science & ML | `skills/data-science-ml/` | 60 |
+| Languages | `skills/languages/` | 41 |
+| AI Platform | `skills/ai-platform/` | 9 |
+| Research & Docs | `skills/research-docs/` | 29 |
+| DevOps | `skills/devops/` | 20 |
+| DevTools | `skills/devtools/` | 18 |
+| UI & Design | `skills/ui-design/` | 49 |
+| Integrations | `skills/integrations/` | 107 |
+| Integrations — Scraping | `skills/integrations-scraping/` | 15 |
+| Frameworks — Frontend | `skills/frameworks-frontend/` | 49 |
+| Frameworks — Backend | `skills/frameworks-backend/` | 24 |
+| Frameworks — Mobile | `skills/frameworks-mobile/` | 11 |
+| Frameworks — Desktop | `skills/frameworks-desktop/` | 24 |
+| Agents & Orchestration | `skills/agents-orchestration/` | 37 |
+| Architecture | `skills/architecture/` | 18 |
+| Cloud | `skills/cloud/` | 24 |
+| Cloud — Azure | `skills/cloud-azure/` | 122 |
+| Containers & Orchestration | `skills/containers-orchestration/` | 11 |
+| Security — Offensive | `skills/security-offensive/` | 36 |
+| Security — Defensive | `skills/security-defensive/` | 29 |
+| SEO | `skills/seo/` | 31 |
+| Marketing & Growth | `skills/marketing-growth/` | 31 |
+| Product & Business | `skills/product-business/` | 23 |
+| E-commerce | `skills/ecommerce/` | 7 |
+| ERP — Odoo | `skills/erp-odoo/` | 24 |
+| Health & Wellness | `skills/health-wellness/` | 16 |
+| Legal & Compliance | `skills/legal-compliance/` | 15 |
+| Fintech & Payments | `skills/fintech-payments/` | 7 |
+| Blockchain & Web3 | `skills/blockchain-web3/` | 8 |
+| Game Development | `skills/game-dev/` | 19 |
+| Media & Video | `skills/media-video/` | 10 |
+| Office & Documents | `skills/office-documents/` | 11 |
+| Bots | `skills/bots/` | 7 |
+| Personas | `skills/personas/` | 15 |
+| Team & HR | `skills/team-hr/` | 8 |
+| Scientific | `skills/scientific/` | 13 |
+| Functional Programming | `skills/functional-programming/` | 15 |
+| Observability | `skills/observability/` | 8 |
+| Search | `skills/search/` | 5 |
+| Performance | `skills/performance/` | 4 |
+| CMS | `skills/cms/` | 4 |
+| Domain | `skills/domain/` | 5 |
+| BaaS | `skills/baas/` | 2 |
+| Salesforce | `skills/salesforce/` | 1 |
+| Customer Support | `skills/customer-support/` | 1 |
+| Specialized | `skills/specialized/` | 112 |
+| **TOTAL** | | **1,207** |
 
 ---
 
-## 14. The generate-claude-md Skill Table
+## 11. The generate-claude-md Skill Table
 
 This is the **routing table** — when adding any new skill, it MUST be added here or it will never be selected for projects. Located at `skills/core/generate-claude-md/SKILL.md`, Step 3.
 
@@ -428,20 +442,20 @@ Format:
 | Description of when to use | `skill-name` |
 ```
 
-Current categories in the table: Core/Meta, Development, Planning & Architecture, Testing & Quality, Data & Backend, Languages, Claude/AI Platform, Research & Docs, DevOps & Infrastructure, UI & Design, Integrations, Domain, Specialized.
+Current categories in the table: Core/Meta, Development, Planning & Architecture, Testing & Quality, Data & Backend, Data Science & ML, Languages, Claude/AI Platform, Research & Docs, DevOps & Infrastructure, DevTools, UI & Design, Integrations, Frameworks (Frontend/Backend/Mobile/Desktop), Agents & Orchestration, Architecture, Cloud, Cloud Azure, Containers & Orchestration, Security (Offensive/Defensive), SEO, Marketing & Growth, Product & Business, E-commerce, ERP Odoo, Health & Wellness, Legal & Compliance, Fintech & Payments, Blockchain & Web3, Game Dev, Media & Video, Office Documents, Bots, Personas, Team & HR, Scientific, Functional Programming, Observability, Search, Performance, CMS, Domain, BaaS, Specialized.
 
 ---
 
-## 15. File Counts Summary
+## 12. File Counts Summary
 
 | Component | Count | Status |
 |-----------|-------|--------|
-| Skills | 61 | OK |
-| Agents | 18 | OK |
-| Commands | 59 | OK |
+| Skills | 1,207 | OK |
+| Skill categories | 51 | OK |
+| Agents | 24 | OK |
+| Commands | 51 | OK |
 | Rules (common) | 9 | OK |
-| Rules (language) | 30 | OK |
+| Rules (language) | 35 | OK (7 languages x 5 files) |
 | Contexts | 3 | OK |
 | Hooks | 2 | OK |
-| MCP configs | 1 | OK |
-| New skills (to triage) | 1,129 | PENDING (208 redundant removed) |
+| MCP configs | 1 (23 servers) | OK |
