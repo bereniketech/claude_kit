@@ -112,3 +112,42 @@ npx eslint . --fix
 ---
 
 **Remember**: Fix the error, verify the build passes, move on. Speed and precision over perfection.
+
+## Multi-Language Build Patterns
+
+### Python
+```bash
+# Type errors
+mypy . --ignore-missing-imports
+# Missing dependency
+pip install package && pip freeze > requirements.txt
+# Import errors
+python -c "import problematic_module" 2>&1  # diagnose
+```
+
+### Go
+```bash
+go build ./... 2>&1            # compilation errors
+go mod tidy                     # fix dependency issues
+go clean -modcache && go mod download  # fix checksum errors
+```
+
+### Kotlin/Gradle
+```bash
+./gradlew build --stacktrace 2>&1 | head -100
+./gradlew clean && ./gradlew build  # cache issues
+./gradlew dependencies --configuration runtimeClasspath | grep "CONFLICT"  # version conflicts
+```
+
+### Java/Maven
+```bash
+mvn compile -e 2>&1 | grep "ERROR"
+mvn dependency:tree | grep "CONFLICT"
+```
+
+### Rust
+```bash
+cargo build 2>&1               # compilation
+cargo check 2>&1               # faster type check
+cargo clean && cargo build     # cache issues
+```

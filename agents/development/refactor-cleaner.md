@@ -83,3 +83,45 @@ After each batch:
 - Build succeeds
 - No regressions
 - Bundle size reduced
+
+## Functional Programming Refactors
+
+When cleaning up imperative code, prefer these functional patterns:
+
+```typescript
+// BAD: mutation + loop
+const result = [];
+for (const item of items) {
+  if (item.active) {
+    item.score = item.score * 2;  // mutation
+    result.push(item);
+  }
+}
+
+// GOOD: immutable, functional
+const result = items
+  .filter(item => item.active)
+  .map(item => ({ ...item, score: item.score * 2 }));
+
+// BAD: nested conditionals
+function classify(x) {
+  if (x > 100) {
+    return 'high';
+  } else {
+    if (x > 50) {
+      return 'medium';
+    } else {
+      return 'low';
+    }
+  }
+}
+
+// GOOD: guard clauses
+function classify(x: number): 'high' | 'medium' | 'low' {
+  if (x > 100) return 'high';
+  if (x > 50) return 'medium';
+  return 'low';
+}
+```
+
+**Rule:** Never reduce test coverage during refactoring. If coverage drops, add tests before removing code.

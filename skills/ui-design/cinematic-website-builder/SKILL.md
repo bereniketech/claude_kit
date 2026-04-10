@@ -33,7 +33,7 @@ Gather before building:
 
 ## 2. DESIGN.md Selection
 
-Based on the user's description, select the best matching DESIGN.md from `repos/awesome-design-md/design-md/{brand}/DESIGN.md`.
+Based on the user's description, select the best matching DESIGN.md from `skills/ui-design/cinematic-website-builder/design-md/{brand}/DESIGN.md`.
 
 ### By Business Type
 
@@ -242,7 +242,7 @@ Files: `skills/ui-design/cinematic-website-builder/cinematic-site-components/{mo
 
 ## 10. DESIGN.md Library Reference
 
-**Path:** `repos/awesome-design-md/design-md/{brand}/DESIGN.md`
+**Path:** `skills/ui-design/cinematic-website-builder/design-md/{brand}/DESIGN.md`
 
 **Each DESIGN.md contains 9 sections:**
 

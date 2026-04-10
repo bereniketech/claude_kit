@@ -115,4 +115,30 @@ Remaining errors: 2
 
 Final: `Build Status: SUCCESS/FAILED | Errors Fixed: N | Files Modified: list`
 
-For detailed Kotlin patterns and code examples, see `skill: kotlin-patterns`.
+## Kotlin Module & KMP Patterns
+
+```kotlin
+// KMP source sets structure
+kotlin {
+    androidTarget()
+    iosX64(); iosArm64(); iosSimulatorArm64()
+    jvm()
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.ktor.client.core)
+            implementation(libs.kotlinx.coroutines.core)
+        }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
+    }
+}
+
+// Version catalog: fix "Unresolved reference" by checking libs.versions.toml
+// [libraries]
+// ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+```

@@ -91,4 +91,18 @@ Remaining errors: 3
 
 Final: `Build Status: SUCCESS/FAILED | Errors Fixed: N | Files Modified: list`
 
-For detailed Go error patterns and code examples, see `skill: golang-patterns`.
+## Go Module Patterns
+
+```go
+// Interface implementation check (compile-time)
+var _ UserRepository = (*PostgresUserRepo)(nil)
+
+// Fix "does not implement" errors by adding the missing method:
+// Read the interface definition, implement every method with correct receiver type.
+
+// Fix import cycles: extract shared types to a separate /types package
+// pkg/user/user.go importing pkg/post/post.go AND vice versa → extract common types to pkg/types/
+
+// CGo build failures: set CGO_ENABLED=0 go build ./...
+// Cross-compilation: GOOS=linux GOARCH=amd64 go build ./...
+```

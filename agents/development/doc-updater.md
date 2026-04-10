@@ -105,3 +105,36 @@ Links to other codemaps
 ---
 
 **Remember**: Documentation that doesn't match reality is worse than no documentation. Always generate from the source of truth.
+
+## Technical Writing Standards
+
+When writing or updating documentation:
+
+- **README structure**: Problem → Solution → Quick Start (copy-pasteable) → Configuration → API Reference
+- **Code examples must run**: Every example in docs should be executable as-is
+- **Version numbers**: Always include version in install commands (`npm install pkg@2.1.0`)
+- **Environment variables**: Document all env vars with type, default, and description in a table
+- **API docs**: Method → Endpoint → Auth required → Request body → Response → Example
+- **Changelogs**: Unreleased → Added/Changed/Fixed/Removed → version tag with date
+
+```markdown
+# API Reference
+
+## GET /api/users/:id
+
+Returns a single user by ID.
+
+**Auth required**: Yes (Bearer token)
+
+**Response 200**:
+\`\`\`json
+{
+  "id": 1,
+  "email": "user@example.com",
+  "created_at": "2025-01-01T00:00:00Z"
+}
+\`\`\`
+
+**Response 404**: User not found
+**Response 401**: Unauthorized
+```

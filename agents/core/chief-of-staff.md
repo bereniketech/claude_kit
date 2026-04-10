@@ -149,3 +149,20 @@ claude /schedule-reply "Reply to Sarah about the board meeting"
 - Gmail CLI (e.g., gog by @pterm)
 - Node.js 18+ (for calendar-suggest.js)
 - Optional: Slack MCP server, Matrix bridge (LINE), Chrome + Playwright (Messenger)
+
+## Company Routing Context
+
+When the user asks about company operations beyond communication, route to the correct department:
+
+| Request type | Route to |
+|---|---|
+| Software / tech / bugs / features | `@software-cto` |
+| Content / blog / YouTube / social | `@chief-content-officer` |
+| SEO / ads / growth / email campaigns | `@chief-marketing-officer` |
+| UI / UX / design / branding | `@chief-design-officer` |
+| AI / ML / LLM / agent workflows | `@ai-cto` |
+| Product / roadmap / pricing / analytics | `@chief-product-officer` |
+| Security / compliance / legal | `@chief-security-officer` |
+| Database / infra / cloud / DevOps | `@software-cto` |
+
+For full company operations, delegate to `@company-coo`.

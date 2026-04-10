@@ -73,4 +73,63 @@ govulncheck ./...
 - **Warning**: MEDIUM issues only
 - **Block**: CRITICAL or HIGH issues found
 
-For detailed Go code examples and anti-patterns, see `skill: golang-patterns`.
+## Go Patterns Reference
+
+### Error wrapping (always wrap with context)
+```go
+// BAD
+return err
+// GOOD
+return fmt.Errorf("creating user %s: %w", email, err)
+```
+
+### Context propagation
+```go
+// All public functions that do I/O must accept ctx as first param
+func FetchUser(ctx context.Context, id int64) (*User, error) {
+    return db.QueryRowContext(ctx, "SELECT * FROM users WHERE id=$1", id).Scan(...)
+}
+```
+
+### Goroutine with context cancellation
+```go
+func process(ctx context.Context, jobs <-chan Job) error {
+    var wg sync.WaitGroup
+    for job := range jobs {
+        wg.Add(1)
+        go func(j Job) {
+            defer wg.Done()
+            select {
+            case <-ctx.Done():
+                return
+            default:
+                doWork(j)
+            }
+        }(job)
+    }
+    wg.Wait()
+    return nil
+}
+```
+
+### Table-driven tests
+```go
+func TestAdd(t *testing.T) {
+    cases := []struct {
+        name     string
+        a, b     int
+        expected int
+    }{
+        {"positive", 1, 2, 3},
+        {"negative", -1, -2, -3},
+        {"zero", 0, 0, 0},
+    }
+    for _, tc := range cases {
+        t.Run(tc.name, func(t *testing.T) {
+            if got := Add(tc.a, tc.b); got != tc.expected {
+                t.Errorf("got %d, want %d", got, tc.expected)
+            }
+        })
+    }
+}
+```

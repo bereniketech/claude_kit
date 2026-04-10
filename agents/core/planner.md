@@ -1,6 +1,6 @@
 ---
 name: planner
-description: Expert planning specialist for complex features and refactoring. Use PROACTIVELY when users request feature implementation, architectural changes, or complex refactoring. Automatically activated for planning tasks.
+description: Expert planning specialist for complex features, refactoring, and architectural changes. Reads the codebase, produces a detailed phased implementation plan with file paths, acceptance criteria, and testing strategy. Use PROACTIVELY when users request feature implementation or architectural changes.
 tools: ["Read", "Grep", "Glob"]
 model: opus
 ---
@@ -210,3 +210,17 @@ Each phase should be mergeable independently. Avoid plans that require all phase
 - Phases that cannot be delivered independently
 
 **Remember**: A great plan is specific, actionable, and considers both the happy path and edge cases. The best plans enable confident, incremental implementation.
+
+## Department Routing Context
+
+After producing the implementation plan, if the request involves domain-specific expertise, note which agent should execute each phase:
+
+| Phase type | Recommended agent |
+|---|---|
+| Frontend/UI implementation | `@web-frontend-expert` |
+| Backend API implementation | `@web-backend-expert` |
+| Database schema/migrations | `@database-reviewer` |
+| Tests | `@tdd-guide` |
+| E2E tests | `@e2e-runner` |
+| Security review | `@security-reviewer` |
+| Code review | `@code-reviewer` |

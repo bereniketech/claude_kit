@@ -24,7 +24,7 @@ If user provides enough context upfront, skip questions and proceed. If user say
 
 ### Step 2: DESIGN.md Selection
 
-Based on the user's description, select the best matching DESIGN.md from the library at `repos/awesome-design-md/design-md/`. Use this mapping:
+Based on the user's description, select the best matching DESIGN.md from `skills/ui-design/cinematic-website-builder/design-md/`. Use this mapping:
 
 #### By Business Type / Industry
 
@@ -210,7 +210,7 @@ Fix any issues → re-deploy → re-screenshot. Maximum 3 iteration cycles.
 
 ## DESIGN.md Library Path
 
-All DESIGN.md files are at: `repos/awesome-design-md/design-md/{brand}/DESIGN.md`
+All DESIGN.md files are at: `skills/ui-design/cinematic-website-builder/design-md/{brand}/DESIGN.md`
 
 Available brands (58): airbnb, airtable, apple, bmw, cal, claude, clay, clickhouse, cohere, coinbase, composio, cursor, elevenlabs, expo, ferrari, figma, framer, hashicorp, ibm, intercom, kraken, lamborghini, linear.app, lovable, minimax, mintlify, miro, mistral.ai, mongodb, notion, nvidia, ollama, opencode.ai, pinterest, posthog, raycast, renault, replicate, resend, revolut, runwayml, sanity, sentry, spacex, spotify, stripe, supabase, superhuman, tesla, together.ai, uber, vercel, voltagent, warp, webflow, wise, x.ai, zapier
 
