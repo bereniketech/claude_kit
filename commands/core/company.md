@@ -1,27 +1,28 @@
 ---
-description: Invoke company-coo — the master router that delegates any task to the right department lead (engineering, marketing, content, design, product, security, AI, ops).
+description: Invoke company-coo — the master router that delegates any task to the right operating company CEO (software-cto, chief-marketing-officer, chief-content-officer) or board peer (chief-of-staff, chief-design-officer, people-operations-expert).
 ---
 
 # /company — Company COO (Master Router)
 
-Routes to the **company-coo** agent in [agents/core/company-coo.md](agents/core/company-coo.md).
+Routes to the **company-coo** agent in [agents/board/company-coo.md](agents/board/company-coo.md).
 
 ## What It Does
 
-The COO is the top-level coordinator for the entire agent suite. It detects intent and dispatches to the correct department lead — you give it any goal and it figures out which specialists to involve.
+The COO is the top-level coordinator for the entire holding company. It detects intent and dispatches to the correct operating company CEO — you give it any goal and it figures out which company should run it. Each CEO then routes work internally to their specialists; the COO does not reach past CEOs.
 
-## Department Routing Map
+## Holding Company Routing Map
 
-| Domain | Department lead | Examples |
+| Domain | Operating company CEO | Examples |
 |---|---|---|
-| Software / web / mobile / desktop / infra | [software-cto](agents/core/software-cto.md) | "Build an app", "Refactor backend", "Set up CI/CD" |
-| AI / ML / agents / RAG / prompts | [ai-cto](agents/core/ai-cto.md) | "Build a RAG system", "Train a model", "Design an agent" |
-| Content / video / blog / podcast / newsletter | [chief-content-officer](agents/content/chief-content-officer.md) | "Make a YouTube series", "Launch a newsletter" |
-| Marketing / SEO / paid / growth | [chief-marketing-officer](agents/marketing/chief-marketing-officer.md) | "Plan a launch campaign", "Audit our funnel" |
-| Design / UI / brand / decks | [chief-design-officer](agents/design/chief-design-officer.md) | "Design a dashboard", "Build a brand identity" |
-| Product / business / sales / CS / ops / fintech / ERP | [chief-product-officer](agents/product/chief-product-officer.md) | "Write a PRD", "Set up Stripe billing", "Build an Odoo module" |
-| Security / pentest / compliance / legal | [chief-security-officer](agents/security/chief-security-officer.md) | "Pentest our API", "Get SOC 2 ready", "GDPR audit" |
-| Specialists (game dev, health, OCR, search, IoT, bots, CMS, RE) | individual specialist agents | "Build a Discord bot", "Search infra for…" |
+| Software, web, mobile, desktop, infra, AI/ML, agents, RAG, prompts, product, business, sales, CS, ops, fintech, ERP, security, pentest, compliance, legal, software UI | [software-cto](agents/software-company/software-cto.md) | "Build an app", "Build a RAG system", "Write a PRD", "Pentest our API", "Get SOC 2 ready" |
+| Marketing, SEO, paid, growth, email, brand, positioning | [chief-marketing-officer](agents/marketing-company/chief-marketing-officer.md) | "Plan a launch campaign", "Audit our funnel", "Build a brand identity" |
+| Content, video, blog, podcast, newsletter, social, image creation, presentations, technical writing | [chief-content-officer](agents/media-company/chief-content-officer.md) | "Make a YouTube series", "Launch a newsletter", "Produce a pitch deck" |
+
+| Cross-company (board peers) | Agent | Examples |
+|---|---|---|
+| Cross-company ops, escalations between CEOs, weekly reviews | [chief-of-staff](agents/board/chief-of-staff.md) | "Coordinate launch comms", "Run a weekly review" |
+| Cross-company design coherence (UI ↔ brand ↔ visuals) | [chief-design-officer](agents/board/chief-design-officer.md) | "Keep design consistent across all 3 companies" |
+| Corporate HR, hiring, comp, contracts, handbook | [people-operations-expert](agents/board/people-operations-expert.md) | "Hire a senior engineer", "Write our handbook" |
 
 ## Process
 

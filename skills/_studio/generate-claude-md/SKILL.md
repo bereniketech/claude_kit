@@ -215,22 +215,24 @@ Execution CLAUDE.md always includes these eight skills regardless of project typ
 
 ### Step 3b — Select Active Agent Team
 
-After selecting skills, identify which department lead agents apply to this project. Use the routing table below to map the project description to 1–4 department leads and their key sub-agents.
+After selecting skills, identify which operating company CEO(s) apply to this project. The agent suite is organized as a holding company with 3 operating subsidiaries; each CEO routes work internally to their specialists.
 
 **Routing Table:**
 
-| Task type | Department Lead | Key Sub-Agents |
+| Task type | CEO (operating company) | Sample sub-agents the CEO will route to |
 |---|---|---|
-| Website, app, API, bug, feature | `software-cto` | web-frontend-expert, web-backend-expert, mobile-expert, test-expert |
-| YouTube, blog, video, podcast, newsletter | `chief-content-officer` | youtube-content-expert, blog-writing-expert, video-production-expert, image-creation-expert |
-| SEO, ads, email, growth, CRO, leads | `chief-marketing-officer` | seo-expert, growth-marketing-expert, paid-ads-expert, email-marketing-expert |
-| UI/UX, design system, branding, slides | `chief-design-officer` | ui-design-expert, brand-expert, presentation-expert |
-| AI, ML, LLM, agents, RAG, Claude API | `ai-cto` | ai-ml-expert, orchestration-expert, data-scientist-expert |
-| Product, SaaS, startup, pricing, analytics | `chief-product-officer` | product-manager-expert, ecommerce-expert, startup-analyst |
-| Security, pentest, compliance, GDPR | `chief-security-officer` | pentest-expert, security-architect, legal-compliance-expert |
-| Database, infra, cloud, DevOps, K8s | `software-cto` | database-architect, devops-infra-expert, cloud-architect |
+| Website, app, API, bug, feature, database, infra, cloud, DevOps, K8s | `software-cto` (software-company) | web-frontend-expert, web-backend-expert, mobile-expert, database-architect, devops-infra-expert, cloud-architect, test-expert |
+| AI, ML, LLM, agents, RAG, Claude API | `software-cto` → routes to `ai-cto` (software-company/ai/) | ai-ml-expert, ai-platform-expert, orchestration-expert, data-scientist-expert |
+| Product, SaaS, startup, pricing, ecommerce, payments, customer success, sales, ops, ERP | `software-cto` → routes to `chief-product-officer` (software-company/product/) | product-manager-expert, ecommerce-expert, startup-analyst, sales-automation-expert, fintech-payments-expert, erp-odoo-expert |
+| Software UI / design system / dashboards / forms | `software-cto` → routes to `ui-design-expert` (software-company/design/) | ui-design-expert |
+| Security, pentest, compliance, GDPR, SOC2, HIPAA, legal | `software-cto` → routes to `chief-security-officer` (software-company/security/) | pentest-expert, security-architect, legal-compliance-expert |
+| SEO, ads, email, growth, CRO, leads, brand, positioning | `chief-marketing-officer` (marketing-company) | seo-expert, growth-marketing-expert, paid-ads-expert, email-marketing-expert, brand-expert, competitor-intelligence-expert |
+| YouTube, blog, video, podcast, newsletter, social, image creation, presentations, technical writing | `chief-content-officer` (media-company) | youtube-content-expert, blog-writing-expert, video-production-expert, image-creation-expert, podcast-expert, newsletter-expert, social-media-expert, presentation-expert, technical-writer-expert |
+| Hiring, comp, employment contracts, handbook | `people-operations-expert` (board) | — direct |
+| Cross-company design coherence | `chief-design-officer` (board) | ui-design-expert, brand-expert, presentation-expert |
+| Multi-company initiatives spanning all 3 | `company-coo` (board) | all 3 CEOs |
 
-Embed the result as an `## Active Agent Team` block in `.claude/CLAUDE.md` (see template in Step 5c).
+For most projects, list 1–3 CEOs as the active team (typically `software-cto` plus one of the marketing/media CEOs depending on scope). Embed the result as an `## Active Agent Team` block in `.claude/CLAUDE.md` (see template in Step 5c).
 
 | Skill | What it enforces |
 |---|---|
@@ -397,11 +399,11 @@ When you need context about past decisions, patterns, architecture, or session h
 This is mandatory. Skipping the Brain check wastes tokens re-reading files that have already been summarized.
 
 ## Active Agent Team
-- [e.g. Software tasks → @software-cto (web-frontend-expert, web-backend-expert, test-expert)]
-- [e.g. Content tasks → @chief-content-officer (youtube-content-expert, blog-writing-expert)]
-- [e.g. SEO/Marketing tasks → @chief-marketing-officer (seo-expert, growth-marketing-expert)]
-- [e.g. Design tasks → @chief-design-officer (ui-design-expert, brand-expert)]
-Describe your task naturally — Claude routes to the right agent automatically.
+- [e.g. Software tasks (code, AI, product, security, software UI) → @software-cto — routes internally to web-frontend-expert, web-backend-expert, ai-cto, product-manager-expert, etc.]
+- [e.g. Marketing tasks (SEO, ads, brand, campaigns) → @chief-marketing-officer — routes to seo-expert, paid-ads-expert, brand-expert]
+- [e.g. Media tasks (blog, video, podcast, social) → @chief-content-officer — routes to youtube-content-expert, blog-writing-expert, social-media-expert]
+- [e.g. Multi-company initiatives → @company-coo (board)]
+Describe your task naturally — call the operating company CEO and they route internally. Do not reach past a CEO into their specialists.
 
 ## Active Feature
 Feature: {feature-name or "initial build"}

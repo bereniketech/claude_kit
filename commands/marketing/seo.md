@@ -4,7 +4,7 @@ description: Invoke seo-expert for technical audits, content optimization, keywo
 
 # /seo — SEO Expert
 
-Routes to the **seo-expert** agent in [agents/marketing/seo-expert.md](agents/marketing/seo-expert.md).
+Routes to the **seo-expert** agent in [agents/marketing-company/strategy/seo-expert.md](agents/marketing-company/strategy/seo-expert.md).
 
 ## What It Does
 

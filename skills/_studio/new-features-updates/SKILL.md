@@ -218,21 +218,23 @@ Only apply changes after the user confirms.
 
 ---
 
-## 4b — Route to Department Lead Agent
+## 4b — Route to Operating Company CEO
 
 After reading the existing codebase (Step 3) and the feature spec (Step 1), check if `.claude/CLAUDE.md` contains an `## Active Agent Team` section.
 
-**If it exists:** identify which department lead handles this task type:
-- Software / code / API / bug → `@software-cto`
-- YouTube / blog / video / podcast → `@chief-content-officer`
-- SEO / ads / email / growth → `@chief-marketing-officer`
-- UI/UX / design / branding → `@chief-design-officer`
-- AI / ML / LLM / agents → `@ai-cto`
-- Product / SaaS / startup → `@chief-product-officer`
-- Security / pentest / compliance → `@chief-security-officer`
-- Database / infra / cloud / DevOps → `@software-cto`
+**If it exists:** identify which operating company CEO handles this task type. The agent suite is organized as a holding company with 3 operating subsidiaries, each managed by a CEO. The CEO routes work internally to their specialists — you just call the CEO.
 
-Invoke the matching department lead agent with the context brief from Step 3 + the feature spec from Step 1. The lead agent will activate the right sub-agents and execute end-to-end without further prompting.
+- Software, code, API, bug, infra, cloud, DevOps, database, AI/ML, LLM, agents, RAG, product, SaaS, startup, pricing, security, pentest, compliance, GDPR, software UI → `@software-cto`
+- SEO, ads, email, growth, paid, brand, positioning, competitor analysis → `@chief-marketing-officer`
+- YouTube, blog, video, podcast, newsletter, social, image creation, presentations, technical writing → `@chief-content-officer`
+
+For board-level roles (cross-company governance):
+- Hiring, comp, employment contracts, handbook → `@people-operations-expert`
+- Cross-company design coherence (UI ↔ brand ↔ visuals) → `@chief-design-officer`
+- Cross-company ops, escalations between CEOs → `@chief-of-staff`
+- Multi-company initiatives spanning all 3 companies → `@company-coo`
+
+Invoke the matching CEO with the context brief from Step 3 + the feature spec from Step 1. The CEO will route to the right internal specialists and execute end-to-end without further prompting. Do not reach past a CEO into their internal org chart — let them manage their team.
 
 **If no `Active Agent Team` section exists:** continue with the standard planning workflow below (Step 5 onwards).
 

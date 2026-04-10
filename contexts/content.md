@@ -19,20 +19,23 @@ Focus: Audience-first storytelling, brand voice, distribution
 4. **Native format fit** — platform-specific structure, length, aspect
 5. **Distribution + repurposing** — built into the brief, not bolted on
 
-## Available Department Agents
+## Available Agents — media-company
 
-| Agent | Use for |
-|---|---|
-| `chief-content-officer` | Multi-channel campaign coordination |
-| `youtube-content-expert` | YouTube videos + Shorts (full pipeline) |
-| `video-production-expert` | Scripted video, AI video generation |
-| `image-creation-expert` | Thumbnails, hero images, illustrations |
-| `blog-writing-expert` | Long-form articles, guides, refreshes |
-| `social-media-expert` | Threads, carousels, Reels, native posts |
-| `podcast-expert` | Episode planning, scripts, show notes |
-| `newsletter-expert` | Newsletter strategy, drafts, lifecycle |
-| `content-repurposing-expert` | One source → many formats |
-| `technical-writer-expert` | Docs, wikis, changelogs, dev content |
+All agents below live inside `media-company/` (CEO: `chief-content-officer`). For multi-format campaigns, call the CEO and let them route internally.
+
+| Agent | Division | Use for |
+|---|---|---|
+| `chief-content-officer` | (CEO) | Multi-channel campaign coordination — entry point |
+| `youtube-content-expert` | video/ | YouTube videos + Shorts (full pipeline) |
+| `video-production-expert` | video/ | Scripted video, AI video generation |
+| `podcast-expert` | audio/ | Episode planning, scripts, show notes |
+| `blog-writing-expert` | editorial/ | Long-form articles, guides, refreshes |
+| `newsletter-expert` | editorial/ | Newsletter strategy, drafts, lifecycle |
+| `technical-writer-expert` | editorial/ | Docs, wikis, changelogs, dev content |
+| `image-creation-expert` | visual/ | Thumbnails, hero images, illustrations |
+| `presentation-expert` | visual/ | Pitch decks, conference talks, exec presentations |
+| `social-media-expert` | distribution/ | Threads, carousels, Reels, native posts |
+| `content-repurposing-expert` | distribution/ | One source → many formats |
 
 ## Tools to Favor
 

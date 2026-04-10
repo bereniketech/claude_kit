@@ -4,7 +4,7 @@ description: Invoke ui-design-expert for design systems, component design, acces
 
 # /ui — UI Design Expert
 
-Routes to the **ui-design-expert** agent in [agents/design/ui-design-expert.md](agents/design/ui-design-expert.md).
+Routes to the **ui-design-expert** agent in [agents/software-company/design/ui-design-expert.md](agents/software-company/design/ui-design-expert.md).
 
 ## What It Does
 

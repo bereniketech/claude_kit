@@ -4,7 +4,7 @@ description: Invoke blog-writing-expert to research, outline, draft, and SEO-opt
 
 # /blog — Blog Post Production
 
-Routes to the **blog-writing-expert** agent in [agents/content/blog-writing-expert.md](agents/content/blog-writing-expert.md).
+Routes to the **blog-writing-expert** agent in [agents/media-company/editorial/blog-writing-expert.md](agents/media-company/editorial/blog-writing-expert.md).
 
 ## What It Does
 

@@ -19,16 +19,19 @@ Focus: Measurable outcomes — pipeline, conversions, retention, CAC/LTV
 4. **Funnel hygiene** — measurement, attribution, leak diagnosis
 5. **Experiment loop** — hypothesis → test → measure → ship/kill
 
-## Available Department Agents
+## Available Agents — marketing-company
 
-| Agent | Use for |
-|---|---|
-| `chief-marketing-officer` | Full campaign orchestration across all channels |
-| `seo-expert` | Technical, content, schema, programmatic SEO (all 31 sub-skills) |
-| `growth-marketing-expert` | Growth loops, viral mechanics, experimentation |
-| `paid-ads-expert` | Google, Meta, LinkedIn, TikTok ad creation + optimization |
-| `email-marketing-expert` | Lifecycle, automation, deliverability |
-| `competitor-intelligence-expert` | Competitor scrape, positioning, gap analysis |
+All agents below live inside `marketing-company/` (CEO: `chief-marketing-officer`). For multi-channel campaigns, call the CEO and let them route internally.
+
+| Agent | Division | Use for |
+|---|---|---|
+| `chief-marketing-officer` | (CEO) | Full campaign orchestration across all channels — entry point |
+| `seo-expert` | strategy/ | Technical, content, schema, programmatic SEO (all 31 sub-skills) |
+| `growth-marketing-expert` | strategy/ | Growth loops, viral mechanics, experimentation |
+| `competitor-intelligence-expert` | strategy/ | Competitor scrape, positioning, gap analysis |
+| `paid-ads-expert` | campaigns/ | Google, Meta, LinkedIn, TikTok ad creation + optimization |
+| `email-marketing-expert` | campaigns/ | Lifecycle, automation, deliverability |
+| `brand-expert` | brand/ | Brand strategy, naming, positioning, voice, identity systems |
 
 ## Tools to Favor
 

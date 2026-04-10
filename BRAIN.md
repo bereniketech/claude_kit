@@ -128,28 +128,46 @@ claude_kit/
 │   ├── customer-support/      # (1) customer-support
 │   └── specialized/          # (112) niche/branded skills, reverse-engineering, forensics, ...
 │
-├── agents/                    # 85 agent files across 13 categories
-│   ├── core/                  # (8) planner, architect, chief-of-staff, loop-operator, harness-optimizer,
-│   │                          #     ai-cto, software-cto, company-coo
-│   ├── ai/                    # (4) ai-ml-expert, ai-platform-expert, orchestration-expert, data-scientist-expert
-│   ├── content/               # (10) chief-content-officer, youtube/video/image/blog/social/podcast/
-│   │                          #      newsletter/content-repurposing/technical-writer experts
-│   ├── marketing/             # (6) chief-marketing-officer, seo, growth, paid-ads, email,
-│   │                          #     competitor-intelligence experts
-│   ├── design/                # (4) chief-design-officer, ui-design, brand, presentation experts
-│   ├── product/               # (11) chief-product-officer, product-manager, ecommerce, startup-analyst,
-│   │                          #      customer-success, sales-automation, saas-integrations,
-│   │                          #      workflow-automation, erp-odoo, fintech-payments, people-operations
-│   ├── security/              # (4) chief-security-officer, pentest, security-architect, legal-compliance
-│   ├── development/           # (15) code-reviewer, refactor-cleaner, doc-updater, build-error-resolver,
-│   │                          #      cinematic-website-builder, software-developer, web-frontend, web-backend,
-│   │                          #      mobile, desktop, mcp-server, systems-programming, python, typescript, polyglot
-│   ├── devops/                # (4) devops-infra, cloud-architect, azure, observability-engineer
-│   ├── testing-quality/       # (4) tdd-guide, security-reviewer, e2e-runner, test-expert
-│   ├── data-backend/          # (2) database-reviewer, database-architect
-│   ├── languages/             # (5) go-reviewer, go-build-resolver, kotlin-reviewer, kotlin-build-resolver, python-reviewer
-│   └── specialists/           # (8) game-dev, health-wellness, office-automation, search, enterprise-operations,
-│   │                          #     conversational-agent, cms, reverse-engineering experts
+├── agents/                    # 82 agents — holding company OS (board + 3 operating companies)
+│   ├── board/                          # (4) corporate governance — sits above the operating companies
+│   │   ├── company-coo.md              # master router across all 3 operating companies
+│   │   ├── chief-of-staff.md           # cross-company ops & comms triage
+│   │   ├── chief-design-officer.md     # cross-company design coherence
+│   │   └── people-operations-expert.md # corporate HR
+│   │
+│   ├── software-company/               # (60) builds & ships software — CEO: software-cto
+│   │   ├── software-cto.md             # CEO of software-company
+│   │   ├── engineering/                # (17) planner, architect, software-developer, web-front/back,
+│   │   │                                #      mobile, desktop, mcp-server, systems, python, typescript,
+│   │   │                                #      polyglot, cinematic-website-builder, code-reviewer,
+│   │   │                                #      refactor-cleaner, doc-updater, build-error-resolver
+│   │   ├── ai/                         # (5) ai-cto + ai-ml, ai-platform, orchestration, data-scientist
+│   │   ├── devops/                     # (4) devops-infra, cloud-architect, azure, observability-engineer
+│   │   ├── data/                       # (2) database-architect, database-reviewer
+│   │   ├── qa/                         # (4) test-expert, tdd-guide, e2e-runner, security-reviewer
+│   │   ├── languages/                  # (5) go-reviewer, go-build-resolver, kotlin-reviewer,
+│   │   │                                #     kotlin-build-resolver, python-reviewer
+│   │   ├── product/                    # (10) chief-product-officer + product-mgr, ecommerce,
+│   │   │                                #      startup-analyst, customer-success, sales-automation,
+│   │   │                                #      saas-integrations, workflow-automation, erp-odoo, fintech-payments
+│   │   ├── design/                     # (1) ui-design-expert (software UI)
+│   │   ├── security/                   # (4) chief-security-officer + pentest, security-architect, legal-compliance
+│   │   └── specialists/                # (7) game-dev, office-automation, search, enterprise-operations,
+│   │                                    #     conversational-agent, cms, reverse-engineering
+│   │
+│   ├── marketing-company/              # (7) marketing services — CEO: chief-marketing-officer
+│   │   ├── chief-marketing-officer.md
+│   │   ├── strategy/                   # (3) seo, growth, competitor-intelligence
+│   │   ├── campaigns/                  # (2) paid-ads, email-marketing
+│   │   └── brand/                      # (1) brand-expert
+│   │
+│   └── media-company/                  # (11) content & media production — CEO: chief-content-officer
+│       ├── chief-content-officer.md
+│       ├── video/                      # (2) youtube, video-production
+│       ├── audio/                      # (1) podcast
+│       ├── editorial/                  # (3) blog, newsletter, technical-writer
+│       ├── visual/                     # (2) image-creation, presentation
+│       └── distribution/               # (2) social-media, content-repurposing
 │
 ├── commands/                  # 58 slash command files across 9 categories
 │   ├── core/                  # (20) learn, sessions, instinct-*, eval, checkpoint, task-handoff,
@@ -473,7 +491,7 @@ Current categories in the table: Core/Meta, Development, Planning & Architecture
 |-----------|-------|--------|
 | Skills | 1,219 | OK |
 | Skill categories | 52 | OK (added `_studio/`) |
-| Agents | 85 | OK (13 categories — full department coverage) |
+| Agents | 82 | OK (board + 3 operating companies — holding company OS) |
 | Commands | 58 | OK (added content/, marketing/, design/) |
 | Rules (common) | 9 | OK |
 | Rules (language) | 35 | OK (7 languages x 5 files) |

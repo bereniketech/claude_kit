@@ -1,6 +1,6 @@
 # claude_kit — Agent Instructions
 
-This is a **distributable AI coding skill library** providing 18 specialized agents, 53 skills, 49 commands, and automated hook workflows for software development. It is a pure library — content here is installed into other projects, not used directly in this repo.
+This is a **distributable AI coding skill library** providing 82 specialized agents (organized as a holding company OS — board + 3 operating companies), 1,219 skills, 58 commands, and automated hook workflows for software development. It is a pure library — content here is installed into other projects, not used directly in this repo.
 
 ## Core Principles
 
@@ -12,39 +12,40 @@ This is a **distributable AI coding skill library** providing 18 specialized age
 
 ## Available Agents
 
-| Agent | Purpose | When to Use |
-|-------|---------|-------------|
-| planner | Implementation planning | Complex features, refactoring |
-| architect | System design and scalability | Architectural decisions |
-| tdd-guide | Test-driven development | New features, bug fixes |
-| code-reviewer | Code quality and maintainability | After writing/modifying code |
-| security-reviewer | Vulnerability detection | Before commits, sensitive code |
-| build-error-resolver | Fix build/type errors | When build fails |
-| e2e-runner | End-to-end Playwright testing | Critical user flows |
-| refactor-cleaner | Dead code cleanup | Code maintenance |
-| doc-updater | Documentation and codemaps | Updating docs |
-| go-reviewer | Go code review | Go projects |
-| go-build-resolver | Go build errors | Go build failures |
-| kotlin-reviewer | Kotlin code review | Kotlin/Android projects |
-| kotlin-build-resolver | Kotlin build errors | Kotlin build failures |
-| database-reviewer | PostgreSQL/Supabase specialist | Schema design, query optimization |
-| python-reviewer | Python code review | Python projects |
-| chief-of-staff | Communication triage and drafts | Multi-channel email, Slack, LINE |
-| loop-operator | Autonomous loop execution | Run loops safely, monitor stalls |
-| harness-optimizer | Harness config tuning | Reliability, cost, throughput |
+The agent suite is organized as a **holding company OS**: a board of cross-company governance roles above three operating companies, each with its own CEO and internal cascade.
+
+### Board (4) — `agents/board/`
+| Agent | Purpose |
+|---|---|
+| `company-coo` | Master router across all 3 operating companies — entry point for multi-company initiatives |
+| `chief-of-staff` | Cross-company ops, communication triage, escalations |
+| `chief-design-officer` | Cross-company design coherence (software UI ↔ marketing brand ↔ media visuals) |
+| `people-operations-expert` | Corporate HR — hiring, comp, contracts, handbook |
+
+### software-company (60) — `agents/software-company/` — CEO: `software-cto`
+
+Internal divisions: `engineering/` (17), `ai/` (5, sub-lead `ai-cto`), `devops/` (4), `data/` (2), `qa/` (4), `languages/` (5), `product/` (10, sub-lead `chief-product-officer`), `design/` (1), `security/` (4, sub-lead `chief-security-officer`), `specialists/` (7).
+
+Key direct-use agents: `planner`, `architect`, `code-reviewer`, `refactor-cleaner`, `doc-updater`, `build-error-resolver`, `web-frontend-expert`, `web-backend-expert`, `mobile-expert`, `desktop-expert`, `mcp-server-expert`, `python-expert`, `typescript-expert`, `polyglot-expert`, `systems-programming-expert`, `database-architect`, `database-reviewer`, `tdd-guide`, `test-expert`, `e2e-runner`, `security-reviewer`, `pentest-expert`, `security-architect`, `legal-compliance-expert`, `ui-design-expert`, `product-manager-expert`, `devops-infra-expert`, `cloud-architect`, `azure-expert`, `observability-engineer`, `go-reviewer`, `kotlin-reviewer`, `python-reviewer`, plus go/kotlin build resolvers and 7 niche specialists (game-dev, office-automation, search, enterprise-operations, conversational-agent, cms, reverse-engineering).
+
+### marketing-company (7) — `agents/marketing-company/` — CEO: `chief-marketing-officer`
+
+`seo-expert`, `growth-marketing-expert`, `competitor-intelligence-expert`, `paid-ads-expert`, `email-marketing-expert`, `brand-expert`.
+
+### media-company (11) — `agents/media-company/` — CEO: `chief-content-officer`
+
+`youtube-content-expert`, `video-production-expert`, `podcast-expert`, `blog-writing-expert`, `newsletter-expert`, `technical-writer-expert`, `image-creation-expert`, `presentation-expert`, `social-media-expert`, `content-repurposing-expert`.
 
 ## Agent Orchestration
 
 Use agents proactively without user prompt:
-- Complex feature requests → **planner**
-- Code just written/modified → **code-reviewer**
-- Bug fix or new feature → **tdd-guide**
-- Architectural decision → **architect**
-- Security-sensitive code → **security-reviewer**
-- Autonomous loops / loop monitoring → **loop-operator**
-- Harness config reliability and cost → **harness-optimizer**
+- Multi-company initiatives → **company-coo**
+- Anything inside software-company → **software-cto** (will route internally)
+- Anything inside marketing-company → **chief-marketing-officer**
+- Anything inside media-company → **chief-content-officer**
+- Single direct tasks: bypass the CEO and call the specialist directly when scope is clear (e.g. `code-reviewer` after writing code, `tdd-guide` for new features, `architect` for design decisions)
 
-Use parallel execution for independent operations — launch multiple agents simultaneously.
+Do **not** reach past a CEO into their internal org chart for multi-step work — let the CEO route. Use parallel execution for independent operations.
 
 ## Security Guidelines
 
@@ -98,20 +99,24 @@ Use parallel execution for independent operations — launch multiple agents sim
 ## Library Structure
 
 ```
-agents/          — 18 specialized subagents (core/, development/, testing-quality/, data-backend/, languages/)
-skills/          — 53+ workflow skills organized by category
-commands/        — 49 slash commands (core/, development/, testing-quality/, planning/, languages/, specialized/)
+agents/          — 82 agents organized as a holding company OS:
+                   board/             (4)  — corporate governance
+                   software-company/  (60) — CEO: software-cto
+                   marketing-company/ (7)  — CEO: chief-marketing-officer
+                   media-company/     (11) — CEO: chief-content-officer
+skills/          — 1,219 workflow skills organized by category
+commands/        — 58 slash commands (core/, development/, testing-quality/, planning/, languages/, content/, marketing/, design/, specialized/)
 hooks/           — hooks.json trigger-based automations
 rules/           — Always-follow guidelines (common/ + per-language)
 scripts/         — Cross-platform Node.js hook utilities
 mcp-configs/     — MCP server configurations
-contexts/        — dev.md, research.md, review.md context files
+contexts/        — dev.md, research.md, review.md, content.md, marketing.md, design.md
 ```
 
 ## When Working in This Repo
 
-- **Adding a skill:** Follow WAT format in `.claude/skills/claude-kit/SKILL.md`. Update `skills/core/generate-claude-md/SKILL.md` skill table and `CLAUDE.md`.
-- **Adding an agent:** Place in `agents/<category>/`. Reviewer agents never get Write/Edit tools.
+- **Adding a skill:** Follow WAT format in `.claude/skills/claude-kit/SKILL.md`. Update `skills/_studio/generate-claude-md/SKILL.md` skill table and `CLAUDE.md`.
+- **Adding an agent:** Place in the right operating company subfolder (`agents/software-company/<division>/`, `agents/marketing-company/<division>/`, `agents/media-company/<division>/`) or `agents/board/` if it's a cross-company governance role. Reviewer agents never get Write/Edit tools.
 - **Adding a command:** Place in `commands/<category>/`. Use frontmatter with `description:` field.
 - **Commit convention:** `feat:`, `fix:`, `docs:`, `chore:`, `refactor:` — subjects under 70 chars.
 

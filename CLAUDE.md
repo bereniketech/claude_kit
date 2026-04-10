@@ -68,20 +68,39 @@ claude_kit/
 │   ├── baas/                     # (2) firebase, upstash, ...
 │   ├── domain/                   # (5) logistics, trade-compliance, energy-procurement, ...
 │   └── specialized/              # (112) niche/branded skills, reverse-engineering, forensics, ...
-├── agents/          # 85 agents across 13 categories — full company OS
-│   ├── core/            # (8) planner, architect, chief-of-staff, loop-operator, harness-optimizer, ai-cto, software-cto, company-coo
-│   ├── ai/              # (4) ai-ml, ai-platform, orchestration, data-scientist
-│   ├── content/         # (10) chief-content-officer + youtube/video/image/blog/social/podcast/newsletter/repurposing/tech-writer
-│   ├── marketing/       # (6) chief-marketing-officer + seo/growth/paid-ads/email/competitor-intelligence
-│   ├── design/          # (4) chief-design-officer + ui-design/brand/presentation
-│   ├── product/         # (11) chief-product-officer + product-mgr/ecommerce/startup/CS/sales/saas-int/workflow/erp/fintech/people-ops
-│   ├── security/        # (4) chief-security-officer + pentest/security-architect/legal-compliance
-│   ├── development/     # (15) code-reviewer, refactor-cleaner, doc-updater, build-error-resolver, software-developer, web-front/back, mobile, desktop, mcp-server, systems, python, typescript, polyglot, cinematic-website-builder
-│   ├── devops/          # (4) devops-infra, cloud-architect, azure, observability-engineer
-│   ├── testing-quality/ # (4) tdd-guide, security-reviewer, e2e-runner, test-expert
-│   ├── data-backend/    # (2) database-reviewer, database-architect
-│   ├── languages/       # (5) go-reviewer, go-build-resolver, kotlin-reviewer, kotlin-build-resolver, python-reviewer
-│   └── specialists/     # (8) game-dev, health-wellness, office-automation, search, enterprise-ops, conversational-agent, cms, reverse-engineering
+├── agents/          # 82 agents across board + 3 operating companies — holding company OS
+│   ├── board/                          # (4) corporate governance — sits above the operating companies
+│   │   ├── company-coo.md              # master router across all 3 operating companies
+│   │   ├── chief-of-staff.md           # cross-company ops & comms triage
+│   │   ├── chief-design-officer.md     # cross-company design coherence (UI ↔ brand ↔ visuals)
+│   │   └── people-operations-expert.md # corporate HR — hiring, comp, contracts, handbook
+│   │
+│   ├── software-company/               # (60) builds & ships software — CEO: software-cto
+│   │   ├── software-cto.md             # CEO of software-company
+│   │   ├── engineering/                # (17) planner, architect, software-developer, web-front/back, mobile, desktop, mcp-server, systems, python, typescript, polyglot, cinematic-website-builder, code-reviewer, refactor-cleaner, doc-updater, build-error-resolver
+│   │   ├── ai/                         # (5) ai-cto + ai-ml, ai-platform, orchestration, data-scientist
+│   │   ├── devops/                     # (4) devops-infra, cloud-architect, azure, observability-engineer
+│   │   ├── data/                       # (2) database-architect, database-reviewer
+│   │   ├── qa/                         # (4) test-expert, tdd-guide, e2e-runner, security-reviewer
+│   │   ├── languages/                  # (5) go-reviewer, go-build-resolver, kotlin-reviewer, kotlin-build-resolver, python-reviewer
+│   │   ├── product/                    # (10) chief-product-officer + product-mgr, ecommerce, startup-analyst, customer-success, sales-automation, saas-integrations, workflow-automation, erp-odoo, fintech-payments
+│   │   ├── design/                     # (1) ui-design-expert
+│   │   ├── security/                   # (4) chief-security-officer + pentest, security-architect, legal-compliance
+│   │   └── specialists/                # (7) game-dev, office-automation, search, enterprise-operations, conversational-agent, cms, reverse-engineering
+│   │
+│   ├── marketing-company/              # (7) marketing services — CEO: chief-marketing-officer
+│   │   ├── chief-marketing-officer.md
+│   │   ├── strategy/                   # (3) seo, growth, competitor-intelligence
+│   │   ├── campaigns/                  # (2) paid-ads, email-marketing
+│   │   └── brand/                      # (1) brand-expert
+│   │
+│   └── media-company/                  # (11) content & media production — CEO: chief-content-officer
+│       ├── chief-content-officer.md
+│       ├── video/                      # (2) youtube, video-production
+│       ├── audio/                      # (1) podcast
+│       ├── editorial/                  # (3) blog, newsletter, technical-writer
+│       ├── visual/                     # (2) image-creation, presentation
+│       └── distribution/               # (2) social-media, content-repurposing
 ├── commands/        # 58 slash command definitions across 9 categories
 │   ├── core/            # learn, skill-create, sessions, task-handoff, wrapup, instinct-*, eval, harness-audit, company, ...
 │   ├── development/     # code-review, build-fix, refactor-clean, verify, update-*, pm2, ...
@@ -295,48 +314,54 @@ Azure SDK skills across all services: AI, identity, storage, cosmos, monitor, ke
 **Specialized** (112)
 Niche/branded skills, reverse-engineering, forensics, custom workflows, and community contributions
 
-### Agents (85 across 13 categories)
+### Agents (82 across board + 3 operating companies)
 
-The agent suite is structured as a full company OS, with department leads coordinating specialists. Invoke any agent by name, or route through `company-coo` (master) or a department lead.
+The agent suite is structured as a holding company. The **board** contains cross-company governance roles. Underneath, three **operating companies** each have their own CEO and internal cascade. Route through `company-coo` (master) for multi-company work, or directly to a company CEO for single-company work. Each CEO manages their own internal org — do not reach past a CEO into their specialists.
 
-**Core / Coordinators** (8)
-`company-coo` (master router) · `software-cto` · `ai-cto` · `chief-of-staff` · `planner` · `architect` · `loop-operator` · `harness-optimizer`
+#### Board (4) — `agents/board/`
+`company-coo` (master router across all 3 companies) · `chief-of-staff` (cross-company ops + comms triage) · `chief-design-officer` (cross-company design coherence) · `people-operations-expert` (corporate HR)
 
-**AI / ML** (4)
-`ai-ml-expert` · `ai-platform-expert` · `orchestration-expert` · `data-scientist-expert`
+#### software-company (60) — `agents/software-company/` — CEO: `software-cto`
 
-**Content & Media** (10)
-`chief-content-officer` · `youtube-content-expert` · `video-production-expert` · `image-creation-expert` · `blog-writing-expert` · `social-media-expert` · `podcast-expert` · `newsletter-expert` · `content-repurposing-expert` · `technical-writer-expert`
+**Engineering** (17, `engineering/`) — `architect` · `planner` · `software-developer-expert` · `web-frontend-expert` · `web-backend-expert` · `mobile-expert` · `desktop-expert` · `systems-programming-expert` · `mcp-server-expert` · `python-expert` · `typescript-expert` · `polyglot-expert` · `cinematic-website-builder` · `code-reviewer` · `refactor-cleaner` · `doc-updater` · `build-error-resolver`
 
-**Marketing** (6)
-`chief-marketing-officer` · `seo-expert` · `growth-marketing-expert` · `paid-ads-expert` · `email-marketing-expert` · `competitor-intelligence-expert`
+**AI / ML** (5, `ai/`) — sub-lead: `ai-cto` · `ai-ml-expert` · `ai-platform-expert` · `orchestration-expert` · `data-scientist-expert`
 
-**Design** (4)
-`chief-design-officer` · `ui-design-expert` · `brand-expert` · `presentation-expert`
+**DevOps** (4, `devops/`) — `devops-infra-expert` · `cloud-architect` · `azure-expert` · `observability-engineer`
 
-**Product & Business** (11)
-`chief-product-officer` · `product-manager-expert` · `ecommerce-expert` · `startup-analyst` · `customer-success-expert` · `sales-automation-expert` · `saas-integrations-expert` · `workflow-automation-expert` · `erp-odoo-expert` · `fintech-payments-expert` · `people-operations-expert`
+**Data** (2, `data/`) — `database-architect` · `database-reviewer`
 
-**Security & Compliance** (4)
-`chief-security-officer` · `pentest-expert` · `security-architect` · `legal-compliance-expert`
+**QA** (4, `qa/`) — `test-expert` · `tdd-guide` · `e2e-runner` · `security-reviewer`
 
-**Software Development** (15)
-`code-reviewer` · `refactor-cleaner` · `doc-updater` · `build-error-resolver` · `software-developer-expert` · `web-frontend-expert` · `web-backend-expert` · `mobile-expert` · `desktop-expert` · `mcp-server-expert` · `systems-programming-expert` · `python-expert` · `typescript-expert` · `polyglot-expert` · `cinematic-website-builder`
+**Languages** (5, `languages/`) — `go-reviewer` · `go-build-resolver` · `kotlin-reviewer` · `kotlin-build-resolver` · `python-reviewer`
 
-**DevOps & Cloud** (4)
-`devops-infra-expert` · `cloud-architect` · `azure-expert` · `observability-engineer`
+**Product & Business** (10, `product/`) — sub-lead: `chief-product-officer` · `product-manager-expert` · `ecommerce-expert` · `startup-analyst` · `customer-success-expert` · `sales-automation-expert` · `saas-integrations-expert` · `workflow-automation-expert` · `erp-odoo-expert` · `fintech-payments-expert`
 
-**Testing & Quality** (4)
-`tdd-guide` · `security-reviewer` · `e2e-runner` · `test-expert`
+**Software UI Design** (1, `design/`) — `ui-design-expert`
 
-**Data & Backend** (2)
-`database-reviewer` · `database-architect`
+**Security & Compliance** (4, `security/`) — sub-lead: `chief-security-officer` · `pentest-expert` · `security-architect` · `legal-compliance-expert`
 
-**Languages** (5)
-`go-reviewer` · `go-build-resolver` · `kotlin-reviewer` · `kotlin-build-resolver` · `python-reviewer`
+**Specialists** (7, `specialists/`) — `game-dev-expert` · `office-automation-expert` · `search-expert` · `enterprise-operations-expert` · `conversational-agent-expert` · `cms-expert` · `reverse-engineering-expert`
 
-**Specialists** (8)
-`game-dev-expert` · `health-wellness-expert` · `office-automation-expert` · `search-expert` · `enterprise-operations-expert` · `conversational-agent-expert` · `cms-expert` · `reverse-engineering-expert`
+#### marketing-company (7) — `agents/marketing-company/` — CEO: `chief-marketing-officer`
+
+**Strategy** (3, `strategy/`) — `seo-expert` · `growth-marketing-expert` · `competitor-intelligence-expert`
+
+**Campaigns** (2, `campaigns/`) — `paid-ads-expert` · `email-marketing-expert`
+
+**Brand** (1, `brand/`) — `brand-expert`
+
+#### media-company (11) — `agents/media-company/` — CEO: `chief-content-officer`
+
+**Video** (2, `video/`) — `youtube-content-expert` · `video-production-expert`
+
+**Audio** (1, `audio/`) — `podcast-expert`
+
+**Editorial** (3, `editorial/`) — `blog-writing-expert` · `newsletter-expert` · `technical-writer-expert`
+
+**Visual** (2, `visual/`) — `image-creation-expert` · `presentation-expert`
+
+**Distribution** (2, `distribution/`) — `social-media-expert` · `content-repurposing-expert`
 
 ### Commands (58)
 

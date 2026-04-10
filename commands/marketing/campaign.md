@@ -4,7 +4,7 @@ description: Invoke chief-marketing-officer to plan and orchestrate a full multi
 
 # /campaign — Marketing Campaign Orchestrator
 
-Routes to the **chief-marketing-officer** agent in [agents/marketing/chief-marketing-officer.md](agents/marketing/chief-marketing-officer.md).
+Routes to the **chief-marketing-officer** agent in [agents/marketing-company/chief-marketing-officer.md](agents/marketing-company/chief-marketing-officer.md).
 
 ## What It Does
 

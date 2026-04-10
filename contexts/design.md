@@ -3,6 +3,8 @@
 Mode: Visual design, UI, design systems, brand, presentations
 Focus: Usable, accessible, on-brand, implementation-ready
 
+Note: design specialists are split across the holding company. `ui-design-expert` lives in **software-company** (under software-cto). `brand-expert` lives in **marketing-company** (under chief-marketing-officer). `presentation-expert` lives in **media-company** (under chief-content-officer). `chief-design-officer` sits on the **board** and keeps the three coherent across companies.
+
 ## Behavior
 
 - User goal first — pixel polish never overrides task completion

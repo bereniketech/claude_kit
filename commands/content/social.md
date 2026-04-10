@@ -4,7 +4,7 @@ description: Invoke social-media-expert to plan, write, and schedule platform-na
 
 # /social — Social Media Production
 
-Routes to the **social-media-expert** agent in [agents/content/social-media-expert.md](agents/content/social-media-expert.md).
+Routes to the **social-media-expert** agent in [agents/media-company/distribution/social-media-expert.md](agents/media-company/distribution/social-media-expert.md).
 
 ## What It Does
 

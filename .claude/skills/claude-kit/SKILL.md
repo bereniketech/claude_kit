@@ -31,12 +31,11 @@ claude_kit/
 │   ├── integrations/        ← x-api, fal-ai, video-editing, videodb, ...
 │   ├── domain/              ← logistics, trade-compliance, energy-procurement
 │   └── specialized/         ← nanoclaw-repl, ralphinho-rfc-pipeline
-├── agents/          ← 18 agent definitions, organized by category
-│   ├── core/        ← planner, architect, chief-of-staff, loop-operator, harness-optimizer
-│   ├── development/ ← code-reviewer, refactor-cleaner, doc-updater, build-error-resolver
-│   ├── testing-quality/ ← tdd-guide, security-reviewer, e2e-runner
-│   ├── data-backend/ ← database-reviewer
-│   └── languages/   ← go-*, kotlin-*, python-reviewer
+├── agents/          ← 82 agents — holding company OS (board + 3 operating companies)
+│   ├── board/                ← company-coo, chief-of-staff, chief-design-officer, people-operations-expert
+│   ├── software-company/     ← CEO software-cto + engineering, ai (ai-cto), devops, data, qa, languages, product (cpo), design, security (cso), specialists
+│   ├── marketing-company/    ← CEO chief-marketing-officer + strategy, campaigns, brand
+│   └── media-company/        ← CEO chief-content-officer + video, audio, editorial, visual, distribution
 ├── commands/        ← 48 slash command definitions, organized by category
 │   ├── core/        ← learn, sessions, instinct-*, eval, harness-audit, ...
 │   ├── development/ ← code-review, build-fix, refactor-clean, verify, ...

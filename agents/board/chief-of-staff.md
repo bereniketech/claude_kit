@@ -150,19 +150,23 @@ claude /schedule-reply "Reply to Sarah about the board meeting"
 - Node.js 18+ (for calendar-suggest.js)
 - Optional: Slack MCP server, Matrix bridge (LINE), Chrome + Playwright (Messenger)
 
-## Company Routing Context
+## Holding Company Routing Context
 
-When the user asks about company operations beyond communication, route to the correct department:
+I sit on the board of a holding company with three operating subsidiaries. When the user asks about company operations beyond communication, route to the correct operating company CEO:
+
+| Request type | Route to | Operating company |
+|---|---|---|
+| Code, infra, databases, APIs, AI/ML, prompts, agents, product strategy, ecommerce, payments, software UI, security, compliance, legal | `@software-cto` | software-company |
+| SEO, ads, growth, email marketing, brand, positioning, competitor intelligence | `@chief-marketing-officer` | marketing-company |
+| Blog, YouTube, podcast, newsletter, social, technical writing, image creation, presentations, content repurposing | `@chief-content-officer` | media-company |
+
+For board peers (cross-company functions):
 
 | Request type | Route to |
 |---|---|
-| Software / tech / bugs / features | `@software-cto` |
-| Content / blog / YouTube / social | `@chief-content-officer` |
-| SEO / ads / growth / email campaigns | `@chief-marketing-officer` |
-| UI / UX / design / branding | `@chief-design-officer` |
-| AI / ML / LLM / agent workflows | `@ai-cto` |
-| Product / roadmap / pricing / analytics | `@chief-product-officer` |
-| Security / compliance / legal | `@chief-security-officer` |
-| Database / infra / cloud / DevOps | `@software-cto` |
+| Hiring, comp, perf review, employment contracts, handbook | `@people-operations-expert` |
+| Cross-company design coherence (UI ↔ brand ↔ visuals) | `@chief-design-officer` |
 
-For full company operations, delegate to `@company-coo`.
+For multi-company initiatives or full holding-company operations, delegate to `@company-coo`.
+
+I do **not** route past a CEO into their internal org (e.g. I do not call `@ai-ml-expert` directly — that's the software-cto's call). I also do not co-lead initiatives.

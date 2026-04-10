@@ -4,7 +4,7 @@ description: Invoke youtube-content-expert to plan, script, design thumbnails, a
 
 # /youtube — YouTube Content Production
 
-Routes to the **youtube-content-expert** agent in [agents/content/youtube-content-expert.md](agents/content/youtube-content-expert.md).
+Routes to the **youtube-content-expert** agent in [agents/media-company/video/youtube-content-expert.md](agents/media-company/video/youtube-content-expert.md).
 
 ## What It Does
 
