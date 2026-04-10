@@ -17,8 +17,9 @@ claude_kit/
 │   ├── homunculus/instincts/inherited/   # Curated instincts for this repo
 │   └── skills/claude-kit/SKILL.md    # Meta-skill for working in this repo
 │
-├── skills/          # 1,191 skill modules organized by category
-│   ├── core/                     # (7) generate-claude-md, continuous-learning, eval-harness, ...
+├── skills/          # 1,219 skill modules organized by category
+│   ├── _studio/                  # (2) ENTRY POINTS — generate-claude-md, new-features-updates (route to agents)
+│   ├── core/                     # (5) continuous-learning, eval-harness, skill-stocktake, strategic-compact, configure-ecc
 │   ├── development/              # (11) code-writing, build-website, api-design, systematic-debugging, ...
 │   ├── planning/                 # (5) planning-specification, autonomous-agents, multi-model, ...
 │   ├── testing-quality/          # (24) tdd-workflow, security-review, e2e-testing, playwright, ...
@@ -67,21 +68,32 @@ claude_kit/
 │   ├── baas/                     # (2) firebase, upstash, ...
 │   ├── domain/                   # (5) logistics, trade-compliance, energy-procurement, ...
 │   └── specialized/              # (112) niche/branded skills, reverse-engineering, forensics, ...
-├── agents/          # 18 agent definitions, organized by category
-│   ├── core/            # planner, architect, chief-of-staff, loop-operator, harness-optimizer
-│   ├── development/     # code-reviewer, refactor-cleaner, doc-updater, build-error-resolver
-│   ├── testing-quality/ # tdd-guide, security-reviewer, e2e-runner
-│   ├── data-backend/    # database-reviewer
-│   └── languages/       # go-reviewer, go-build-resolver, kotlin-reviewer, kotlin-build-resolver, python-reviewer
-├── commands/        # 50 slash command definitions, organized by category
-│   ├── core/            # learn, skill-create, sessions, task-handoff, wrapup, instinct-*, eval, harness-audit, ...
+├── agents/          # 85 agents across 13 categories — full company OS
+│   ├── core/            # (8) planner, architect, chief-of-staff, loop-operator, harness-optimizer, ai-cto, software-cto, company-coo
+│   ├── ai/              # (4) ai-ml, ai-platform, orchestration, data-scientist
+│   ├── content/         # (10) chief-content-officer + youtube/video/image/blog/social/podcast/newsletter/repurposing/tech-writer
+│   ├── marketing/       # (6) chief-marketing-officer + seo/growth/paid-ads/email/competitor-intelligence
+│   ├── design/          # (4) chief-design-officer + ui-design/brand/presentation
+│   ├── product/         # (11) chief-product-officer + product-mgr/ecommerce/startup/CS/sales/saas-int/workflow/erp/fintech/people-ops
+│   ├── security/        # (4) chief-security-officer + pentest/security-architect/legal-compliance
+│   ├── development/     # (15) code-reviewer, refactor-cleaner, doc-updater, build-error-resolver, software-developer, web-front/back, mobile, desktop, mcp-server, systems, python, typescript, polyglot, cinematic-website-builder
+│   ├── devops/          # (4) devops-infra, cloud-architect, azure, observability-engineer
+│   ├── testing-quality/ # (4) tdd-guide, security-reviewer, e2e-runner, test-expert
+│   ├── data-backend/    # (2) database-reviewer, database-architect
+│   ├── languages/       # (5) go-reviewer, go-build-resolver, kotlin-reviewer, kotlin-build-resolver, python-reviewer
+│   └── specialists/     # (8) game-dev, health-wellness, office-automation, search, enterprise-ops, conversational-agent, cms, reverse-engineering
+├── commands/        # 58 slash command definitions across 9 categories
+│   ├── core/            # learn, skill-create, sessions, task-handoff, wrapup, instinct-*, eval, harness-audit, company, ...
 │   ├── development/     # code-review, build-fix, refactor-clean, verify, update-*, pm2, ...
 │   ├── testing-quality/ # tdd, e2e, quality-gate, test-coverage
 │   ├── planning/        # plan, orchestrate, model-route, loop-*, multi-*, brainstorm
 │   ├── languages/       # go-*, kotlin-*, gradle-build, python-review
+│   ├── content/         # youtube, blog, social
+│   ├── marketing/       # seo, campaign
+│   ├── design/          # ui
 │   └── specialized/     # claw
 ├── rules/           # common/ + 8 language dirs (golang, python, kotlin, ...)
-├── contexts/        # dev.md, research.md, review.md
+├── contexts/        # dev.md, research.md, review.md, content.md, marketing.md, design.md
 ├── hooks/           # hooks.json (PreToolUse, PostToolUse, SessionStart, ...)
 ├── mcp-configs/     # mcp-servers.json (14 MCP integrations, tokens sanitized)
 │
@@ -114,7 +126,7 @@ From any project directory, ask Claude:
 I'm building a [description of your project].
 ```
 
-The `generate-claude-md` skill will:
+The `generate-claude-md` skill (now in `skills/_studio/`) will:
 1. Analyze your project description
 2. Select 2–6 relevant skills for the project type
 3. Create in your project:
@@ -146,10 +158,13 @@ When working inside the Skill Builder repository itself:
 
 ## Available Content
 
-### Skills (1,191 across 49 categories)
+### Skills (1,219 across 52 categories)
 
-**Core / Meta** (7)
-`generate-claude-md` · `new-features-updates` · `skill-stocktake` · `configure-ecc` · `continuous-learning` · `strategic-compact` · `eval-harness`
+**Studio / Entry Points** (2)
+`generate-claude-md` · `new-features-updates` — these route project requests to the right department agents
+
+**Core / Meta** (5)
+`continuous-learning` · `strategic-compact` · `eval-harness` · `skill-stocktake` · `configure-ecc`
 
 **Development** (11)
 `code-writing-software-development` · `build-website-web-app` · `api-design` · `systematic-debugging` · `branch-completion` · `api-endpoint-builder` · `framework-migration-*` · ...
@@ -280,21 +295,52 @@ Azure SDK skills across all services: AI, identity, storage, cosmos, monitor, ke
 **Specialized** (112)
 Niche/branded skills, reverse-engineering, forensics, custom workflows, and community contributions
 
-### Agents (18)
+### Agents (85 across 13 categories)
 
-**Core** — `planner` · `architect` · `chief-of-staff` · `loop-operator` · `harness-optimizer`
+The agent suite is structured as a full company OS, with department leads coordinating specialists. Invoke any agent by name, or route through `company-coo` (master) or a department lead.
 
-**Development** — `code-reviewer` · `refactor-cleaner` · `doc-updater` · `build-error-resolver`
+**Core / Coordinators** (8)
+`company-coo` (master router) · `software-cto` · `ai-cto` · `chief-of-staff` · `planner` · `architect` · `loop-operator` · `harness-optimizer`
 
-**Testing & Quality** — `tdd-guide` · `security-reviewer` · `e2e-runner`
+**AI / ML** (4)
+`ai-ml-expert` · `ai-platform-expert` · `orchestration-expert` · `data-scientist-expert`
 
-**Data & Backend** — `database-reviewer`
+**Content & Media** (10)
+`chief-content-officer` · `youtube-content-expert` · `video-production-expert` · `image-creation-expert` · `blog-writing-expert` · `social-media-expert` · `podcast-expert` · `newsletter-expert` · `content-repurposing-expert` · `technical-writer-expert`
 
-**Languages** — `go-reviewer` · `go-build-resolver` · `kotlin-reviewer` · `kotlin-build-resolver` · `python-reviewer`
+**Marketing** (6)
+`chief-marketing-officer` · `seo-expert` · `growth-marketing-expert` · `paid-ads-expert` · `email-marketing-expert` · `competitor-intelligence-expert`
 
-### Commands (51)
+**Design** (4)
+`chief-design-officer` · `ui-design-expert` · `brand-expert` · `presentation-expert`
 
-**Core** — `learn` · `learn-eval` · `skill-create` · `evolve` · `eval` · `checkpoint` · `save-session` · `resume-session` · `task-handoff` · `wrapup` · `sessions` · `aside` · `instinct-export` · `instinct-import` · `instinct-status` · `harness-audit` · `projects` · `promote` · `setup-pm`
+**Product & Business** (11)
+`chief-product-officer` · `product-manager-expert` · `ecommerce-expert` · `startup-analyst` · `customer-success-expert` · `sales-automation-expert` · `saas-integrations-expert` · `workflow-automation-expert` · `erp-odoo-expert` · `fintech-payments-expert` · `people-operations-expert`
+
+**Security & Compliance** (4)
+`chief-security-officer` · `pentest-expert` · `security-architect` · `legal-compliance-expert`
+
+**Software Development** (15)
+`code-reviewer` · `refactor-cleaner` · `doc-updater` · `build-error-resolver` · `software-developer-expert` · `web-frontend-expert` · `web-backend-expert` · `mobile-expert` · `desktop-expert` · `mcp-server-expert` · `systems-programming-expert` · `python-expert` · `typescript-expert` · `polyglot-expert` · `cinematic-website-builder`
+
+**DevOps & Cloud** (4)
+`devops-infra-expert` · `cloud-architect` · `azure-expert` · `observability-engineer`
+
+**Testing & Quality** (4)
+`tdd-guide` · `security-reviewer` · `e2e-runner` · `test-expert`
+
+**Data & Backend** (2)
+`database-reviewer` · `database-architect`
+
+**Languages** (5)
+`go-reviewer` · `go-build-resolver` · `kotlin-reviewer` · `kotlin-build-resolver` · `python-reviewer`
+
+**Specialists** (8)
+`game-dev-expert` · `health-wellness-expert` · `office-automation-expert` · `search-expert` · `enterprise-operations-expert` · `conversational-agent-expert` · `cms-expert` · `reverse-engineering-expert`
+
+### Commands (58)
+
+**Core** — `learn` · `learn-eval` · `skill-create` · `evolve` · `eval` · `checkpoint` · `save-session` · `resume-session` · `task-handoff` · `wrapup` · `sessions` · `aside` · `instinct-export` · `instinct-import` · `instinct-status` · `harness-audit` · `projects` · `promote` · `setup-pm` · `company`
 
 **Development** — `code-review` · `build-fix` · `refactor-clean` · `verify` · `update-docs` · `update-codemaps` · `pm2` · `prompt-optimize`
 
@@ -304,7 +350,16 @@ Niche/branded skills, reverse-engineering, forensics, custom workflows, and comm
 
 **Languages** — `go-build` · `go-review` · `go-test` · `gradle-build` · `kotlin-build` · `kotlin-review` · `kotlin-test` · `python-review`
 
+**Content** — `youtube` · `blog` · `social`
+
+**Marketing** — `seo` · `campaign`
+
+**Design** — `ui`
+
 **Specialized** — `claw`
+
+### Contexts (6)
+`dev.md` · `review.md` · `research.md` · `content.md` · `marketing.md` · `design.md`
 
 ### Rules
 `rules/common/` — 9 files (agents, coding-style, development-workflow, git-workflow, hooks, patterns, performance, security, testing)
@@ -315,7 +370,7 @@ Niche/branded skills, reverse-engineering, forensics, custom workflows, and comm
 ## Adding or Updating Skills
 
 1. Create `skills/<category>/<skill-name>/SKILL.md` using the WAT format (see `.claude/skills/claude-kit/SKILL.md`)
-2. Add the skill to `skills/core/generate-claude-md/SKILL.md` under the correct category
+2. Add the skill to `skills/_studio/generate-claude-md/SKILL.md` under the correct category
 3. Update the Available Content table in this file
 4. Check for overlap with existing skills first — merge if >50% overlap
 

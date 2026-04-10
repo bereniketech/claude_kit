@@ -184,9 +184,9 @@ Created in `agents/development/`, `agents/devops/` (new), `agents/data-backend/`
 
 ---
 
-## 🔄 Phase 6 — Department Leads + COO (PENDING)
+## ✅ Phase 6 — Department Leads + COO (COMPLETE)
 
-Create 9 master coordinator agents:
+All 8 master coordinator agents created:
 
 | Agent | File | Routes to |
 |---|---|---|
@@ -201,30 +201,29 @@ Create 9 master coordinator agents:
 
 ---
 
-## 🔄 Phase 7 — New Commands, Contexts, Documentation (PENDING)
+## ✅ Phase 7 — New Commands, Contexts, Documentation (COMPLETE)
 
-### New Commands (7)
-| File | Command | Does |
+### New Commands (7) — DONE
+| File | Command | Routes to |
 |---|---|---|
-| `commands/content/youtube.md` | `/youtube` | Invoke youtube-content-expert |
-| `commands/content/blog.md` | `/blog` | Invoke blog-writing-expert |
-| `commands/content/social.md` | `/social` | Invoke social-media-expert |
-| `commands/marketing/seo.md` | `/seo` | Invoke seo-expert |
-| `commands/marketing/campaign.md` | `/campaign` | Invoke chief-marketing-officer |
-| `commands/design/ui.md` | `/ui` | Invoke ui-design-expert |
-| `commands/core/company.md` | `/company` | Invoke company-coo (master router) |
+| `commands/content/youtube.md` | `/youtube` | youtube-content-expert |
+| `commands/content/blog.md` | `/blog` | blog-writing-expert |
+| `commands/content/social.md` | `/social` | social-media-expert |
+| `commands/marketing/seo.md` | `/seo` | seo-expert |
+| `commands/marketing/campaign.md` | `/campaign` | chief-marketing-officer |
+| `commands/design/ui.md` | `/ui` | ui-design-expert |
+| `commands/core/company.md` | `/company` | company-coo (master router) |
 
-### New Context Files (3)
+### New Context Files (3) — DONE
 | File | When loaded |
 |---|---|
-| `contexts/content.md` | Content/media sessions |
-| `contexts/marketing.md` | Marketing/SEO sessions |
-| `contexts/design.md` | Design/UI sessions |
+| `contexts/content.md` | Content/media sessions — 10 content agents listed |
+| `contexts/marketing.md` | Marketing/SEO sessions — 6 marketing agents listed |
+| `contexts/design.md` | Design/UI sessions — 4 design agents listed |
 
-### Documentation Updates
-- `BRAIN.md`: update agent count (24 → ~65), skill count, new `_studio/` folder
-- `CLAUDE.md`: update skill count, add `_studio/` to categories table, add agents section
-- `skills/_studio/generate-claude-md/SKILL.md`: update routing table reference
+### Documentation Updates — DONE
+- ✅ `BRAIN.md`: agent count 24 → 85, skill count 1,207 → 1,219, `_studio/` folder added, command count 51 → 58, contexts 3 → 6, full directory tree refreshed, file counts table updated, date bumped to 2026-04-10
+- ✅ `CLAUDE.md`: skill count 1,191 → 1,219, `_studio/` added to categories tree + Available Content table, full Agents section rewritten (85 agents across 13 categories), Commands section expanded (58), Contexts section added, "Adding Skills" pointer updated to `skills/_studio/generate-claude-md/`
 
 ---
 

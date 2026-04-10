@@ -1,6 +1,6 @@
 # claude_kit BRAIN
 
-> **Purpose:** Single-read knowledge base for the entire claude_kit repository. Read this instead of scanning the codebase. Updated: 2026-04-06.
+> **Purpose:** Single-read knowledge base for the entire claude_kit repository. Read this instead of scanning the codebase. Updated: 2026-04-10.
 
 ---
 
@@ -38,9 +38,10 @@ claude_kit/
 │   ├── homunculus/instincts/inherited/   # Curated instincts YAML
 │   └── skills/claude-kit/SKILL.md       # Meta-skill (repo-editing guidance)
 │
-├── skills/                    # 1,207 SKILL.md files across 51 categories
-│   ├── core/                  # (7) generate-claude-md, continuous-learning, eval-harness,
-│   │                          #     new-features-updates, skill-stocktake, strategic-compact, configure-ecc
+├── skills/                    # 1,219 SKILL.md files across 52 categories
+│   ├── _studio/               # (2) ENTRY-POINT skills (route to agents): generate-claude-md, new-features-updates
+│   ├── core/                  # (5) continuous-learning, eval-harness, skill-stocktake,
+│   │                          #     strategic-compact, configure-ecc
 │   ├── development/           # (11) code-writing, build-website, api-design, systematic-debugging,
 │   │                          #      branch-completion, api-endpoint-builder, framework-migration, ...
 │   ├── planning/              # (5) planning-specification, autonomous-agents, multi-model,
@@ -127,20 +128,39 @@ claude_kit/
 │   ├── customer-support/      # (1) customer-support
 │   └── specialized/          # (112) niche/branded skills, reverse-engineering, forensics, ...
 │
-├── agents/                    # 24 agent files across 5 categories
-│   ├── core/                  # planner, architect, chief-of-staff, loop-operator, harness-optimizer
-│   ├── development/           # code-reviewer, refactor-cleaner, doc-updater, build-error-resolver, cinematic-website-builder
-│   ├── testing-quality/       # tdd-guide, security-reviewer, e2e-runner
-│   ├── data-backend/          # database-reviewer
-│   └── languages/             # go-reviewer, go-build-resolver, kotlin-reviewer, kotlin-build-resolver, python-reviewer
+├── agents/                    # 85 agent files across 13 categories
+│   ├── core/                  # (8) planner, architect, chief-of-staff, loop-operator, harness-optimizer,
+│   │                          #     ai-cto, software-cto, company-coo
+│   ├── ai/                    # (4) ai-ml-expert, ai-platform-expert, orchestration-expert, data-scientist-expert
+│   ├── content/               # (10) chief-content-officer, youtube/video/image/blog/social/podcast/
+│   │                          #      newsletter/content-repurposing/technical-writer experts
+│   ├── marketing/             # (6) chief-marketing-officer, seo, growth, paid-ads, email,
+│   │                          #     competitor-intelligence experts
+│   ├── design/                # (4) chief-design-officer, ui-design, brand, presentation experts
+│   ├── product/               # (11) chief-product-officer, product-manager, ecommerce, startup-analyst,
+│   │                          #      customer-success, sales-automation, saas-integrations,
+│   │                          #      workflow-automation, erp-odoo, fintech-payments, people-operations
+│   ├── security/              # (4) chief-security-officer, pentest, security-architect, legal-compliance
+│   ├── development/           # (15) code-reviewer, refactor-cleaner, doc-updater, build-error-resolver,
+│   │                          #      cinematic-website-builder, software-developer, web-frontend, web-backend,
+│   │                          #      mobile, desktop, mcp-server, systems-programming, python, typescript, polyglot
+│   ├── devops/                # (4) devops-infra, cloud-architect, azure, observability-engineer
+│   ├── testing-quality/       # (4) tdd-guide, security-reviewer, e2e-runner, test-expert
+│   ├── data-backend/          # (2) database-reviewer, database-architect
+│   ├── languages/             # (5) go-reviewer, go-build-resolver, kotlin-reviewer, kotlin-build-resolver, python-reviewer
+│   └── specialists/           # (8) game-dev, health-wellness, office-automation, search, enterprise-operations,
+│   │                          #     conversational-agent, cms, reverse-engineering experts
 │
-├── commands/                  # 51 slash command files across 6 categories
-│   ├── core/                  # (19) learn, sessions, instinct-*, eval, checkpoint, task-handoff,
-│   │                          #      wrapup, skill-create, evolve, save-session, resume-session, ...
+├── commands/                  # 58 slash command files across 9 categories
+│   ├── core/                  # (20) learn, sessions, instinct-*, eval, checkpoint, task-handoff,
+│   │                          #      wrapup, skill-create, evolve, save-session, resume-session, company, ...
 │   ├── development/           # (8) code-review, build-fix, refactor-clean, verify, update-*, pm2, ...
 │   ├── testing-quality/       # (4) tdd, e2e, quality-gate, test-coverage
 │   ├── planning/              # (11) plan, orchestrate, model-route, loop-*, multi-*, brainstorm
 │   ├── languages/             # (8) go-*, kotlin-*, gradle-build, python-review
+│   ├── content/               # (3) youtube, blog, social
+│   ├── marketing/             # (2) seo, campaign
+│   ├── design/                # (1) ui
 │   └── specialized/           # (1) claw
 │
 ├── rules/                     # common/ + 7 language dirs
@@ -154,7 +174,7 @@ claude_kit/
 │   ├── swift/                 # 5 files
 │   └── typescript/            # 5 files
 │
-├── contexts/                  # 3 context files: dev.md, research.md, review.md
+├── contexts/                  # 6 context files: dev.md, research.md, review.md, content.md, marketing.md, design.md
 ├── hooks/                     # hooks.json + README.md
 ├── mcp-configs/mcp-servers.json  # 23 MCP server configs (tokens sanitized)
 │
@@ -375,7 +395,8 @@ From `skills-lock.json` — 7 skills installed from `anthropics/claude-code`:
 
 | Category | Kit Path | Count |
 |----------|----------|-------|
-| Core / Meta | `skills/core/` | 7 |
+| Studio (Entry Points) | `skills/_studio/` | 2 |
+| Core / Meta | `skills/core/` | 5 |
 | Development | `skills/development/` | 11 |
 | Planning | `skills/planning/` | 5 |
 | Testing & Quality | `skills/testing-quality/` | 24 |
@@ -426,7 +447,7 @@ From `skills-lock.json` — 7 skills installed from `anthropics/claude-code`:
 | Salesforce | `skills/salesforce/` | 1 |
 | Customer Support | `skills/customer-support/` | 1 |
 | Specialized | `skills/specialized/` | 112 |
-| **TOTAL** | | **1,207** |
+| **TOTAL** | | **1,219** |
 
 ---
 
@@ -450,12 +471,12 @@ Current categories in the table: Core/Meta, Development, Planning & Architecture
 
 | Component | Count | Status |
 |-----------|-------|--------|
-| Skills | 1,207 | OK |
-| Skill categories | 51 | OK |
-| Agents | 24 | OK |
-| Commands | 51 | OK |
+| Skills | 1,219 | OK |
+| Skill categories | 52 | OK (added `_studio/`) |
+| Agents | 85 | OK (13 categories — full department coverage) |
+| Commands | 58 | OK (added content/, marketing/, design/) |
 | Rules (common) | 9 | OK |
 | Rules (language) | 35 | OK (7 languages x 5 files) |
-| Contexts | 3 | OK |
+| Contexts | 6 | OK (added content, marketing, design) |
 | Hooks | 2 | OK |
 | MCP configs | 1 (23 servers) | OK |
