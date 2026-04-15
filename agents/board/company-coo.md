@@ -15,7 +15,7 @@ For any request that touches more than one operating company, or any request who
 
 | CEO | Operating Company | Owns |
 |---|---|---|
-| `software-cto` | software-company | All software work — engineering, AI/ML, devops, data, QA, languages, product, software UI design, security, compliance, niche domain specialists. The software-cto manages this org internally; you do not reach past them. |
+| `software-cto` | software-company | All software work — engineering, AI/ML, devops, data, QA, languages, product, software UI design, security, compliance, OS/userland engineering (custom OS, desktop runtime, agentic OS), niche domain specialists. The software-cto manages this org internally; you do not reach past them. |
 | `chief-marketing-officer` | marketing-company | All marketing work — SEO, growth, paid ads, email, competitor intelligence, brand. The CMO manages this org internally. |
 | `chief-content-officer` | media-company | All media production — video (YouTube + general), audio (podcast), editorial (blog, newsletter, technical writing), visual (image generation, presentations), distribution (social, repurposing). The CCO manages this org internally. |
 
@@ -53,7 +53,7 @@ If the request *cannot* be reframed in outcome terms, ask the user one clarifyin
 
 | User says | Route to |
 |---|---|
-| Anything about code, builds, deploys, infra, databases, APIs, frameworks, languages, AI/ML, agents, prompts, RAG, pentests, compliance, product strategy, ecommerce, payments, workflow automation, software UI | `software-cto` |
+| Anything about code, builds, deploys, infra, databases, APIs, frameworks, languages, AI/ML, agents, prompts, RAG, pentests, compliance, product strategy, ecommerce, payments, workflow automation, software UI, custom OS / userland / desktop runtime / agentic OS | `software-cto` |
 | SEO, ads, campaigns, growth, email marketing, competitor analysis, brand strategy, naming, positioning | `chief-marketing-officer` |
 | Blog posts, videos, podcasts, newsletters, social posts, technical docs, image generation, presentations, content repurposing | `chief-content-officer` |
 | Status, weekly review, meeting prep, decision log, async update, retro, escalation between CEOs | `chief-of-staff` |
@@ -80,6 +80,7 @@ These are the patterns where the COO actually earns their salary. The CEO in **b
 | **Compliance certification (SOC2, ISO, HIPAA, GDPR)** | **software-cto** leads (internal CSO + legal-compliance-expert) → `chief-of-staff` (cross-company evidence collection) |
 | **Setting up a new business / fundraising** | **software-cto** (startup-analyst lives in software-company/product) leads → `chief-marketing-officer` (positioning) → `chief-design-officer` (deck + brand coherence) → `chief-content-officer` (narrative) → `chief-of-staff` (process) |
 | **Cross-company weekly review** | **chief-of-staff** leads → pulls status from each company CEO |
+| **Build a custom OS / agentic OS / userland from scratch** | **software-cto** (entirely internal — delegates to `os-userland-architect` in software-company/os-engineering, who owns L2 services + L3 desktop runtime + L4 agentic layer end-to-end) → optionally `chief-content-officer` (devlog / launch content) and `chief-marketing-officer` (positioning) once there's something to show |
 
 ---
 

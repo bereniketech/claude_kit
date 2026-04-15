@@ -17,7 +17,7 @@ claude_kit/
 │   ├── homunculus/instincts/inherited/   # Curated instincts for this repo
 │   └── skills/claude-kit/SKILL.md    # Meta-skill for working in this repo
 │
-├── skills/          # 1,219 skill modules organized by category
+├── skills/          # 1,228 skill modules organized by category (OS/Systems Userland category folders are phased in over the agentic-OS kit build — Phase 1 shipped)
 │   ├── _studio/                  # (2) ENTRY POINTS — generate-claude-md, new-features-updates (route to agents)
 │   ├── core/                     # (5) continuous-learning, eval-harness, skill-stocktake, strategic-compact, configure-ecc
 │   ├── development/              # (11) code-writing, build-website, api-design, systematic-debugging, ...
@@ -67,15 +67,20 @@ claude_kit/
 │   ├── performance/              # (4) web-performance, app-performance, ...
 │   ├── baas/                     # (2) firebase, upstash, ...
 │   ├── domain/                   # (5) logistics, trade-compliance, energy-procurement, ...
+│   ├── os-linux-platform/        # (5) linux-kernel-config-for-custom-os, hardware-profiling-and-driver-mapping, drm-kms-and-mesa-basics, pipewire-wireplumber-session, input-stack-libinput-udev — Phase 1 shipped; Phase 8 adds arch-portability-and-hal-boundary
+│   ├── os-boot-and-firmware/     # (0) [scaffolded — Phase 2] UEFI/systemd-boot, secure boot, TPM2, initramfs
+│   ├── os-system-services/       # (0) [scaffolded — Phase 4] PID 1, cgroups v2, seccomp+landlock, systemd user units
+│   ├── os-distribution/          # (0) [scaffolded — Phase 5] image-based atomic distro, package signing, A/B rollback
+│   ├── os-desktop-stack/         # (0) [scaffolded — Phase 3] Smithay compositor, gestures, portals, HDR, fractional scaling
 │   └── specialized/              # (112) niche/branded skills, reverse-engineering, forensics, ...
-├── agents/          # 82 agents across board + 3 operating companies — holding company OS
+├── agents/          # 83 agents across board + 3 operating companies — holding company OS
 │   ├── board/                          # (4) corporate governance — sits above the operating companies
 │   │   ├── company-coo.md              # master router across all 3 operating companies
 │   │   ├── chief-of-staff.md           # cross-company ops & comms triage
 │   │   ├── chief-design-officer.md     # cross-company design coherence (UI ↔ brand ↔ visuals)
 │   │   └── people-operations-expert.md # corporate HR — hiring, comp, contracts, handbook
 │   │
-│   ├── software-company/               # (60) builds & ships software — CEO: software-cto
+│   ├── software-company/               # (61) builds & ships software — CEO: software-cto
 │   │   ├── software-cto.md             # CEO of software-company
 │   │   ├── engineering/                # (17) planner, architect, software-developer, web-front/back, mobile, desktop, mcp-server, systems, python, typescript, polyglot, cinematic-website-builder, code-reviewer, refactor-cleaner, doc-updater, build-error-resolver
 │   │   ├── ai/                         # (5) ai-cto + ai-ml, ai-platform, orchestration, data-scientist
@@ -86,7 +91,8 @@ claude_kit/
 │   │   ├── product/                    # (10) chief-product-officer + product-mgr, ecommerce, startup-analyst, customer-success, sales-automation, saas-integrations, workflow-automation, erp-odoo, fintech-payments
 │   │   ├── design/                     # (1) ui-design-expert
 │   │   ├── security/                   # (4) chief-security-officer + pentest, security-architect, legal-compliance
-│   │   └── specialists/                # (7) game-dev, office-automation, search, enterprise-operations, conversational-agent, cms, reverse-engineering
+│   │   ├── specialists/                # (7) game-dev, office-automation, search, enterprise-operations, conversational-agent, cms, reverse-engineering
+│   │   └── os-engineering/             # (2) os-userland-architect (sub-lead) + linux-platform-expert (Phase 1 shipped); division continues growing in kit phases 3,5,8
 │   │
 │   ├── marketing-company/              # (7) marketing services — CEO: chief-marketing-officer
 │   │   ├── chief-marketing-officer.md
@@ -177,7 +183,7 @@ When working inside the Skill Builder repository itself:
 
 ## Available Content
 
-### Skills (1,219 across 52 categories)
+### Skills (1,224 across 52 categories)
 
 **Studio / Entry Points** (2)
 `generate-claude-md` · `new-features-updates` — these route project requests to the right department agents
@@ -237,8 +243,8 @@ Azure SDK skills across all services: AI, identity, storage, cosmos, monitor, ke
 **Security — Defensive** (29)
 `auth-implementation-patterns` · `secrets-management` · `incident-response-*` · `semgrep-*` · `privacy-by-design` · `threat-modeling-*` · ...
 
-**SEO** (31)
-`seo-technical` · `seo-content-*` · `seo-audit` · `seo-keyword-strategist` · `schema-markup` · `programmatic-seo` · ...
+**SEO** (32)
+`seo-technical` · `seo-content-*` · `seo-audit` · `seo-keyword-strategist` · `schema-markup` · `programmatic-seo` · `seo-strategy` · ...
 
 **Marketing & Growth** (31)
 `content-strategy` · `growth-engine` · `cold-email` · `paid-ads` · `lead-magnets` · `viral-generator-builder` · ...
@@ -261,8 +267,8 @@ Azure SDK skills across all services: AI, identity, storage, cosmos, monitor, ke
 **Research & Docs** (29)
 `research-information-retreival` · `document-content-writing-editing` · `wiki-*` · `blog-writing-guide` · `scientific-writing` · `changelog-automation` · ...
 
-**UI & Design** (49)
-`presentations-ui-design` · `ui-ux-pro-max` · `design-system` · `hig-*` · `accessibility-*` · `landing-page-generator` · `cinematic-website-builder` · `spline-3d-integration` · ...
+**UI & Design** (52)
+`presentations-ui-design` · `ui-ux-pro-max` · `design-system` · `hig-*` · `accessibility-*` · `landing-page-generator` · `cinematic-website-builder` · `website-intelligence` · `asset-generation` · `3d-animation-creator` · `spline-3d-integration` · ...
 
 **Observability** (8)
 `distributed-tracing` · `prometheus-configuration` · `slo-implementation` · `observability-engineer` · ...
@@ -311,17 +317,20 @@ Azure SDK skills across all services: AI, identity, storage, cosmos, monitor, ke
 
 **Performance** (4) · **CMS** (4) · **Search** (5) · **BaaS** (2) · **Customer Support** (1) · **Salesforce** (1) · **Domain** (5)
 
+**OS / Systems Userland** (5, Phase 1 shipped — more in Phases 2–8)
+`linux-kernel-config-for-custom-os` · `hardware-profiling-and-driver-mapping` · `drm-kms-and-mesa-basics` · `pipewire-wireplumber-session` · `input-stack-libinput-udev` — the L1-wrapping layer for a custom agentic OS. Used with `os-userland-architect` + `linux-platform-expert` agents.
+
 **Specialized** (112)
 Niche/branded skills, reverse-engineering, forensics, custom workflows, and community contributions
 
-### Agents (82 across board + 3 operating companies)
+### Agents (84 across board + 3 operating companies)
 
 The agent suite is structured as a holding company. The **board** contains cross-company governance roles. Underneath, three **operating companies** each have their own CEO and internal cascade. Route through `company-coo` (master) for multi-company work, or directly to a company CEO for single-company work. Each CEO manages their own internal org — do not reach past a CEO into their specialists.
 
 #### Board (4) — `agents/board/`
 `company-coo` (master router across all 3 companies) · `chief-of-staff` (cross-company ops + comms triage) · `chief-design-officer` (cross-company design coherence) · `people-operations-expert` (corporate HR)
 
-#### software-company (60) — `agents/software-company/` — CEO: `software-cto`
+#### software-company (62) — `agents/software-company/` — CEO: `software-cto`
 
 **Engineering** (17, `engineering/`) — `architect` · `planner` · `software-developer-expert` · `web-frontend-expert` · `web-backend-expert` · `mobile-expert` · `desktop-expert` · `systems-programming-expert` · `mcp-server-expert` · `python-expert` · `typescript-expert` · `polyglot-expert` · `cinematic-website-builder` · `code-reviewer` · `refactor-cleaner` · `doc-updater` · `build-error-resolver`
 
@@ -342,6 +351,8 @@ The agent suite is structured as a holding company. The **board** contains cross
 **Security & Compliance** (4, `security/`) — sub-lead: `chief-security-officer` · `pentest-expert` · `security-architect` · `legal-compliance-expert`
 
 **Specialists** (7, `specialists/`) — `game-dev-expert` · `office-automation-expert` · `search-expert` · `enterprise-operations-expert` · `conversational-agent-expert` · `cms-expert` · `reverse-engineering-expert`
+
+**OS Engineering** (2, `os-engineering/`) — sub-lead: `os-userland-architect` (master agent for custom-OS / userland / desktop runtime / agentic-OS work; owns L2 system services, L3 desktop runtime, L4 agentic layer, capability model, HAL boundary, x86_64 ↔ aarch64 portability) · `linux-platform-expert` (Phase 1 — L1 wrapping: kernel config, hardware profiling, DRM/KMS, libinput, PipeWire, NetworkManager, udev, firmware). Division continues growing in kit phases 3, 5, 8 with `wayland-compositor-expert`, `immutable-distro-expert`, `asahi-porting-expert`.
 
 #### marketing-company (7) — `agents/marketing-company/` — CEO: `chief-marketing-officer`
 

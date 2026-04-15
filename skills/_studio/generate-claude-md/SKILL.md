@@ -184,6 +184,10 @@ If any field is unknown or not applicable, write "TBD" or "N/A". This file is re
 | HTML presentations / pitch decks | `slides` |
 | shadcn/ui / Tailwind styling | `ui-styling` |
 | Premium websites, cinematic GSAP animations, autonomous site builder | `cinematic-website-builder` |
+| Competitive research + intelligence report before website build | `website-intelligence` |
+| AI image/video prompt generation for scroll-stop website hero assets | `asset-generation` |
+| Video file → scroll-driven animated website (frame-sequence canvas) | `3d-animation-creator` |
+| SEO optimization for a single page or full site audit | `seo-strategy` |
 
 ### Integrations
 | If the project involves… | Include skill |
@@ -203,6 +207,35 @@ If any field is unknown or not applicable, write "TBD" or "N/A". This file is re
 | Logistics / supply chain | `logistics-supply-chain` |
 | Trade / customs compliance | `trade-compliance` |
 | Energy procurement | `energy-procurement` |
+
+### OS / Systems Userland
+Activate this group whenever the user describes building a custom operating system, custom userland, custom desktop runtime, agentic OS, Wayland compositor, immutable Linux distro, init/PID 1 in Rust, custom sandboxing layer, or any "feels like macOS but I'm writing it from scratch" project. Also activate when porting such a stack to Apple Silicon. The lead agent for all of these is `os-userland-architect` (in `software-company/os-engineering/`).
+
+| If the project involves… | Include skill |
+|---|---|
+| Configuring a minimal Linux kernel for a specific machine | `linux-kernel-config-for-custom-os` |
+| Profiling a laptop / mapping chips → kernel modules + firmware | `hardware-profiling-and-driver-mapping` |
+| DRM/KMS, GBM, EGL/Vulkan handoff for a custom compositor | `drm-kms-and-mesa-basics` |
+| PipeWire / WirePlumber session policy for audio + screencapture | `pipewire-wireplumber-session` |
+| libinput tuning, gestures, touchpad feel | `input-stack-libinput-udev` |
+| UEFI / systemd-boot / dual-boot with Windows | `uefi-and-systemd-boot` *(Phase 2 — pending)* |
+| Secure Boot self-enrollment, TPM2 PCR policy, measured boot | `secure-boot-and-tpm2` *(Phase 2 — pending)* |
+| Minimal initramfs (booster/dracut/mkinitcpio) | `initramfs-minimal` *(Phase 2 — pending)* |
+| Writing PID 1 / service supervisor in Rust | `rust-init-and-service-supervisor` *(Phase 4 — pending)* |
+| cgroups v2 + namespaces for a userland sandbox | `cgroups-v2-namespaces-for-userland` *(Phase 4 — pending)* |
+| seccomp-bpf + landlock + capability sandbox | `seccomp-landlock-capability-sandbox` *(Phase 4 — pending)* |
+| Packaging agents / LLMs / MCP servers as systemd user units | `systemd-user-units-for-agents` *(Phase 4 — pending)* |
+| Wayland compositor with Smithay | `wayland-compositor-with-smithay` *(Phase 3 — pending)* |
+| Compositor input routing + macOS-grade gestures | `compositor-input-routing-and-gestures` *(Phase 3 — pending)* |
+| xdg-desktop-portal backend implementation | `xdg-desktop-portals-implementation` *(Phase 3 — pending)* |
+| HDR, fractional scaling, multi-monitor, color management | `display-configuration-hdr-and-fractional-scaling` *(Phase 3 — pending)* |
+| Image-based atomic distro (OSTree / bootc patterns) | `image-based-atomic-distro-builder` *(Phase 5 — pending)* |
+| Custom package format with cryptographic signing | `package-format-and-signing` *(Phase 5 — pending)* |
+| A/B partitioning, atomic switch, automatic rollback | `ab-partition-and-rollback` *(Phase 5 — pending)* |
+| Apple Silicon (Asahi) bring-up and per-Mac-model status | (Phase 8 — agent: `asahi-porting-expert`, pending) |
+| Cargo workspace + HAL crate for x86_64 ↔ aarch64 portability | `arch-portability-and-hal-boundary` *(Phase 8 — pending)* |
+
+The categories `os-linux-platform/` (5 skills shipped — Phase 1), `os-boot-and-firmware/`, `os-system-services/`, `os-distribution/`, `os-desktop-stack/` are scaffolded; additional `SKILL.md` files land in the kit phases noted above. When generating CLAUDE.md for a custom-OS project today, include the `os-userland-architect` agent (and `linux-platform-expert` if Linux-platform work is in scope) and add the skills listed here as `@` imports as they ship.
 
 ### Specialized
 | If the project involves… | Include skill |
@@ -226,6 +259,7 @@ After selecting skills, identify which operating company CEO(s) apply to this pr
 | Product, SaaS, startup, pricing, ecommerce, payments, customer success, sales, ops, ERP | `software-cto` → routes to `chief-product-officer` (software-company/product/) | product-manager-expert, ecommerce-expert, startup-analyst, sales-automation-expert, fintech-payments-expert, erp-odoo-expert |
 | Software UI / design system / dashboards / forms | `software-cto` → routes to `ui-design-expert` (software-company/design/) | ui-design-expert |
 | Security, pentest, compliance, GDPR, SOC2, HIPAA, legal | `software-cto` → routes to `chief-security-officer` (software-company/security/) | pentest-expert, security-architect, legal-compliance-expert |
+| Custom OS, userland from scratch, Wayland compositor, immutable distro, agentic OS, port to Apple Silicon | `software-cto` → routes to `os-userland-architect` (software-company/os-engineering/) | os-userland-architect, linux-platform-expert (Phase 1 — shipped), wayland-compositor-expert (Phase 3 — pending), immutable-distro-expert (Phase 5 — pending), asahi-porting-expert (Phase 8 — pending) |
 | SEO, ads, email, growth, CRO, leads, brand, positioning | `chief-marketing-officer` (marketing-company) | seo-expert, growth-marketing-expert, paid-ads-expert, email-marketing-expert, brand-expert, competitor-intelligence-expert |
 | YouTube, blog, video, podcast, newsletter, social, image creation, presentations, technical writing | `chief-content-officer` (media-company) | youtube-content-expert, blog-writing-expert, video-production-expert, image-creation-expert, podcast-expert, newsletter-expert, social-media-expert, presentation-expert, technical-writer-expert |
 | Hiring, comp, employment contracts, handbook | `people-operations-expert` (board) | — direct |
