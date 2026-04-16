@@ -472,6 +472,7 @@ After the user approves `tasks.md`, create individual task files under `.spec/{f
 task: NNN
 feature: {feature-name}
 status: pending
+model: haiku
 depends_on: []
 ---
 
@@ -486,7 +487,69 @@ Commands: /verify, /task-handoff
 ---
 
 ## Objective
-[Self-contained goal — readable without any other file]
+[One sentence — what this task produces. Completable without reading any other file.]
+
+---
+
+## Files
+
+### Create
+| File | Purpose |
+|------|---------|
+| `src/path/to/NewFile.tsx` | [one-line description] |
+
+### Modify
+| File | What to change |
+|------|---------------|
+| `src/path/to/existing.ts` | [exact change — e.g. "Add /login route entry"] |
+
+---
+
+## Dependencies
+```bash
+# Install (skip if already in package.json):
+bun add package-name
+
+# Env vars this task introduces (names only — add values to .env):
+NEW_VAR_NAME=example_value
+```
+_(none)_ if not applicable.
+
+---
+
+## API Contracts
+```
+METHOD /path/to/endpoint
+Headers:  [if required]
+Request:  { field: type }
+Response 200: { field: type }
+Response 4xx: { error: 'Exact error string' }
+Response 5xx: { error: string }
+```
+_(none)_ if this task makes no API calls.
+
+---
+
+## Code Templates
+
+### `src/path/to/NewFile.tsx` (create this file exactly)
+```typescript
+// [Complete working implementation — not a skeleton]
+// [All imports exact and complete]
+// [All types resolved — no any/unknown unless design requires it]
+// [Error handling matches Decision Rules below]
+// [// FILL: only for values unknowable without runtime context]
+```
+
+### `src/path/to/existing.ts` — before → after
+**Before:**
+```typescript
+// [exact block being replaced]
+```
+**After:**
+```typescript
+// [replacement block — complete, not a diff description]
+```
 
 ---
 
@@ -494,18 +557,16 @@ Commands: /verify, /task-handoff
 > Pre-populated by Task Enrichment. No file reading required.
 
 ### Key Code Snippets
-> Embed the exact code the implementer must conform to. No file reading required.
-
 ```typescript
-// [label: e.g. "Interface to implement" — from src/services/base.ts:42-58]
-[paste the relevant code block here]
+// [label — e.g. "Interface to implement"] — src/services/base.ts:42-58
+[paste the exact code block here]
 ```
 
 ### Key Patterns in Use
-- **[Pattern]:** [one-sentence constraint]
+- **[Pattern name]:** [one-sentence rule — e.g. "Always call toast.error(message) from @/lib/toast — never alert()"]
 
 ### Architecture Decisions Affecting This Task
-- [ADR reference or inline decision]
+- [Inline the specific ADR entry from design.md that affects this task]
 
 ---
 
@@ -520,16 +581,57 @@ Commands: /verify, /task-handoff
 ---
 
 ## Implementation Steps
-1. [Specific step — reference file paths, function names where known]
+1. [Exact file path] — [exact function/block to create or edit]
+2. [Shell command to run, if any — e.g. `bun add zod`]
+3. Run: `bun test path/to/File.test.tsx`
+4. Run: `/verify`
 
 _Requirements: {req IDs}_
-_Skills: /skill-name — [reason]_
+_Skills: /skill-name — [reason this skill applies]_
+
+---
+
+## Test Cases
+
+### File: `src/path/to/File.test.tsx`
+```typescript
+// [Complete test file — imports, mocks with return values, beforeEach, full it-blocks]
+// [One test per Acceptance Criteria item + one per Decision Rule row]
+// [No /* ... */ bodies — every it() block has full assertions]
+
+import { ... } from '...';
+
+vi.mock('@/lib/dependency', () => ({ fn: vi.fn() }));
+
+beforeEach(() => { vi.clearAllMocks(); });
+
+describe('ComponentName', () => {
+  it('[test name matching AC item 1]', async () => {
+    // render → act → expect
+  });
+
+  it('[test name matching Decision Rule scenario]', async () => {
+    // render → act → expect
+  });
+});
+```
+
+---
+
+## Decision Rules
+| Scenario | Action |
+|----------|--------|
+| [Exact error condition] | [Exact function call + exact message string + navigation outcome] |
+| [Validation failure case] | [Exact inline error — field, message string] |
+| [Network/fetch failure] | [Exact toast call + message] |
+| [Empty/null state] | [Exact fallback behavior] |
 
 ---
 
 ## Acceptance Criteria
-- [ ] [WHEN/THEN verifiable criterion]
+- [ ] WHEN [condition] THEN [outcome — references test name above]
 - [ ] All existing tests pass
+- [ ] `bun run type-check` — zero errors
 - [ ] `/verify` passes
 
 ---
@@ -543,14 +645,37 @@ _Skills: /skill-name — [reason]_
 **Open questions:** _(fill via /task-handoff)_
 ```
 
-3. Fill **Codebase Context** by running `Glob` and `Grep` on the existing codebase to find files relevant to this task. For each relevant file, **embed the actual code snippet** (interface, type, base class, config constant, etc.) directly into the **Key Code Snippets** block — labeled with its source path and line range. This eliminates all file reading at execution time. Record only patterns and constraints that cannot be conveyed by a snippet in **Key Patterns in Use**.
-4. Copy **Implementation Steps** and **Acceptance Criteria** from the corresponding task entry in `tasks.md`.
-5. Leave **Handoff from Previous Task** empty (with placeholders) for all tasks — `/task-handoff` fills these during execution.
-6. Leave **Handoff to Next Task** with placeholders for all tasks — `/task-handoff` fills these during execution.
+**Goal: task files must be complete enough for Claude Haiku to execute with zero file reads, zero decisions, and zero open questions.** Every ambiguity is resolved in the task file before execution begins.
+
+**Inputs available during enrichment:** `design.md`, `requirements.md`, `tasks.md`, `project-config.md`, and the real source tree via Glob/Grep (for existing projects).
+
+3. **Files** — derive from `design.md` file structure + this task's scope. List every file created or modified. No surprises.
+4. **Dependencies** — scan `design.md` stack + task description for new packages. Write exact install command. List any new env var names. Write `_(none)_` if not applicable.
+5. **API Contracts** — for every API call: derive from `design.md` API section. Write method, path, request shape, success response shape, and every named error shape. Write `_(none)_` if not applicable.
+6. **Code Templates** — write the full working implementation for every new file (not a skeleton — actual runnable code). Rules:
+   - Imports exact and complete (module aliases from tsconfig/pyproject in `design.md`)
+   - Types match `## Key Code Snippets`
+   - Error handling follows `## Decision Rules`
+   - All business logic written out — not referenced, written
+   - `// FILL:` only for values unknowable without runtime context. More than 3 `// FILL:` lines → split the task
+   - For modified files: embed the exact before-block then the replacement after-block
+7. **Codebase Context → Key Code Snippets** — existing projects: Grep/Glob for interfaces, base classes, types this task must conform to; embed with `// path:line` label. Greenfield: extract relevant interfaces/types from `design.md` and format as code. Never leave empty if the task implements an interface.
+8. **Key Patterns** — 3–5 one-sentence rules from `design.md` ADRs constraining this task. Never "follow project conventions" — state the rule explicitly.
+9. **Implementation Steps** — each step names the exact file path and exact function/block to write or edit, plus any shell command. No step uses the words "appropriate", "similar", "follow", "refer to", "see", or "based on context".
+10. **Test Cases** — write the complete test file: imports, mock setup with return values, `beforeEach`/`afterEach`, every `it` block with full assertions. One test per AC item + one per Decision Rule row. No `/* ... */` bodies.
+11. **Decision Rules** — exhaustive table. Every row: exact error condition → exact function call + exact message string + navigation outcome. No row says "show error" or "handle appropriately".
+12. **Acceptance Criteria** — WHEN/THEN format. Each item maps 1:1 to a test case name in `## Test Cases`.
+13. Leave all **Handoff** sections with `_(fill via /task-handoff)_` placeholders.
+
+**Hard rules:**
+- No Implementation Step uses "appropriate", "similar", "follow", "refer to", "see", or "based on context"
+- No `// TODO:` without the exact answer written in the same file
+- No test body that is `/* ... */` or empty
+- No Decision Rule row that says "show error" — name the exact function + message string
+- Code Templates must resolve all types — no `any`/`unknown` unless `design.md` explicitly uses them
+- If completing the task requires reading a source file, that file's relevant section is embedded in `## Key Code Snippets` instead
 
 **Rule:** Task Enrichment reads the codebase but does NOT require a separate user approval gate. The user already approved `tasks.md`. Enrichment only adds context — it never changes scope or acceptance criteria.
-
-**Rule:** For greenfield projects with no existing source files, write `[greenfield — no existing files to reference]` in the Key Patterns section and leave the Files to Read First table empty. Do not fabricate file paths.
 
 ---
 

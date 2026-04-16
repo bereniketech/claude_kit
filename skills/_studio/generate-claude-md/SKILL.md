@@ -33,253 +33,19 @@ If the CWD contains existing project files (source code, `package.json`, `pyproj
 ### Rule
 **All file paths in Steps 4–10 are relative to `PROJECT_ROOT`, not the CWD.** Never write `.claude/`, `.spec/`, `.gitignore`, or `.env.example` into the skill library directory.
 
-## Step 2 — Gather Deployment & Hosting Info (Smart Defaults)
+## Step 2 — Do NOT Gather Deployment Info (Board Decides)
 
-After understanding the project type, infer sensible defaults rather than asking 8 questions upfront.
+**Skip all deployment, hosting, stack, and auth decisions.** The board will assess the project and decide the right stack, package manager, hosting, database, and auth. Pre-filling these before the board has seen the project produces wrong defaults that the board then has to undo.
 
-### Default Profiles by Project Type
+## Step 3 — Do NOT Select Skills (Board Decides)
 
-| Project Type | Package Manager | Hosting | Database | Auth |
-|---|---|---|---|---|
-| Web app (React/Next.js) | bun | Vercel | Supabase | Supabase Auth |
-| Landing page / static site | bun | Vercel | N/A | N/A |
-| CLI tool / library | npm | N/A | N/A | N/A |
-| API / backend service | npm | Railway | Supabase | JWT |
-| Data pipeline | pip/uv | N/A | N/A | N/A |
-| Mobile app (React Native) | bun | N/A | Supabase | Supabase Auth |
+**Skip skill selection.** The board (`@company-coo`) will decide which CEO and which skills that CEO needs.
 
-### Interaction
+Instead, document what the project involves (from Step 1) as a brief for the board. This brief becomes the input to `@company-coo` in Step 6, and the board uses it to decide:
+1. Which operating company (software / marketing / media)?
+2. Which skills does *that company* need for this specific project?
 
-1. Pre-fill all fields using the matching default profile.
-2. Present the pre-filled config to the user in one block.
-3. Ask: **"Here are the defaults for your project type. Change anything that's wrong, or say 'looks good' to continue."**
-4. Apply any overrides the user provides.
-
-Only ask follow-up questions for fields the user explicitly marks as needing clarification.
-
-### Store in `.claude/project-config.md`
-
-```markdown
-# Project Configuration
-
-## Skill Library
-- Path: [absolute path to the skill library — store so future runs auto-detect]
-
-## GitHub
-- Repo: [url or "not yet created"]
-- Branch: main
-- Visibility: [public/private]
-
-## Hosting
-- Provider: [provider]
-- Domain: [domain or "none"]
-
-## CI/CD
-- Pipeline: [tool or "none"]
-
-## Environment Variables
-[List of required env var names — NO values]
-
-## Database
-- Provider: [provider or "none"]
-
-## Auth
-- Provider: [provider or "none"]
-
-## Package Manager
-- [npm/pnpm/yarn/bun]
-```
-
-If any field is unknown or not applicable, write "TBD" or "N/A". This file is referenced during execution for deployment tasks.
-
-## Step 3 — Select Relevant Skills
-
-### Core / Meta
-| If the project involves… | Include skill |
-|---|---|
-| Generating CLAUDE.md for a project | `generate-claude-md` |
-| Planning new features onto an existing project | `new-features-updates` |
-| Auditing the skill library itself | `skill-stocktake` |
-| Installing ECC skills/rules | `configure-ecc` |
-| Extracting patterns from sessions | `continuous-learning` |
-| Context window compaction | `strategic-compact` |
-| Eval-driven AI development | `eval-harness` |
-| End-of-session knowledge capture | `wrapup` |
-
-### Development
-| If the project involves… | Include skill |
-|---|---|
-| Any code writing / refactoring | `code-writing-software-development` |
-| Web app / landing page / UI | `build-website-web-app` |
-| IDE pair programming assistance | `ide-integration-pair-programming` |
-| REST API design | `api-design` |
-| Content caching patterns | `content-hash-cache-pattern` |
-| Bug hunting / debugging methodology | `systematic-debugging` |
-| Branch merge / PR / cleanup workflow | `branch-completion` |
-
-### Planning & Architecture
-| If the project involves… | Include skill |
-|---|---|
-| Requirements / architecture | `planning-specification-architecture` |
-| Autonomous multi-step tasks | `autonomous-agents-task-automation` |
-| Multiple AI models / providers | `multi-model-model-agnostic-platforms` |
-| Design ideation / brainstorming | `brainstorming` |
-| Parallel agent orchestration | `parallel-agent-dispatch` |
-
-### Testing & Quality
-| If the project involves… | Include skill |
-|---|---|
-| Test-driven development | `tdd-workflow` |
-| Security audit / OWASP review | `security-review` |
-| Automated security scanning | `security-scan` |
-| Playwright / E2E testing | `e2e-testing` |
-
-### Data & Backend
-| If the project involves… | Include skill |
-|---|---|
-| PostgreSQL / Supabase DB | `postgres-patterns` |
-| Database schema migrations | `database-migrations` |
-| ClickHouse / OLAP analytics | `clickhouse-io` |
-
-### Languages
-| If the project involves… | Include skill |
-|---|---|
-| Go / Golang projects | `golang-patterns` |
-| Python / Django projects | `python-patterns` |
-| Kotlin / Ktor projects | `kotlin-patterns` |
-| Java / Spring Boot projects | `java-patterns` |
-| Swift / SwiftUI / iOS projects | `swift-patterns` |
-| C++ projects | `cpp-patterns` |
-| Android / KMP projects | `android-patterns` |
-| Perl projects | `perl-patterns` |
-
-### Claude / AI Platform
-| If the project involves… | Include skill |
-|---|---|
-| Claude API / Anthropic SDK | `claude-developer-platform` |
-| NotebookLM / podcast generation | `notebooklm` |
-
-### Research & Docs
-| If the project involves… | Include skill |
-|---|---|
-| Web search / knowledge retrieval | `research-information-retreival` |
-| Writing docs / READMEs / reports | `document-content-writing-editing` |
-| Notes / knowledge bases / tasks | `knowledge-management-productivity` |
-
-### DevOps & Infrastructure
-| If the project involves… | Include skill |
-|---|---|
-| Shell scripts / CI/CD / DevOps | `terminal-cli-devops` |
-| Git worktree-based isolation | `git-worktrees` |
-
-### UI & Design
-| If the project involves… | Include skill |
-|---|---|
-| UI components / design system | `presentations-ui-design` |
-| UI/UX design decisions / style selection | `ui-ux-pro-max` |
-| Logo, CIP, icon, or banner design | `design` |
-| Brand identity / voice / guidelines | `brand` |
-| Design tokens / component specs | `design-system` |
-| Banner / social media assets | `banner-design` |
-| HTML presentations / pitch decks | `slides` |
-| shadcn/ui / Tailwind styling | `ui-styling` |
-| Premium websites, cinematic GSAP animations, autonomous site builder | `cinematic-website-builder` |
-| Competitive research + intelligence report before website build | `website-intelligence` |
-| AI image/video prompt generation for scroll-stop website hero assets | `asset-generation` |
-| Video file → scroll-driven animated website (frame-sequence canvas) | `3d-animation-creator` |
-| SEO optimization for a single page or full site audit | `seo-strategy` |
-
-### Integrations
-| If the project involves… | Include skill |
-|---|---|
-| Twitter/X API integration | `x-api` |
-| AI image/video generation | `fal-ai-media` |
-| Video editing pipelines | `video-editing` |
-| Video database / streaming | `videodb` |
-| Document OCR / PDF processing | `nutrient-document-processing` |
-| Visa / translation documents | `visa-doc-translate` |
-| WhatsApp messaging automation | `whatsapp-automation` |
-| GitHub Copilot autonomous task loop | `copilot-autonomous-tasks` |
-
-### Domain
-| If the project involves… | Include skill |
-|---|---|
-| Logistics / supply chain | `logistics-supply-chain` |
-| Trade / customs compliance | `trade-compliance` |
-| Energy procurement | `energy-procurement` |
-
-### OS / Systems Userland
-Activate this group whenever the user describes building a custom operating system, custom userland, custom desktop runtime, agentic OS, Wayland compositor, immutable Linux distro, init/PID 1 in Rust, custom sandboxing layer, or any "feels like macOS but I'm writing it from scratch" project. Also activate when porting such a stack to Apple Silicon. The lead agent for all of these is `os-userland-architect` (in `software-company/os-engineering/`).
-
-| If the project involves… | Include skill |
-|---|---|
-| Configuring a minimal Linux kernel for a specific machine | `linux-kernel-config-for-custom-os` |
-| Profiling a laptop / mapping chips → kernel modules + firmware | `hardware-profiling-and-driver-mapping` |
-| DRM/KMS, GBM, EGL/Vulkan handoff for a custom compositor | `drm-kms-and-mesa-basics` |
-| PipeWire / WirePlumber session policy for audio + screencapture | `pipewire-wireplumber-session` |
-| libinput tuning, gestures, touchpad feel | `input-stack-libinput-udev` |
-| UEFI / systemd-boot / dual-boot with Windows | `uefi-and-systemd-boot` *(Phase 2 — pending)* |
-| Secure Boot self-enrollment, TPM2 PCR policy, measured boot | `secure-boot-and-tpm2` *(Phase 2 — pending)* |
-| Minimal initramfs (booster/dracut/mkinitcpio) | `initramfs-minimal` *(Phase 2 — pending)* |
-| Writing PID 1 / service supervisor in Rust | `rust-init-and-service-supervisor` *(Phase 4 — pending)* |
-| cgroups v2 + namespaces for a userland sandbox | `cgroups-v2-namespaces-for-userland` *(Phase 4 — pending)* |
-| seccomp-bpf + landlock + capability sandbox | `seccomp-landlock-capability-sandbox` *(Phase 4 — pending)* |
-| Packaging agents / LLMs / MCP servers as systemd user units | `systemd-user-units-for-agents` *(Phase 4 — pending)* |
-| Wayland compositor with Smithay | `wayland-compositor-with-smithay` *(Phase 3 — pending)* |
-| Compositor input routing + macOS-grade gestures | `compositor-input-routing-and-gestures` *(Phase 3 — pending)* |
-| xdg-desktop-portal backend implementation | `xdg-desktop-portals-implementation` *(Phase 3 — pending)* |
-| HDR, fractional scaling, multi-monitor, color management | `display-configuration-hdr-and-fractional-scaling` *(Phase 3 — pending)* |
-| Image-based atomic distro (OSTree / bootc patterns) | `image-based-atomic-distro-builder` *(Phase 5 — pending)* |
-| Custom package format with cryptographic signing | `package-format-and-signing` *(Phase 5 — pending)* |
-| A/B partitioning, atomic switch, automatic rollback | `ab-partition-and-rollback` *(Phase 5 — pending)* |
-| Apple Silicon (Asahi) bring-up and per-Mac-model status | (Phase 8 — agent: `asahi-porting-expert`, pending) |
-| Cargo workspace + HAL crate for x86_64 ↔ aarch64 portability | `arch-portability-and-hal-boundary` *(Phase 8 — pending)* |
-
-The categories `os-linux-platform/` (5 skills shipped — Phase 1), `os-boot-and-firmware/`, `os-system-services/`, `os-distribution/`, `os-desktop-stack/` are scaffolded; additional `SKILL.md` files land in the kit phases noted above. When generating CLAUDE.md for a custom-OS project today, include the `os-userland-architect` agent (and `linux-platform-expert` if Linux-platform work is in scope) and add the skills listed here as `@` imports as they ship.
-
-### Specialized
-| If the project involves… | Include skill |
-|---|---|
-| NanoClaw REPL sessions | `nanoclaw-repl` |
-| Large RFC multi-agent features | `ralphinho-rfc-pipeline` |
-
-Planning CLAUDE.md always includes `planning-specification-architecture`.
-Execution CLAUDE.md always includes these eight skills regardless of project type — they are the foundation of structured AI-assisted development:
-
-### Step 3b — Select Active Agent Team
-
-After selecting skills, identify which operating company CEO(s) apply to this project. The agent suite is organized as a holding company with 3 operating subsidiaries; each CEO routes work internally to their specialists.
-
-**Routing Table:**
-
-| Task type | CEO (operating company) | Sample sub-agents the CEO will route to |
-|---|---|---|
-| Website, app, API, bug, feature, database, infra, cloud, DevOps, K8s | `software-cto` (software-company) | web-frontend-expert, web-backend-expert, mobile-expert, database-architect, devops-infra-expert, cloud-architect, test-expert |
-| AI, ML, LLM, agents, RAG, Claude API | `software-cto` → routes to `ai-cto` (software-company/ai/) | ai-ml-expert, ai-platform-expert, orchestration-expert, data-scientist-expert |
-| Product, SaaS, startup, pricing, ecommerce, payments, customer success, sales, ops, ERP | `software-cto` → routes to `chief-product-officer` (software-company/product/) | product-manager-expert, ecommerce-expert, startup-analyst, sales-automation-expert, fintech-payments-expert, erp-odoo-expert |
-| Software UI / design system / dashboards / forms | `software-cto` → routes to `ui-design-expert` (software-company/design/) | ui-design-expert |
-| Security, pentest, compliance, GDPR, SOC2, HIPAA, legal | `software-cto` → routes to `chief-security-officer` (software-company/security/) | pentest-expert, security-architect, legal-compliance-expert |
-| Custom OS, userland from scratch, Wayland compositor, immutable distro, agentic OS, port to Apple Silicon | `software-cto` → routes to `os-userland-architect` (software-company/os-engineering/) | os-userland-architect, linux-platform-expert (Phase 1 — shipped), wayland-compositor-expert (Phase 3 — pending), immutable-distro-expert (Phase 5 — pending), asahi-porting-expert (Phase 8 — pending) |
-| SEO, ads, email, growth, CRO, leads, brand, positioning | `chief-marketing-officer` (marketing-company) | seo-expert, growth-marketing-expert, paid-ads-expert, email-marketing-expert, brand-expert, competitor-intelligence-expert |
-| YouTube, blog, video, podcast, newsletter, social, image creation, presentations, technical writing | `chief-content-officer` (media-company) | youtube-content-expert, blog-writing-expert, video-production-expert, image-creation-expert, podcast-expert, newsletter-expert, social-media-expert, presentation-expert, technical-writer-expert |
-| Hiring, comp, employment contracts, handbook | `people-operations-expert` (board) | — direct |
-| Cross-company design coherence | `chief-design-officer` (board) | ui-design-expert, brand-expert, presentation-expert |
-| Multi-company initiatives spanning all 3 | `company-coo` (board) | all 3 CEOs |
-
-For most projects, list 1–3 CEOs as the active team (typically `software-cto` plus one of the marketing/media CEOs depending on scope). Embed the result as an `## Active Agent Team` block in `.claude/CLAUDE.md` (see template in Step 5c).
-
-| Skill | What it enforces |
-|---|---|
-| `continuous-learning` | Persists patterns across sessions — prevents repeating debugging and re-explaining conventions |
-| `strategic-compact` | Prevents context rot — compacts at phase boundaries so architectural decisions stay coherent |
-| `tdd-workflow` | 80%+ test coverage enforced from the first line — Red/Green/Refactor on every feature |
-| `code-writing-software-development` | Coding standards, read-before-edit discipline, and the 6-phase verification loop (build → type → lint → test → security → diff) |
-| `security-review` | OWASP Top 10 checklist on every feature touching auth, input, secrets, or APIs — catches issues before code review |
-| `autonomous-agents-task-automation` | Parallel execution, model routing, and subagent delegation — faster feature completion with less context switching |
-| `notebooklm` | Second brain — every session's knowledge is queryable; "check Brain first" reduces token burn by leveraging pre-summarized context |
-| `wrapup` | Session persistence — captures decisions, learnings, and open threads at session end and pushes them to the NotebookLM Brain |
-
-Execution CLAUDE.md includes all other selected skills — never `planning-specification-architecture`.
+Only skills the board approves will be added to `.claude/CLAUDE.md`. No random skills loaded upfront.
 
 ## Step 4 — Initialize Git-Ready Project
 
@@ -329,7 +95,7 @@ If the project type is known, uncomment the relevant dependency line (e.g., `nod
 
 ### 4c — Create .env.example
 
-If the project needs environment variables (from Step 2), create `.env.example` with the variable names and placeholder comments — no real values:
+If any environment variables are already known from the project description, create `.env.example` with placeholder comments — no real values. Otherwise leave this for the board to define:
 
 ```
 # Database
@@ -410,18 +176,12 @@ Add from Step 3 selections (examples):
 @KIT_PATH/skills/<category>/<skill-name>/SKILL.md
 ```
 
-Example CLAUDE.md (adjust skills per project):
+Template CLAUDE.md (skills will be added by `@company-coo` after assessing the project):
 ```markdown
 # [Project Name]
 
-@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/development/code-writing-software-development/SKILL.md
-@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/core/continuous-learning/SKILL.md
-@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/core/strategic-compact/SKILL.md
-@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/planning/autonomous-agents-task-automation/SKILL.md
-@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/testing-quality/tdd-workflow/SKILL.md
-@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/development/build-website-web-app/SKILL.md
-@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/ai-platform/notebooklm/SKILL.md
-@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/core/wrapup/SKILL.md
+## Skills
+_(To be populated by @company-coo. The board will add only the skills needed for this specific project.)_
 
 ## Second Brain — NotebookLM
 **ALWAYS check the AI Brain notebook BEFORE searching the codebase.**
@@ -430,17 +190,26 @@ When you need context about past decisions, patterns, architecture, or session h
 2. Query: `notebooklm ask "your question" --notebook <BRAIN_NOTEBOOK_ID>`
 3. If the Brain returns relevant context → use it directly, DO NOT search the codebase
 4. Only if the Brain has no match → fall back to codebase search, memory files, and .spec/ artifacts
-This is mandatory. Skipping the Brain check wastes tokens re-reading files that have already been summarized.
 
 ## Active Agent Team
-- [e.g. Software tasks (code, AI, product, security, software UI) → @software-cto — routes internally to web-frontend-expert, web-backend-expert, ai-cto, product-manager-expert, etc.]
-- [e.g. Marketing tasks (SEO, ads, brand, campaigns) → @chief-marketing-officer — routes to seo-expert, paid-ads-expert, brand-expert]
-- [e.g. Media tasks (blog, video, podcast, social) → @chief-content-officer — routes to youtube-content-expert, blog-writing-expert, social-media-expert]
-- [e.g. Multi-company initiatives → @company-coo (board)]
-Describe your task naturally — call the operating company CEO and they route internally. Do not reach past a CEO into their specialists.
+
+**Always start from the board. Describe your task naturally — the board will route internally.**
+
+### Board (entry points)
+| Agent | When to use |
+|---|---|
+| `@company-coo` | Building something, launching a product, cross-company initiatives, anything spanning software + marketing + media |
+| `@chief-design-officer` | Design work that crosses company lines — software UI, marketing brand, and media visuals must be coherent together |
+| `@people-operations-expert` | Hiring, comp bands, performance reviews, employment contracts, handbook, onboarding |
+| `@chief-of-staff` | Comms triage (email, Slack, LINE, Messenger), decision tracking, weekly reviews, escalations between CEOs |
+
+### How the board routes
+- `@company-coo` routes to: `@software-cto` (code, AI, infra, product, security, OS), `@chief-marketing-officer` (SEO, ads, growth, brand), `@chief-content-officer` (blog, video, podcast, social)
+- `@chief-design-officer` coordinates: `ui-design-expert` (inside software-company), `brand-expert` (inside marketing-company), `presentation-expert` (inside media-company)
+- Never reach past a board member into the operating companies or their specialists directly.
 
 ## Active Feature
-Feature: {feature-name or "initial build"}
+Feature: _(to be updated after planning starts)_
 Tasks: .spec/tasks/
 Current task: .spec/tasks/task-001.md
 Branch: main
@@ -448,7 +217,7 @@ Branch: main
 ## Start Here
 1. Read `## Active Feature` above — note the current task path.
 2. Open the current task file — it is self-contained.
-3. Skills are already loaded via @imports above — no need to load them manually.
+3. Skills section lists all rules you must follow — read them at session start.
 4. Implement. Run `/task-handoff` when done.
 5. Run `/wrapup` at end of session to save context to the AI Brain.
 
@@ -477,7 +246,7 @@ Lead with the action. No preamble, no post-summary. Bullet points over prose.
 
 ### 5d — Write project-config.md
 
-Write `PROJECT_ROOT/.claude/project-config.md`:
+Write `PROJECT_ROOT/.claude/project-config.md` with a stub that `@company-coo` will populate:
 
 ```markdown
 # Project Configuration
@@ -486,30 +255,14 @@ Write `PROJECT_ROOT/.claude/project-config.md`:
 - Path: KIT_PATH
 
 ## Selected Skills
-- code-writing-software-development → skills/development/code-writing-software-development
-- continuous-learning → skills/core/continuous-learning
-- [list all @imported skills with their kit-relative path]
+_(To be populated by @company-coo)_
 
 ## Rules Active
 - common
-- [language-specific if applicable]
+_(language-specific rules added by board after stack is decided)_
 
-## GitHub
-- Repo: [url or "not yet created"]
-- Branch: main
-
-## Hosting
-- Provider: [provider]
-- Domain: [domain or "none"]
-
-## Database
-- Provider: [provider or "none"]
-
-## Package Manager
-- [npm/pnpm/yarn/bun/pip]
-
-## Environment Variables
-[List of required env var names — NO values]
+## Stack
+_(To be decided and populated by the board)_
 ```
 
 ### 5e — Write `.github/copilot-instructions.md`
@@ -624,113 +377,51 @@ When the user types `/command-name`, read the corresponding file and follow its 
 
 ---
 
-## Step 6 — Generate Planning CLAUDE.md
+## Step 6 — Hand Off to the Board
 
-Save as `.claude/CLAUDE.planning.md` (inside `.claude/`, not the project root).
+**This is the last step the skill performs.** Skill selection, planning, and execution are all owned by the board. Do not do any of those things yourself.
 
-Template (fill in `[...]` from context — keep every section to 1–3 lines):
+### 6a — Identify the right board entry point
 
-```markdown
-# Plan: [Project Name]
+Pick the board member whose domain matches the project:
 
-## Goal
-[One sentence: what this project produces and for whom.]
+| If the project is about… | Start with |
+|---|---|
+| Building software, a product, a website, AI features, infra, or anything that spans multiple companies | `@company-coo` |
+| Design coherence across software UI + marketing brand + media visuals | `@chief-design-officer` |
+| Hiring, comp, performance reviews, employment contracts, handbook | `@people-operations-expert` |
+| Comms triage (email, Slack, LINE, Messenger), decision tracking, weekly reviews | `@chief-of-staff` |
 
-## Constraints
-[Bullet list: language/framework locks, API limits, deadlines, style rules. Omit if none.]
+For anything ambiguous, default to `@company-coo` — the COO routes to board peers when needed.
 
-## Deliverables
-The plan must produce:
-- `.spec/plan.md` — high-level project overview: goal, tech stack, architecture diagram, file structure
-- `.spec/requirements.md` — user stories and acceptance criteria (EARS format)
-- `.spec/design.md` — architecture, data models, API design, ADRs, security, performance
-- `.spec/tasks.md` — ordered task list with acceptance criteria per task
+### 6b — Invoke the board member with a complete brief
 
-## Instructions
-Use /planning-specification-architecture.
-Write `plan.md` first as the high-level overview, then follow the skill's 3-phase gated workflow: requirements → user approves → design → user approves → tasks → user approves.
-Do not write implementation code. Do not skip approval gates.
-Save each artifact only after the user explicitly approves that phase.
-```
+Pass them:
+1. **Project description** — what is being built, for whom, and why (from Step 1)
+2. **Project description** — what was captured in Step 1 (the board decides stack, hosting, auth)
+3. **Infrastructure ready** — git initialized, `.claude/CLAUDE.md` stub in place (skills section is empty and awaits board decision), junctions ready
+4. **Board's responsibilities from here:**
+   - Decide which operating company CEO (or board peer) should lead
+   - Select only the skills that company actually needs and fill in `.claude/CLAUDE.md`
+   - Update `.claude/project-config.md` and `.github/copilot-instructions.md` to match
+   - Drive all planning (requirements → design → tasks → task enrichment)
+   - Execute task-001 and cascade via `/task-handoff`
 
-## Step 7 — Run Planning Phase via /planning-specification-architecture
+The board routes internally. Do not prescribe which CEO or specialist to use.
 
-### 7a — Write plan.md directly
-Write `.spec/plan.md` yourself — the high-level project overview: goal, constraints, tech stack rationale, architecture diagram (Mermaid), file/folder structure. This is the only `.spec/` file `generate-claude-md` writes directly.
-
-### 7b — Invoke the planning skill
-Call the Skill tool with `planning-specification-architecture` before writing any of the three gated files. Do NOT proceed without this invocation.
-
-### 7c — Follow the 3-phase gated workflow
-Using project context from Steps 1–2, follow the planning skill's gated workflow exactly:
-
-**Phase 1 — Requirements**
-- Draft the full content of `.spec/requirements.md` (user stories + EARS acceptance criteria for every major feature) and present it to the user as inline text — do NOT save the file yet.
-- Ask: "Does the requirements document look right? If so, we can move on to the design."
-- Wait for explicit approval (`yes`, `looks good`, `approved`, or equivalent).
-- ONLY after approval: save `.spec/requirements.md`.
-
-**Phase 2 — Design**
-- Draft the full content of `.spec/design.md` (architecture Mermaid diagram, ERD, API design, ADRs, error handling, security, performance) and present it as inline text — do NOT save the file yet.
-- Ask: "Does the design look good? If so, we can move on to the implementation plan."
-- Wait for explicit approval.
-- ONLY after approval: save `.spec/design.md`.
-
-**Phase 3 — Tasks**
-- Draft the full content of `.spec/tasks.md` (ordered tasks with `_Requirements:_`, `_Skills:_`, and `**AC:**`) and present it as inline text — do NOT save the file yet.
-- Ask: "Do the tasks look good? Once approved, the spec is ready for implementation."
-- Wait for explicit approval.
-- ONLY after approval: save `.spec/tasks.md`.
-
-All three files must reflect the deployment/hosting choices in `.claude/project-config.md`.
-
-### HARD RULES — violations are prohibited
-- **NEVER write `requirements.md`, `design.md`, or `tasks.md` without first invoking the Skill tool with `planning-specification-architecture`.**
-- **NEVER save any of the three gated files before the user explicitly approves that phase.**
-- **NEVER present and save in the same step — present first, wait, then save.**
-- **NEVER combine phases — present and approve one phase at a time.**
-
-### 7d — Run Task Enrichment
-
-Immediately after `.spec/tasks.md` is saved (Phase 3 approved), create self-contained individual task files:
-
-1. Create `.spec/tasks/` directory.
-2. For each task in `tasks.md`, create `task-NNN.md` (zero-padded, e.g. `task-001.md`, `task-002.md`).
-3. Populate `## Session Bootstrap` with only the skills that task requires (from its `_Skills:_` line) — not all project skills. Reference them by name only (e.g. "tdd-workflow") — the actual content loads via @imports in `.claude/CLAUDE.md`.
-4. Populate Objective, Implementation Steps, and Acceptance Criteria from the corresponding entry in `tasks.md`.
-5. For **greenfield projects** (no existing source files yet): write `[greenfield — no existing files to reference]` in the Key Patterns section and leave Key Code Snippets empty.
-6. For **Step 10 (update/regenerate)**: use `Glob` and `Grep` on real `PROJECT_ROOT` source files. Embed actual code snippets (interfaces, base classes, key types) directly into the Key Code Snippets block — so the implementer reads zero files during execution.
-7. Leave all Handoff sections with placeholders — `/task-handoff` fills these during execution.
-
-**Rule:** Task Enrichment does NOT require a separate user approval gate. It is a mechanical transformation of already-approved `tasks.md` content.
-
-## Step 8 — Output
-
-After writing all files:
-1. Print a one-line summary of which skills were selected and why (list their kit paths as they appear in `.claude/CLAUDE.md`).
-2. Print the deployment/hosting config summary from `.claude/project-config.md`.
-3. Tell the user: `.spec/plan.md`, `.spec/requirements.md`, `.spec/design.md`, and `.spec/tasks.md` are ready. Individual task files are in `.spec/tasks/` — start with `task-001.md`. Run `/task-handoff` after each task completes.
-4. List the junctions created in `.claude/` so the user can see which agents, commands, rules, hooks, and contexts are available via the kit.
-5. Remind the user: editing any skill in the kit takes effect on the next Claude Code session start. Editing agents/commands takes effect immediately.
-6. Note: `.github/copilot-instructions.md` was created — it mirrors CLAUDE.md with explicit skill file paths. GitHub Copilot Chat auto-loads this file, so switching to Copilot and asking it to complete a task file will work out of the box.
+**Rule:** This step is mandatory and fires immediately after Step 5e. Never skip it. Never bypass the board.
 
 ## Step 9 — Validate Generated Files
 
-After all files are written, verify each expected path exists. Check for:
+After all files are written (Steps 1–5), verify each expected path exists before handing off to `@company-coo` in Step 6. Check for:
 
 **Real files (must exist as actual files):**
-- `.claude/CLAUDE.md` — contains `@KIT_PATH/skills/.../SKILL.md` imports for each selected skill
-- `.claude/CLAUDE.planning.md`
-- `.claude/project-config.md` — contains kit path and selected skill list
-- `.spec/plan.md`
-- `.spec/requirements.md`
-- `.spec/design.md`
-- `.spec/tasks.md`
-- `.spec/tasks/task-001.md`
-- `.gitignore`
-- `.env.example` (if env vars were defined)
+- `.claude/CLAUDE.md` — stub with empty `## Skills` section (to be filled by `@company-coo`)
+- `.claude/project-config.md` — stub with empty `## Selected Skills` section (to be filled by `@company-coo`)
+- `.gitignore` — generated with sensible defaults
+- `.env.example` (if env vars were already known from the project description)
 - `.git/` directory (git repo initialized)
-- `.github/copilot-instructions.md` — contains the same skills as `.claude/CLAUDE.md` as readable file paths
+- `.github/copilot-instructions.md` — stub, to be filled by `@company-coo` after skill selection
 
 **Junctions (must exist as directory junctions pointing to the kit):**
 - `.claude/agents/` → `KIT_PATH/agents/`
@@ -750,7 +441,7 @@ List any missing files or broken junctions as warnings. Do not declare success u
 
 If re-running on an existing project:
 
-1. Read existing `.claude/project-config.md`, `.claude/CLAUDE.md`, and `.claude/CLAUDE.planning.md` first.
+1. Read existing `.claude/project-config.md` and `.claude/CLAUDE.md` first.
 2. Read `KIT_PATH` from `project-config.md` — do not ask the user again.
 3. Present the current list of `@`-imported skills from CLAUDE.md and ask the user if any should be added or removed.
 4. For **new skills**: add a new `@KIT_PATH/skills/<category>/<skill>/SKILL.md` line to `.claude/CLAUDE.md`, add the skill to `project-config.md`, and add the corresponding absolute path line to the `## Skills` section of `.github/copilot-instructions.md`.
