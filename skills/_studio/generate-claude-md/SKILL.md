@@ -1,6 +1,6 @@
 ---
 name: generate-claude-md
-description: Generate a pair of CLAUDE.md files for any project — one for planning phase, one for execution phase. Selects only the relevant skills based on what is being built. Both files are token-minimal. Use when starting a new project or restructuring an existing one.
+description: Set up a new project — git, .gitignore, .env.example, .claude/, .spec/, .kit/ — then route through the board to select skills, copy them into .kit/, run the company planning skill, and write a lean CLAUDE.md. Use when starting a new project.
 ---
 
 # Generate CLAUDE.md Skill
@@ -113,7 +113,7 @@ This file IS committed to git (it's excluded from `.gitignore` via `!.env.exampl
 Create `.claude/` in the project root if it doesn't exist. All generated config and CLAUDE.md files go here.
 Create `.spec/` in the project root if it doesn't exist. All planning artifacts (`requirements.md`, `design.md`, `tasks/`) go here.
 
-**Do not create `.claude/skills/`** — skills are referenced by absolute `@` path only, never copied.
+**Do not create `.claude/skills/`** — selected skills are copied into `.kit/skills/` by the lead CEO in Step 6c.
 
 ## Step 5 — Copy Kit Content + Write CLAUDE.md
 
