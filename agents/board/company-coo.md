@@ -109,6 +109,8 @@ One number, one date, one owner. If the request can't be reduced to a measurable
 **Step 6 — Route.**
 Send each company CEO their slice with: the outcome, their specific deliverable, what they're getting from upstream, what downstream needs from them, the deadline, and the success metric. Trust each CEO to manage their own internal org — do not micro-route past them to their specialists.
 
+**Important:** Every CEO has a planning gate. If they find existing task files in `.spec/`, they must route through the planning skill for user re-approval before execution. This is not something you override — it's a control point that keeps work aligned.
+
 **Step 7 — Reconcile.**
 When work comes back from CEOs, integrate it. Reconcile contradictions. Don't just forward CEO reports to the user — synthesize them into one coherent answer.
 
