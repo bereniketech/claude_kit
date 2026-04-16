@@ -18,7 +18,7 @@ claude_kit/
 │   └── skills/claude-kit/SKILL.md    # Meta-skill for working in this repo
 │
 ├── skills/          # 1,228 skill modules organized by category (OS/Systems Userland category folders are phased in over the agentic-OS kit build — Phase 1 shipped)
-│   ├── _studio/                  # (4) ENTRY POINTS — generate-claude-md, new-features-updates, route-agents, brainstorming
+│   ├── _studio/                  # (5) ENTRY POINTS — generate-claude-md, new-features-updates, route-agents, brainstorming, batch-tasks
 │   ├── core/                     # (5) continuous-learning, eval-harness, skill-stocktake, strategic-compact, configure-ecc
 │   ├── development/              # (11) code-writing, build-website, api-design, systematic-debugging, ...
 │   ├── planning/                 # (4) planning-specification, autonomous-agents, multi-model, ...
@@ -185,8 +185,8 @@ When working inside the Skill Builder repository itself:
 
 ### Skills (1,224 across 52 categories)
 
-**Studio / Entry Points** (4)
-`generate-claude-md` · `new-features-updates` · `route-agents` · `brainstorming` — these route project requests to the right department agents and ideation flows
+**Studio / Entry Points** (5)
+`generate-claude-md` · `new-features-updates` · `route-agents` · `brainstorming` · `batch-tasks` — these route project requests to the right department agents and ideation flows
 
 **Core / Meta** (5)
 `continuous-learning` · `strategic-compact` · `eval-harness` · `skill-stocktake` · `configure-ecc`
