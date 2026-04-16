@@ -115,6 +115,33 @@ Create `.spec/` in the project root if it doesn't exist. All planning artifacts 
 
 **Do not create `.claude/skills/`** — selected skills are copied into `.kit/skills/` by the lead CEO in Step 6c.
 
+### 4e — Create .claudeignore
+
+Create `.claudeignore` in the project root to prevent Claude from loading large or irrelevant files into context:
+
+```
+# Kit content — loaded on demand, not at session start
+.kit/
+
+# Planning artifacts — read only when task requires
+.spec/
+
+# Dependencies
+node_modules/
+__pycache__/
+.venv/
+
+# Build output
+dist/
+build/
+
+# Secrets
+.env
+.env.*
+```
+
+If the project type is known, add language-specific build output paths (e.g. `target/` for Rust/Java, `*.pyc` for Python). The `.kit/` entry is always included — kit files are large and should only be read when explicitly needed.
+
 ## Step 5 — Copy Kit Content + Write CLAUDE.md
 
 Kit content is **copied** into `PROJECT_ROOT/.kit/` — agents, commands, hooks, contexts, rules, and selected skills. The kit itself is never modified. The project is fully self-contained.
@@ -189,6 +216,7 @@ Before handing off to the board, verify each expected path exists.
 - `.claude/CLAUDE.md`
 - `.claude/project-config.md`
 - `.gitignore`
+- `.claudeignore`
 - `.git/` directory
 
 **Copied directories (must exist under `.kit/`):**
