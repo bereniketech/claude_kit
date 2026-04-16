@@ -37,16 +37,14 @@ If the CWD contains existing project files (source code, `package.json`, `pyproj
 
 **Skip all deployment, hosting, stack, and auth decisions.** The board will assess the project and decide the right stack, package manager, hosting, database, and auth. Pre-filling these before the board has seen the project produces wrong defaults that the board then has to undo.
 
-## Step 3 — Analyze Project Description (STOP — No Infrastructure)
+## Step 3 — Analyze Project Description
 
 From Step 1, understand what's being built:
 - Type of project (web app, CLI, data pipeline, etc.)
 - Primary purpose and users
 - Any existing codebase or starting point
 
-**STOP HERE.** Do not set up infrastructure, create files, or select skills. Analysis only.
-
-This becomes the input to the board in Step 6.
+This becomes the input to the board in Step 6. **Do not select skills, plan features, or make stack decisions here** — that belongs to the board. Proceed immediately to Step 4 (infrastructure setup).
 
 ## Step 4 — Infrastructure Setup
 
@@ -113,12 +111,13 @@ This file IS committed to git (it's excluded from `.gitignore` via `!.env.exampl
 ### 4d — Set Up Project Folders
 
 Create `.claude/` in the project root if it doesn't exist. All generated config and CLAUDE.md files go here.
-Also create `.claude/skills/` — this is where selected skill files will be copied using the correct folder structure.
-Create `.spec/` in the project root if it doesn't exist. All planning artifacts (`plan.md`, `requirements.md`, `design.md`, `tasks.md`) go here.
+Create `.spec/` in the project root if it doesn't exist. All planning artifacts (`requirements.md`, `design.md`, `tasks/`) go here.
 
-## Step 5 — Create Junctions + Write CLAUDE.md
+**Do not create `.claude/skills/`** — skills are referenced by absolute `@` path only, never copied.
 
-Projects reference the skill library directly — **no files are copied**. Directory junctions (Windows: `mklink /J`, zero disk usage) make agents, commands, rules, hooks, and contexts available. Skills are loaded into context only via explicit absolute-path `@` imports in `CLAUDE.md`.
+## Step 5 — Copy Kit Content + Write CLAUDE.md
+
+Kit content is **copied** into `PROJECT_ROOT/.kit/` — agents, commands, hooks, contexts, rules, and selected skills. The kit itself is never modified. The project is fully self-contained.
 
 ### 5a — Determine Kit Path
 
@@ -127,170 +126,37 @@ Read the absolute path of the skill library. If unknown, ask the user once:
 
 Store this as `KIT_PATH`. Use forward slashes throughout.
 
-### 5b — Create Directory Junctions
+### 5b — Create .kit/ Folder
 
-Run these commands via Bash. Create `.claude/` and required subdirectories first if they don't exist.
+Create `PROJECT_ROOT/.kit/` as an empty placeholder. Nothing is copied yet — the board decides what gets copied in Step 6.
 
 ```bash
-# Agents and commands — entire kit dirs, on-demand only (zero context cost)
-cmd /c mklink /J "PROJECT_ROOT\.claude\agents"   "KIT_PATH\agents"
-cmd /c mklink /J "PROJECT_ROOT\.claude\commands" "KIT_PATH\commands"
-
-# Hooks and contexts
-cmd /c mklink /J "PROJECT_ROOT\.claude\hooks"    "KIT_PATH\hooks"
-cmd /c mklink /J "PROJECT_ROOT\.claude\contexts" "KIT_PATH\contexts"
-
-# Rules — always include common; add language-specific only if relevant
-cmd /c mklink /J "PROJECT_ROOT\.claude\rules\common" "KIT_PATH\rules\common"
+mkdir "PROJECT_ROOT\.kit"
 ```
 
-Language-specific rules junctions (add only if selected skill matches):
+**Rule:** Never modify any file under `KIT_PATH`. The kit is read-only source. The project owns everything under `.kit/`.
 
-| Selected skill | Additional junction |
-|---|---|
-| `golang-patterns` | `cmd /c mklink /J "PROJECT\.claude\rules\golang" "KIT\rules\golang"` |
-| `python-patterns` | `cmd /c mklink /J "PROJECT\.claude\rules\python" "KIT\rules\python"` |
-| `kotlin-patterns` | `cmd /c mklink /J "PROJECT\.claude\rules\kotlin" "KIT\rules\kotlin"` |
-| `build-website-web-app` or `java-patterns` | `cmd /c mklink /J "PROJECT\.claude\rules\typescript" "KIT\rules\typescript"` |
-| `swift-patterns` | `cmd /c mklink /J "PROJECT\.claude\rules\swift" "KIT\rules\swift"` |
+### 5c — Write CLAUDE.md
 
-**If a junction target directory does not exist in the kit, skip it silently.**
+Write `PROJECT_ROOT/.claude/CLAUDE.md` using this exact template. Skills and agents are referenced by local `.kit/` paths — no `@` imports, no kit paths.
 
-### 5c — Write CLAUDE.md with Absolute @imports
-
-Write `PROJECT_ROOT/.claude/CLAUDE.md` with absolute-path `@` imports for **only** the skills selected in Step 3. Do not include all skills — only the ones relevant to this project.
-
-Always-include skills for every project (add their absolute paths):
-- `code-writing-software-development` (`skills/development/code-writing-software-development/SKILL.md`)
-- `strategic-compact` (`skills/core/strategic-compact/SKILL.md`)
-- `token-cost` (`rules/common/token-cost.md`) — load via `@KIT_PATH/rules/common/token-cost.md`
-
-Add only when the project needs them (do NOT include by default — each adds context cost):
-- `continuous-learning` — long-running projects with evolving patterns
-- `autonomous-agents-task-automation` — projects that orchestrate agents or automate pipelines
-- `notebooklm` — projects that use NotebookLM as a second brain
-- `wrapup` — projects with multi-session workflows
-
-Add from Step 3 selections (examples):
-- `tdd-workflow` → `skills/testing-quality/tdd-workflow/SKILL.md`
-- `build-website-web-app` → `skills/development/build-website-web-app/SKILL.md`
-- `security-review` → `skills/testing-quality/security-review/SKILL.md`
-- `golang-patterns` → `skills/languages/golang-patterns/SKILL.md`
-
-**@import format** (absolute path, forward slashes):
-```
-@KIT_PATH/skills/<category>/<skill-name>/SKILL.md
-```
-
-Template CLAUDE.md (skills will be added by `@company-coo` after assessing the project):
 ```markdown
 # [Project Name]
 
-## Skills
-_(To be populated by @company-coo. The board will add only the skills needed for this specific project.)_
+## Active Task
+Tasks: `.spec/tasks/` · Current: `.spec/tasks/task-001.md`
 
-## Second Brain — NotebookLM
-**ALWAYS check the AI Brain notebook BEFORE searching the codebase.**
-When you need context about past decisions, patterns, architecture, or session history:
-1. Read Brain notebook ID from memory files (`reference_brain_notebook.md`)
-2. Query: `notebooklm ask "your question" --notebook <BRAIN_NOTEBOOK_ID>`
-3. If the Brain returns relevant context → use it directly, DO NOT search the codebase
-4. Only if the Brain has no match → fall back to codebase search, memory files, and .spec/ artifacts
+## Agents
+`.kit/agents/` — entry point: `@company-coo`
 
-## Active Agent Team
-
-**Always start from the board. Describe your task naturally — the board will route internally.**
-
-### Board (entry points)
-| Agent | When to use |
-|---|---|
-| `@company-coo` | Building something, launching a product, cross-company initiatives, anything spanning software + marketing + media |
-| `@chief-design-officer` | Design work that crosses company lines — software UI, marketing brand, and media visuals must be coherent together |
-| `@people-operations-expert` | Hiring, comp bands, performance reviews, employment contracts, handbook, onboarding |
-| `@chief-of-staff` | Comms triage (email, Slack, LINE, Messenger), decision tracking, weekly reviews, escalations between CEOs |
-
-### How the board routes (ALWAYS respect hierarchy)
-- `@company-coo` routes to: `@software-cto` (code, AI, infra, product, security, OS), `@chief-marketing-officer` (SEO, ads, growth, brand), `@chief-content-officer` (blog, video, podcast, social)
-- Each CEO routes to specialists *within their company* for detailed planning and execution
-- `@chief-design-officer` coordinates: `ui-design-expert` (inside software-company), `brand-expert` (inside marketing-company), `presentation-expert` (inside media-company)
-- **CRITICAL:** Never reach past a board member into operating companies. Never reach past a CEO into specialists. Always respect the chain: board → CEO → specialist.
-- **Planning rule:** Plans (requirements → design → tasks) originate from specialists, never from board members or CEOs directly.
-
-## Advisor Strategy
-
-Use a cost-efficient executor paired with Opus-level reasoning only on hard decisions.
-
-```python
-import anthropic
-client = anthropic.Anthropic()
-response = client.messages.create(
-    model="claude-sonnet-4-6",        # executor drives the task
-    tools=[
-        {
-            "type": "advisor_20260301",
-            "name": "advisor",
-            "model": "claude-opus-4-6",   # consulted only when needed
-            "max_uses": 3,
-        },
-        # ...your other tools
-    ],
-    messages=[{"role": "user", "content": "..."}],
-    extra_headers={"anthropic-beta": "advisor-tool-2026-03-01"},
-)
-```
-
-**Rules:** Executor owns the work end-to-end. Advisor returns guidance only (400–700 tokens) — never writes files, calls tools, or produces user-facing output. Set `max_uses` to 2–4; >5 signals the task scope is too broad. Advisor tokens billed at Opus rates; executor at Sonnet/Haiku rates — overall cost stays below full-Opus runs.
-
-## Active Feature
-Feature: _(to be updated after planning starts)_
-Tasks: .spec/tasks/
-Current task: .spec/tasks/task-001.md
-Branch: main
-
-## Start Here
-1. Read `## Active Feature` above — note the current task path.
-2. Open the current task file — it is self-contained.
-3. Skills section lists all rules you must follow — read them at session start.
-4. Implement. Run `/task-handoff` when done.
-5. Run `/wrapup` at end of session to save context to the AI Brain.
-
-## Reference (load on demand — do not read at session start)
-- Agents: `.claude/agents/` — invoke with `@agent-name`; use only when task specifies
-- Commands: `.claude/commands/` — key ones: `/verify`, `/task-handoff`, `/save-session`, `/tdd`, `/code-review`, `/wrapup`
-- Config: `.claude/project-config.md` — deployment targets, env vars, hosting
-- Rules: `.claude/rules/` — applied automatically
+## Commands
+`.kit/commands/` — key: `/verify` · `/task-handoff` · `/tdd` · `/code-review` · `/wrapup`
 
 ## Bug Log
-Append to `bug-log.md` immediately after any fix:
-`## [YYYY-MM-DD] title | What broke: … | Root cause: … | Fix: … | File(s): …`
-
-## Self-Check (before marking task done)
-1. Acceptance Criteria in current task file — all pass?
-2. Hardcoded values that should be env vars?
-3. Upstream/downstream breakage?
-4. `bug-log.md` updated if errors occurred?
-
-## End of Session
-Run `/wrapup` after `/task-handoff` or when ending any work session. This captures decisions, learnings, and open threads into the AI Brain notebook for future retrieval.
-
-## Token Cost & Usage Limits
-
-| Task | Model | Rule |
-|---|---|---|
-| Scaffolding, simple edits | Haiku 4.5 | Default for worker agents |
-| Feature dev, multi-file | Sonnet 4.6 | Default executor |
-| Architecture, hard decisions | Opus 4.6 (advisor only) | `max_uses: 2–4`, never full-session |
-
-- Load only the skills this task needs — do not `@`-import unused skills.
-- Read files with `Grep`/targeted `Read`; never `Read` an entire large file.
-- Run `/compact` at phase boundaries (not mid-task) when tool call count exceeds 40.
-- Set `max_tokens` explicitly on API calls with predictable output size.
-- On `429` rate-limit: exponential back-off (1 s → 2 s → 4 s … cap 60 s).
-- Full rules: `rules/common/token-cost.md`
-
-## Output Discipline
-Lead with the action. No preamble, no post-summary. Bullet points over prose.
+`bug-log.md` — date · what broke · root cause · fix · files.
 ```
+
+Skills are added by `@company-coo` after board assessment — each selected skill is copied to `.kit/skills/` and listed here as a plain file path (not an `@` import).
 
 ### 5d — Write project-config.md
 
@@ -313,114 +179,6 @@ _(language-specific rules added by board after stack is decided)_
 _(To be decided and populated by the board)_
 ```
 
-### 5e — Write `.github/copilot-instructions.md`
-
-Generate `PROJECT_ROOT/.github/copilot-instructions.md` as a Copilot-compatible mirror of `.claude/CLAUDE.md`. GitHub Copilot Chat auto-loads this file for every request in the repository.
-
-**Transform the `@` import lines** — replace all `@KIT_PATH/skills/.../SKILL.md` lines with a single "Skills" section listing the same paths explicitly:
-
-```markdown
-## Skills — Read These Files for Coding Standards
-When implementing tasks, read these files for detailed coding standards:
-- KIT_PATH/skills/development/code-writing-software-development/SKILL.md
-- KIT_PATH/skills/core/strategic-compact/SKILL.md
-- KIT_PATH/rules/common/token-cost.md
-- KIT_PATH/skills/core/wrapup/SKILL.md
-- [one line per project-specific selected skill]
-```
-
-**Add `## Second Brain — NotebookLM` section at the top, before `## Start Here`:**
-
-```markdown
-## Second Brain — NotebookLM
-**ALWAYS check the AI Brain BEFORE searching the codebase.**
-When you need context about past decisions, patterns, architecture, or session history:
-1. Read the Brain notebook ID from `.claude/memory/` files (look for `reference_brain_notebook.md`)
-2. If the NotebookLM CLI is available, query: `notebooklm ask "your question" --notebook <BRAIN_NOTEBOOK_ID>`
-3. Also check memory files in `.claude/memory/` and planning artifacts in `.spec/`
-4. If the Brain or memory files return relevant context → use it directly, DO NOT search the codebase
-5. Only if prior sources have no match → fall back to codebase search
-This minimizes token usage by leveraging pre-summarized knowledge from prior sessions.
-```
-
-**Keep all other CLAUDE.md sections unchanged:** `## Active Feature`, `## Reference`, `## Bug Log`, `## Self-Check`, `## End of Session`, `## Output Discipline`.
-
-**Update `## Start Here` item 3** from:
-`"Skills are already loaded via @imports above — no need to load them manually."`
-to:
-`"Read the skill files listed in ## Skills above for coding standards."`
-
-**Add a `## Key Commands` section** after `## Reference` — this is critical for GitHub Copilot, which cannot traverse directory junctions. When the user says "run /command-name", use `read_file` on the corresponding path below and follow its instructions exactly:
-
-```markdown
-## Key Commands
-When the user types `/command-name`, read the corresponding file and follow its instructions exactly.
-
-### Core Workflow
-- `/checkpoint` → KIT_PATH/commands/core/checkpoint.md
-- `/save-session` → KIT_PATH/commands/core/save-session.md
-- `/resume-session` → KIT_PATH/commands/core/resume-session.md
-- `/task-handoff` → KIT_PATH/commands/core/task-handoff.md
-- `/sessions` → KIT_PATH/commands/core/sessions.md
-- `/aside` → KIT_PATH/commands/core/aside.md
-- `/projects` → KIT_PATH/commands/core/projects.md
-- `/learn` → KIT_PATH/commands/core/learn.md
-- `/learn-eval` → KIT_PATH/commands/core/learn-eval.md
-- `/skill-create` → KIT_PATH/commands/core/skill-create.md
-- `/evolve` → KIT_PATH/commands/core/evolve.md
-- `/eval` → KIT_PATH/commands/core/eval.md
-- `/promote` → KIT_PATH/commands/core/promote.md
-- `/setup-pm` → KIT_PATH/commands/core/setup-pm.md
-- `/harness-audit` → KIT_PATH/commands/core/harness-audit.md
-- `/instinct-export` → KIT_PATH/commands/core/instinct-export.md
-- `/instinct-import` → KIT_PATH/commands/core/instinct-import.md
-- `/instinct-status` → KIT_PATH/commands/core/instinct-status.md
-- `/wrapup` → KIT_PATH/skills/core/wrapup/SKILL.md
-
-### Development
-- `/verify` → KIT_PATH/commands/development/verify.md
-- `/code-review` → KIT_PATH/commands/development/code-review.md
-- `/build-fix` → KIT_PATH/commands/development/build-fix.md
-- `/refactor-clean` → KIT_PATH/commands/development/refactor-clean.md
-- `/update-docs` → KIT_PATH/commands/development/update-docs.md
-- `/update-codemaps` → KIT_PATH/commands/development/update-codemaps.md
-- `/pm2` → KIT_PATH/commands/development/pm2.md
-- `/prompt-optimize` → KIT_PATH/commands/development/prompt-optimize.md
-
-### Testing & Quality
-- `/tdd` → KIT_PATH/commands/testing-quality/tdd.md
-- `/e2e` → KIT_PATH/commands/testing-quality/e2e.md
-- `/quality-gate` → KIT_PATH/commands/testing-quality/quality-gate.md
-- `/test-coverage` → KIT_PATH/commands/testing-quality/test-coverage.md
-
-### Planning
-- `/plan` → KIT_PATH/commands/planning/plan.md
-- `/orchestrate` → KIT_PATH/commands/planning/orchestrate.md
-- `/model-route` → KIT_PATH/commands/planning/model-route.md
-- `/loop-start` → KIT_PATH/commands/planning/loop-start.md
-- `/loop-status` → KIT_PATH/commands/planning/loop-status.md
-- `/multi-plan` → KIT_PATH/commands/planning/multi-plan.md
-- `/multi-execute` → KIT_PATH/commands/planning/multi-execute.md
-- `/multi-workflow` → KIT_PATH/commands/planning/multi-workflow.md
-- `/multi-backend` → KIT_PATH/commands/planning/multi-backend.md
-- `/multi-frontend` → KIT_PATH/commands/planning/multi-frontend.md
-
-### Languages
-- `/go-build` → KIT_PATH/commands/languages/go-build.md
-- `/go-review` → KIT_PATH/commands/languages/go-review.md
-- `/go-test` → KIT_PATH/commands/languages/go-test.md
-- `/gradle-build` → KIT_PATH/commands/languages/gradle-build.md
-- `/kotlin-build` → KIT_PATH/commands/languages/kotlin-build.md
-- `/kotlin-review` → KIT_PATH/commands/languages/kotlin-review.md
-- `/kotlin-test` → KIT_PATH/commands/languages/kotlin-test.md
-- `/python-review` → KIT_PATH/commands/languages/python-review.md
-
-### Specialized
-- `/claw` → KIT_PATH/commands/specialized/claw.md
-```
-
-**Rule:** Skill paths in `copilot-instructions.md` must match exactly the `@` imports in `.claude/CLAUDE.md`. Both files always list the same skill set.
-
 ---
 
 ## Step 5f — Validate Generated Files
@@ -431,17 +189,16 @@ Before handing off to the board, verify each expected path exists.
 - `.claude/CLAUDE.md`
 - `.claude/project-config.md`
 - `.gitignore`
-- `.github/copilot-instructions.md`
 - `.git/` directory
 
-**Junctions (must resolve correctly — check a known file through each):**
-- `.claude/agents/` → `KIT_PATH/agents/`
-- `.claude/commands/` → `KIT_PATH/commands/`
-- `.claude/hooks/` → `KIT_PATH/hooks/`
-- `.claude/contexts/` → `KIT_PATH/contexts/`
-- `.claude/rules/common/` → `KIT_PATH/rules/common/`
+**Copied directories (must exist under `.kit/`):**
+- `.kit/agents/`
+- `.kit/commands/`
+- `.kit/hooks/`
+- `.kit/contexts/`
+- `.kit/rules/`
 
-List any missing files or broken junctions as warnings. Only proceed to Step 6 once all checks pass (or warnings are acknowledged by the user).
+List any missing directories as warnings. Only proceed to Step 6 once all checks pass (or warnings are acknowledged by the user).
 
 ---
 
@@ -457,15 +214,32 @@ Invoke the Skill tool with `route-agents`. Pass it the project description from 
 
 Invoke `@company-coo` with:
 1. **Project description** — what is being built, for whom, and why (from Step 1)
-2. **Infrastructure status** — git initialized, `.claude/CLAUDE.md` stub ready (Skills section empty, awaits board decision), junctions created, validation passed (Step 5f)
+2. **Infrastructure status** — git initialized, `.claude/CLAUDE.md` stub ready, `.kit/` folder created (empty, awaiting board content selection), validation passed (Step 5f)
 3. **route-agents result** — lead company and supporting companies identified in Step 6a
-4. **Instruction to company-coo:** "Select the lead CEO based on the route-agents result. Route to that CEO only — do not route to specialists directly. The lead CEO must invoke their company planning skill before any execution begins."
+4. **Instruction to company-coo:** "Select the lead CEO. Return the exact list of skills, agents, commands, hooks, contexts, and rules to copy from `KIT_PATH` into `.kit/`. The lead CEO must then invoke their company planning skill."
 
 For anything `route-agents` cannot classify, default to `@company-coo` — the COO will reframe and route.
 
-### 6c — Lead CEO runs the company planning skill
+### 6c — Copy selected content into .kit/
 
-`company-coo` routes to the lead CEO. The lead CEO **must immediately** invoke their company's planning skill:
+Once `@company-coo` returns the list of selected skills, agents, commands, hooks, contexts, and rules — copy **only those items** from `KIT_PATH` into `PROJECT_ROOT/.kit/`:
+
+```bash
+# For each item the board selected:
+xcopy /E /I /Y "KIT_PATH\skills\<category>\<skill>"   "PROJECT_ROOT\.kit\skills\<category>\<skill>"
+xcopy /E /I /Y "KIT_PATH\agents\<company>\<agent>.md" "PROJECT_ROOT\.kit\agents\<company>\<agent>.md"
+xcopy /E /I /Y "KIT_PATH\commands\<category>\<cmd>.md" "PROJECT_ROOT\.kit\commands\<category>\<cmd>.md"
+xcopy /E /I /Y "KIT_PATH\rules\<ruleset>"             "PROJECT_ROOT\.kit\rules\<ruleset>"
+# hooks and contexts are always included in full:
+xcopy /E /I /Y "KIT_PATH\hooks"    "PROJECT_ROOT\.kit\hooks"
+xcopy /E /I /Y "KIT_PATH\contexts" "PROJECT_ROOT\.kit\contexts"
+```
+
+**Rule:** Only copy what the board explicitly listed. Do not copy entire directories speculatively.
+
+### 6d — Lead CEO runs the company planning skill
+
+The lead CEO **must immediately** invoke their company's planning skill:
 
 | Lead company | Planning skill to invoke |
 |---|---|
@@ -474,6 +248,20 @@ For anything `route-agents` cannot classify, default to `@company-coo` — the C
 | media-company | `planning-specification-architecture-media` |
 
 The planning skill runs its three gated phases (brief/requirements → design → tasks). Only after all phases are user-approved does execution begin.
+
+### 6e — Lead CEO writes skills into CLAUDE.md
+
+After planning is complete and skills are confirmed, the lead CEO writes the final `## Skills` section into `PROJECT_ROOT/.claude/CLAUDE.md`. Replace the placeholder line with one plain file path per selected skill, pointing into `.kit/`:
+
+```markdown
+## Skills
+.kit/skills/development/code-writing-software-development/SKILL.md
+.kit/skills/core/strategic-compact/SKILL.md
+.kit/rules/common/token-cost.md
+[one line per additional skill the board selected]
+```
+
+Plain paths only — no `@` imports, no kit paths, no absolute paths outside the project.
 
 **Rule:** Never skip `route-agents`. Never invoke a company CEO directly — always go through `company-coo`. Never let the board or COO create plans — planning belongs to the lead CEO's planning skill.
 
@@ -484,10 +272,10 @@ If re-running on an existing project:
 1. Read existing `.claude/project-config.md` and `.claude/CLAUDE.md` first.
 2. Read `KIT_PATH` from `project-config.md` — do not ask the user again.
 3. Present the current list of `@`-imported skills from CLAUDE.md and ask the user if any should be added or removed.
-4. For **new skills**: add a new `@KIT_PATH/skills/<category>/<skill>/SKILL.md` line to `.claude/CLAUDE.md`, add the skill to `project-config.md`, and add the corresponding absolute path line to the `## Skills` section of `.github/copilot-instructions.md`.
-5. For **removed skills**: delete the corresponding `@` line from `.claude/CLAUDE.md`, remove from `project-config.md`, and remove the matching line from `.github/copilot-instructions.md`. Both files must always list the same skill set.
-6. Check that all junctions exist and resolve correctly. Create any missing junctions (e.g. if a new language ruleset is needed).
-7. Do NOT recreate junctions that already exist and resolve correctly.
+4. For **new skills**: copy `KIT_PATH/skills/<category>/<skill>/` into `.kit/skills/<category>/<skill>/` and record the path in `project-config.md`. Add a plain file reference in `.claude/CLAUDE.md` under `## Skills`.
+5. For **removed skills**: delete the skill folder from `.kit/skills/`, remove the reference from `.claude/CLAUDE.md`, and remove it from `project-config.md`.
+6. Check that `.kit/` subdirectories all exist. Re-copy any that are missing.
+7. Do NOT re-copy directories that already exist and are intact.
 8. Ask the user before overwriting `CLAUDE.md` content other than the `@` import lines.
 
 ### 10a — Re-run Validation and Board Routing
@@ -495,7 +283,7 @@ If re-running on an existing project:
 After updating skills and CLAUDE.md, re-run Steps 5f and 6:
 
 1. Read all existing `.spec/` files (`requirements.md`, `design.md`, `tasks/`) and pass them to `company-coo` as context, so the planning skill treats this as a revision, not a blank slate.
-2. Validate all junctions and `@imports` (Step 5f) — create any missing junctions for newly added language rulesets.
+2. Validate `.kit/` directories (Step 5f) — re-copy any missing subdirectories from the kit.
 3. Route the updated project description to `@company-coo` (Step 6) with a note that `.spec/` artifacts already exist and should be revised rather than replaced.
 4. The lead CEO will invoke their company planning skill, which will revise the existing documents through its gated phases.
 
@@ -513,11 +301,11 @@ Preserve tasks already marked done — pass that context to the board so the pla
 - **NEVER write any project file into the skill library directory.** Always confirm `PROJECT_ROOT` in Step 1b before writing anything.
 - **If the CWD contains `.claude/skills/*/SKILL.md` files, it is the skill library — ask for a separate project folder.**
 - Never include a skill the project doesn't need. Select only the 2–6 skills whose guidance applies to every task in this project.
-- Never copy skill content into the project — use absolute `@KIT_PATH/skills/.../SKILL.md` imports in `.claude/CLAUDE.md`.
+- Never modify files under `KIT_PATH`. Copy into `.kit/` only — the kit is read-only source.
 - Keep each section ≤ 3 lines. Cut every word that doesn't change behavior.
 - If the project already has a `plan.md`, read it before generating — use it to pre-fill context for `requirements.md` and `design.md`.
 - NEVER write `requirements.md`, `design.md`, or `tasks.md`. These are produced by the company planning skill after the board routes in Step 6.
 - If the user's project has existing `workflows/` or `tools/`, mention them in the Layout section rather than overwriting.
 - Always store project config in `.claude/project-config.md` — never hardcode deployment details in CLAUDE.md.
-- If a junction target directory does not exist in the kit, skip it silently and note it as missing in Step 5f validation output rather than failing.
+- If a source directory does not exist in the kit during copy, skip it silently and note it as missing in Step 5f validation output rather than failing.
 - Never create `.claude/skills/` as a directory in the project. Skills are referenced by absolute `@` path only.
