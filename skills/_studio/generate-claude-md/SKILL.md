@@ -1,62 +1,98 @@
 ---
 name: generate-claude-md
-description: Bootstrap a new project end-to-end. Runs 6 phases in order without stopping — gather context, scaffold infrastructure (git, .gitignore, .claudeignore, .env.example, .claude/, .spec/, .kit/), write stub files, validate, route through route-agents + @company-coo, then lead CEO copies board-selected kit content into .kit/ and runs the company planning skill. CLAUDE.md is a tiny navigation stub — it never lists skills. Skills, agents, commands, and rules are declared per-task inside each task file, so every task is self-sufficient.
+description: Bootstrap a project end-to-end. Runs 7 phases in strict order — detect/repair prior run, gather context, scaffold infrastructure, write stub files, validate, route through board, lead CEO copies kit content and runs planning. CLAUDE.md is a fixed tiny navigation stub — never lists skills. Every task file in .spec/tasks/ declares its own skills/agents/commands/rules so tasks are self-sufficient.
 ---
 
 # Project Bootstrap
 
-This skill is not about generating a file. It bootstraps a project: scaffolds infrastructure, routes through the board, lets the lead CEO select and install kit content, and runs planning so every task file is self-sufficient.
+This skill does NOT generate a single CLAUDE.md file. It bootstraps an entire project and does not finish until planning is complete, task files exist, and kit content is installed.
 
-**Hard rule — do not stop early:** Writing files in Phases 2–3 is not the end. You are only done after Phase 6 — planning complete, task files written, kit content copied. If you find yourself thinking "I wrote CLAUDE.md, I'm done" — you are not done. Continue.
+---
 
-**Hard rule — do not analyze into CLAUDE.md:** CLAUDE.md is a fixed tiny navigation stub. Never summarize the project's architecture, stack, or plan into it. Your analysis from Phase 1 is input to the **board** (Phase 5), not to CLAUDE.md.
+## Completion Contract — read this first
 
-**Hard rule — skills are task-scoped, never project-scoped:** CLAUDE.md does **not** list skills. Each task file in `.spec/tasks/` declares the exact skills, agents, commands, and rules it needs. Tasks load their own context. This keeps context per-task minimal and every task independently runnable.
+You are NOT done until ALL of these exist:
+
+1. `PROJECT_ROOT/.git/` directory
+2. `PROJECT_ROOT/.gitignore`
+3. `PROJECT_ROOT/.claudeignore`
+4. `PROJECT_ROOT/.env.example`
+5. `PROJECT_ROOT/.claude/CLAUDE.md` (exactly the fixed stub from Phase 3a — no analysis, no stack, no skills section)
+6. `PROJECT_ROOT/.claude/project-config.md` with `## Selected Skills / Agents / Commands / Rules Active / Stack` all populated
+7. `PROJECT_ROOT/.kit/` contains the board-selected skills, agents, commands, rules (plus full hooks/ and contexts/)
+8. `PROJECT_ROOT/.spec/` contains planning artifacts (brief, design, tasks)
+9. `PROJECT_ROOT/.spec/tasks/task-001.md` exists with its own `## Skills`, `## Agents`, `## Commands` sections at the top
+
+If any of these are missing, the skill is not complete. Do not stop. Do not return control to the user with "I've created CLAUDE.md". Continue until all 9 checks pass.
+
+---
+
+## Three Hard Rules
+
+1. **Never stop at Phase 3.** Writing CLAUDE.md is not the end. Writing all stub files is not the end. Phase 6 + Phase 7 must run.
+2. **Never write project analysis into CLAUDE.md.** CLAUDE.md is the fixed 10-line stub from Phase 3a. Architecture, tech stack, and pipeline descriptions belong in `.spec/design.md`, NEVER in CLAUDE.md. If the user's existing CLAUDE.md contains analysis, overwrite it with the stub.
+3. **CLAUDE.md has no `## Skills` section. Ever.** Skills are task-scoped. Each task file in `.spec/tasks/` declares its own skills/agents/commands/rules.
+
+---
+
+## Phase 0 — Detect Prior Run
+
+Before touching anything, inspect `PROJECT_ROOT` to decide entry point.
+
+Run these checks and classify:
+
+| Observed state | Entry phase |
+|---|---|
+| Empty or only `README.md` / `idea.md` | Start at Phase 1 |
+| `CLAUDE.md` exists at project root (wrong location — should be `.claude/CLAUDE.md`) | Read it for context, then **overwrite with stub in Phase 3a** at correct path |
+| `.claude/CLAUDE.md` exists but contains `## Stack`, `## Architecture`, or any prose beyond the fixed stub | **Overwrite in Phase 3a** with the correct stub |
+| `.claude/project-config.md` exists and is fully populated, `.kit/` populated, `.spec/tasks/` exists | Jump to Phase 7 (re-plan only) |
+| Partial: some stubs but `.kit/` empty or `.spec/tasks/` missing | Resume from the first incomplete phase, but re-run Phase 3a to ensure stubs are correct |
+
+State the classification in one line to the user, e.g.: "Detected partial prior run — CLAUDE.md at project root contains full analysis. Will move to `.claude/CLAUDE.md` as fixed stub and continue from Phase 2."
+
+Then continue. Never stop here.
 
 ---
 
 ## Phase 1 — Gather Context
 
-If the user has not described the project, ask one question:
+If the user has not described the project and no `idea.md` exists, ask:
 
 > "What are you building? (e.g. web app, data pipeline, CLI tool, research workflow, document automation)"
 
-If files already exist in the current directory, run `Glob` / `Grep` to infer the project type before asking.
+If `idea.md`, `README.md`, or stub code exists in `PROJECT_ROOT`, read them to build the project brief — do not re-ask the user.
 
 ### Confirm PROJECT_ROOT
 
-- If the CWD contains `.claude/skills/*/SKILL.md`, it is the kit library. **Do NOT write project files here.** Ask: "Where should I create the project folder? (e.g. `C:\Users\Hp\Desktop\Experiment\My Project`)"
-- If the CWD has existing project files (source code, `package.json`, `pyproject.toml`, the project's own `idea.md`, etc.) matching the description, use CWD as `PROJECT_ROOT`.
-- Otherwise ask.
+- If CWD contains `.claude/skills/*/SKILL.md`, it is the kit library. **Do NOT write project files here.** Ask: "Where should I create the project folder?"
+- If CWD has project files matching the user's description, use CWD as `PROJECT_ROOT`.
+- Otherwise ask once.
 
-Create the folder if it does not exist. All subsequent file paths are relative to `PROJECT_ROOT`.
+### Build the board brief (in working memory, NOT in a file)
 
-### Record project analysis for the board
-
-Capture (in your working memory, not in a file):
-- What the project is
+Capture:
+- Project name and one-line purpose
 - Primary users / outcome
-- Any existing files (idea.md, design spec, README, stub code)
+- Existing artifacts (paths only — e.g. `idea.md`, `README.md`)
+- Any tech stack hints from existing files
 
-This becomes the brief for the board in Phase 5. **Do not write this analysis into any file yet.**
+This brief is input to Phase 5. Do not write it into any file. **Especially not CLAUDE.md.**
+
+**NEXT: Phase 2.**
 
 ---
 
 ## Phase 2 — Scaffold Infrastructure
 
-Set up the project folder so it is git-compliant and ready for the board handoff.
-
 ### 2a — Git init
 
-If `git rev-parse --is-inside-work-tree` fails in the project root:
-```bash
-cd "PROJECT_ROOT" && git init && git branch -M main
-```
-Otherwise skip.
+If `.git/` missing: `cd PROJECT_ROOT && git init && git branch -M main`
 
 ### 2b — .gitignore
 
 Write `PROJECT_ROOT/.gitignore`:
+
 ```
 # Environment & secrets
 .env
@@ -80,7 +116,7 @@ Thumbs.db
 *.log
 ```
 
-If the project type is known, append dependency/build paths:
+Append dependency/build paths if project type is known:
 - Node/TS: `node_modules/`, `dist/`, `build/`
 - Python: `__pycache__/`, `.venv/`, `*.pyc`, `dist/`, `*.egg-info/`
 - Rust: `target/`
@@ -90,33 +126,26 @@ If the project type is known, append dependency/build paths:
 ### 2c — .claudeignore
 
 Write `PROJECT_ROOT/.claudeignore`:
+
 ```
-# Kit content — copied locally, loaded on demand only
 .kit/
-
-# Planning artifacts — read only when task requires
 .spec/
-
-# Dependencies
 node_modules/
 __pycache__/
 .venv/
 target/
-
-# Build output
 dist/
 build/
-
-# Secrets
 .env
 .env.*
 ```
 
-The `.kit/` entry is mandatory — kit files are large and must not auto-load into context.
+The `.kit/` entry is mandatory — kit files are large and must not auto-load.
 
 ### 2d — .env.example
 
-Write `PROJECT_ROOT/.env.example` as a stub. If known env vars came from the project description, add them with placeholder values. Otherwise write a minimal placeholder:
+Write `PROJECT_ROOT/.env.example`. If env vars can be inferred from the project brief, include them with placeholder values. Otherwise minimal:
+
 ```
 # Add project environment variables here as they are needed.
 # Never commit real secrets to this file.
@@ -125,22 +154,20 @@ Write `PROJECT_ROOT/.env.example` as a stub. If known env vars came from the pro
 ### 2e — Create folders
 
 ```bash
-mkdir -p "PROJECT_ROOT/.claude"
-mkdir -p "PROJECT_ROOT/.spec"
-mkdir -p "PROJECT_ROOT/.kit"
+mkdir -p "PROJECT_ROOT/.claude" "PROJECT_ROOT/.spec" "PROJECT_ROOT/.kit"
 ```
 
-`.kit/` stays empty until Phase 6a — the board decides what goes in.
+`.kit/` stays empty until Phase 6a. **Do not create `.claude/skills/`** — skills live in `.kit/skills/`.
 
-**Do not create `.claude/skills/`.** Skills live in `.kit/skills/` after the board selects them.
+**NEXT: Phase 3.**
 
 ---
 
 ## Phase 3 — Write Stub Files
 
-### 3a — CLAUDE.md (tiny navigation stub)
+### 3a — CLAUDE.md (fixed stub — no deviation)
 
-Write `PROJECT_ROOT/.claude/CLAUDE.md` with **exactly this content**. Do not add sections. Do not summarize the project. Do not list skills — skills are declared per-task.
+Write `PROJECT_ROOT/.claude/CLAUDE.md` with EXACTLY the content below. No extra sections. No tech stack. No architecture. No skills list. Replace only `[Project Name]`.
 
 ```markdown
 # [Project Name]
@@ -161,15 +188,14 @@ Kit content: `.kit/` (agents · commands · hooks · contexts · rules · skills
 `bug-log.md` — date · what broke · root cause · fix · files.
 ```
 
-Replace `[Project Name]` with the actual name. Everything else stays as-is. No `## Skills` section ever. Each task file is self-sufficient.
+**If a CLAUDE.md with different content already exists anywhere in the project (root or `.claude/`), OVERWRITE it with this stub.** Tech stack, architecture, and pipeline details belong in `.spec/design.md`, NEVER in CLAUDE.md. If the old CLAUDE.md had a root-level copy (e.g. `PROJECT_ROOT/CLAUDE.md`), delete that file after writing the correct one at `.claude/CLAUDE.md`.
 
 ### 3b — project-config.md
 
-Ask once if not known: "What is the absolute path to your claude_kit directory? (e.g. `C:/Users/Hp/Desktop/Experiment/claude_kit`)"
-
-Store as `KIT_PATH`. Use forward slashes.
+Ask once if unknown: "Absolute path to your claude_kit directory? (default: `C:/Users/Hp/Desktop/Experiment/claude_kit`)". Use forward slashes.
 
 Write `PROJECT_ROOT/.claude/project-config.md`:
+
 ```markdown
 # Project Configuration
 
@@ -192,102 +218,122 @@ _(To be populated by @company-coo)_
 _(To be decided by the board)_
 ```
 
+**NEXT: Phase 4.**
+
 ---
 
 ## Phase 4 — Validate
 
-Check each expected path exists:
+Verify every path exists. If any is missing, create it now. On fundamental failure (e.g. git init failed), report and stop. Otherwise continue immediately.
 
-**Must exist as files:**
-- `.git/` directory
-- `.gitignore`
-- `.claudeignore`
-- `.env.example`
-- `.claude/CLAUDE.md`
-- `.claude/project-config.md`
+**Files required:** `.git/`, `.gitignore`, `.claudeignore`, `.env.example`, `.claude/CLAUDE.md`, `.claude/project-config.md`
+**Folders required (may be empty):** `.claude/`, `.spec/`, `.kit/`
 
-**Must exist as empty folders:**
-- `.claude/`
-- `.spec/`
-- `.kit/`
+Reading back `.claude/CLAUDE.md`: it must be exactly the fixed stub. If anything else is in it, rewrite it now.
 
-If anything is missing, create it now. If something fundamental fails (e.g. git init fails), report the error and stop. Otherwise continue to Phase 5 immediately.
-
-**Reminder:** Writing the files above is **not** the end of the skill. Continue to Phase 5.
+**NEXT: Phase 5 — do NOT stop here.**
 
 ---
 
 ## Phase 5 — Route Through the Board
 
-This is where project-specific decisions get made. You do not make them — the board does.
+You do not make architecture decisions. The board does.
 
 ### 5a — Classify with route-agents
 
-Invoke the `Skill` tool with `route-agents`, passing the project description captured in Phase 1. `route-agents` returns: the correct board entry point, the lead company (software / marketing / media), and supporting companies.
+Invoke the `Skill` tool with `route-agents`, passing the project brief from Phase 1. It returns: board entry point, lead company, supporting companies.
 
-### 5b — Hand off to @company-coo
+### 5b — Invoke @company-coo
 
-Invoke `@company-coo` with:
+Use the `Agent` tool (or `@company-coo` invocation) with this exact brief:
 
 1. **Project description** — from Phase 1
-2. **Existing artifacts** — if the project already has an idea.md, design spec, README, or stub code, mention them by path
-3. **Infrastructure status** — git initialized, `.claude/`, `.spec/`, `.kit/` created (kit empty, awaiting board content selection), validation passed
-4. **route-agents result** — lead company and supporting companies
-5. **Explicit instruction:** "Select the lead CEO. Return the exact list of: (a) skills, (b) agents, (c) commands, (d) rules to copy from KIT_PATH into .kit/. Hooks and contexts can be copied in full — they are small. Then delegate planning to the lead CEO."
+2. **Existing artifacts** — paths to `idea.md`, `README.md`, stub code
+3. **Infrastructure status** — "git initialized; `.claude/`, `.spec/`, `.kit/` created; stubs written; validation passed"
+4. **route-agents result** — lead company, supporting companies
+5. **Required return payload** — "Return a JSON block containing:
+   ```
+   {
+     "lead_company": "software-company | marketing-company | media-company",
+     "lead_ceo": "<agent name>",
+     "skills": ["<category>/<skill-name>", ...],
+     "agents": ["<company>/<agent-name>", ...],
+     "commands": ["<category>/<command-name>", ...],
+     "rules": ["<ruleset>", ...]
+   }
+   ```
+   Do not create plans. Do not write files. Only return the selection JSON."
 
-Do not invoke a company CEO directly. Always route through `@company-coo`.
+Never invoke a company CEO directly. Always route through `@company-coo`.
+
+**NEXT: Phase 6 — YOU (the main thread) execute 6a–6d using the JSON returned by @company-coo. Do NOT wait for the COO to do the copying. Do NOT hand off to the CEO yet.**
 
 ---
 
-## Phase 6 — Lead CEO Closes the Loop
+## Phase 6 — Install Kit Content (YOU do this, not a sub-agent)
 
-Once `@company-coo` returns the selected-content list and hands off to the lead CEO, you (acting as the lead CEO by way of `@company-coo`'s delegation) execute 6a–6e in order.
+You — the main thread running this skill — execute all of 6a–6d. This is not delegated. The board returned a selection; your job is to install it.
 
 ### 6a — Copy board-selected content into .kit/
 
-Only copy what the board explicitly listed. Agents/commands/skills/rules are selective. Hooks and contexts copy in full (always small, always useful).
+For each item in the JSON returned by @company-coo:
 
 ```bash
-# For each selected skill:
+# Skills (one dir per skill):
 xcopy /E /I /Y "KIT_PATH\skills\<category>\<skill>"    "PROJECT_ROOT\.kit\skills\<category>\<skill>"
 
-# For each selected agent:
-xcopy /E /I /Y "KIT_PATH\agents\<company>\<agent>.md"  "PROJECT_ROOT\.kit\agents\<company>\<agent>.md"
+# Agents (one file per agent):
+xcopy /Y "KIT_PATH\agents\<company>\<agent>.md"        "PROJECT_ROOT\.kit\agents\<company>\"
 
-# For each selected command:
-xcopy /E /I /Y "KIT_PATH\commands\<category>\<cmd>.md" "PROJECT_ROOT\.kit\commands\<category>\<cmd>.md"
+# Commands (one file per command):
+xcopy /Y "KIT_PATH\commands\<category>\<cmd>.md"       "PROJECT_ROOT\.kit\commands\<category>\"
 
-# For each selected rule set:
+# Rules (one dir per ruleset):
 xcopy /E /I /Y "KIT_PATH\rules\<ruleset>"              "PROJECT_ROOT\.kit\rules\<ruleset>"
 
-# Hooks and contexts — always full:
+# Hooks + contexts — always full copy:
 xcopy /E /I /Y "KIT_PATH\hooks"    "PROJECT_ROOT\.kit\hooks"
 xcopy /E /I /Y "KIT_PATH\contexts" "PROJECT_ROOT\.kit\contexts"
 ```
 
-**Rule:** Never modify any file under `KIT_PATH`. The kit is read-only source.
+Also copy `rules/common/` in full if it exists:
+```bash
+xcopy /E /I /Y "KIT_PATH\rules\common" "PROJECT_ROOT\.kit\rules\common"
+```
+
+**Never modify any file under `KIT_PATH`.** The kit is read-only source.
 
 ### 6b — Record selections in project-config.md
 
-Update `PROJECT_ROOT/.claude/project-config.md`, filling in the `## Selected Skills`, `## Selected Agents`, `## Selected Commands`, and `## Rules Active` sections with the board's decisions.
+Update `PROJECT_ROOT/.claude/project-config.md` — fill `## Selected Skills`, `## Selected Agents`, `## Selected Commands`, `## Rules Active` with the exact items the board chose. Leave `## Stack` alone for now (Phase 7d sets it).
 
-### 6c — Lead CEO runs the company planning skill
+### 6c — Verify .kit/ contents match the selection
 
-The lead CEO **immediately** invokes their company's planning skill:
+List `PROJECT_ROOT/.kit/` and confirm every skill/agent/command/rule from the JSON is present as a file. If any is missing, re-copy it. Do not proceed until the kit matches the selection.
 
-| Lead company | Planning skill |
+### 6d — Confirm completion of Phase 6
+
+Report to the user, one line: "Kit installed: N skills, M agents, K commands, R rulesets. Lead CEO: `<lead_ceo>`. Invoking planning skill now."
+
+**NEXT: Phase 7 — invoke the planning skill immediately. Do NOT stop.**
+
+---
+
+## Phase 7 — Run the Lead CEO's Planning Skill
+
+Invoke the `Skill` tool RIGHT NOW with the correct planning skill for the lead company. This is a direct `Skill` tool call — not a sub-agent, not a description of what should happen. Actually call the tool.
+
+| Lead company | Planning skill argument |
 |---|---|
 | software-company | `planning-specification-architecture-software` |
 | marketing-company | `planning-specification-architecture-marketing` |
 | media-company | `planning-specification-architecture-media` |
 
-The planning skill runs its gated phases (brief/requirements → design → tasks). Each phase requires explicit user approval. Planning artifacts land in `.spec/`.
-
-If the project already had a design spec (e.g. `idea.md`, existing `design.md`), pass it to the planning skill as prior input — treat the run as a revision, not a blank slate.
-
-**Critical instruction to the planning skill:** Every task file in `.spec/tasks/` **must be self-sufficient**. Each task file declares — in its own header — the exact skills, agents, commands, and rules it requires, using plain `.kit/...` paths. A task file is the single source of truth for running that task — no dependency on CLAUDE.md, no dependency on project-wide skill lists.
-
-Task file header format (planning skill enforces this):
+Pass in the skill input:
+- `PROJECT_ROOT`
+- Project brief from Phase 1
+- Path to `idea.md` if it exists — treat as prior input, run as a revision not a blank slate
+- **Mandatory task file header format** (planning skill MUST emit this for every task):
 
 ```markdown
 # Task NNN: <short title>
@@ -309,58 +355,72 @@ Task file header format (planning skill enforces this):
 ...
 ```
 
-### 6d — Stack decision
+The planning skill runs its own gated phases (brief → design → tasks) — each gated on user approval. Artifacts land in `PROJECT_ROOT/.spec/`.
 
-After planning, the lead CEO updates the `## Stack` section of `PROJECT_ROOT/.claude/project-config.md` with the decided stack (language, framework, hosting, database, auth).
+### 7a — After planning returns: stack decision
 
-### 6e — Verify task files are self-sufficient
+Update `## Stack` in `PROJECT_ROOT/.claude/project-config.md` with the decided stack (language, framework, hosting, database, auth) from the design doc.
 
-Before finishing, sanity-check `.spec/tasks/task-001.md` (or whichever tasks the planning skill produced):
-- Each task file has its own `## Skills`, `## Agents`, `## Commands` sections at the top
-- Paths are plain `.kit/...` references (no `@` imports, no `KIT_PATH`)
-- Every referenced `.kit/skills/...` file actually exists inside `.kit/` (copied in 6a)
+### 7b — Verify task files are self-sufficient
 
-If a task references a skill/agent/command that was not copied in 6a, go back: copy it into `.kit/` from `KIT_PATH` and update `project-config.md`.
+For every file in `.spec/tasks/`:
+- Has `## Skills`, `## Agents`, `## Commands` sections at the top
+- Uses plain `.kit/...` paths (NO `@` imports, NO `KIT_PATH`)
+- Every referenced `.kit/skills/...` and `.kit/agents/...` file actually exists on disk
 
-**This is the last action of the skill.** The project is now ready for execution — open any task file and it tells you exactly what context to load.
+If a task references a skill not copied in 6a: copy it from `KIT_PATH` now and append it to `## Selected Skills` in `project-config.md`. Repeat until every task file's references resolve.
+
+### 7c — Run the Completion Contract
+
+Walk through all 9 items in the Completion Contract at the top of this file. If any fails, fix it before reporting done.
+
+### 7d — Report
+
+Final report to user, 3 lines max:
+1. "Bootstrap complete. Lead: `<lead_ceo>`."
+2. "Kit: N skills, M agents, K commands installed under `.kit/`."
+3. "Planning: `.spec/tasks/task-001.md` … `.spec/tasks/task-NNN.md` written. Open `task-001.md` to start."
+
+**This — and only this — is the end of the skill.**
 
 ---
 
-## Re-running on Existing Projects
+## Re-Run Behavior
 
-If the project already has `.claude/project-config.md`:
+If `PROJECT_ROOT/.claude/project-config.md` already exists and is populated:
 
-1. Read `project-config.md` to get `KIT_PATH` — do not ask again.
-2. Read existing `.spec/` artifacts.
-3. Re-run Phase 5 (route through the board) with the existing `.spec/` content as context — the lead CEO's planning skill treats it as a revision, preserving completed tasks.
-4. When the planning skill produces new/revised task files, their self-sufficient headers may reference skills not yet in `.kit/`. Copy any missing items from `KIT_PATH` into `.kit/` and update `project-config.md`.
-5. Never edit CLAUDE.md — it is the same tiny stub regardless of how many skills the project uses. Task files carry the skill references, not CLAUDE.md.
+1. Read `project-config.md` for `KIT_PATH` — do not ask again.
+2. Verify the fixed CLAUDE.md stub at `.claude/CLAUDE.md`. If it drifted (has Stack, Architecture, Skills sections, or is at the wrong location), rewrite it as the stub.
+3. Read existing `.spec/` artifacts.
+4. Re-run Phase 5 with the existing `.spec/` content as prior input — planning treats it as a revision, not a blank slate.
+5. Copy any newly-referenced `.kit/` items not already on disk.
+6. CLAUDE.md stays the fixed stub forever. Do not edit it to reflect project state.
 
 ---
 
-## Global Rules
+## Global Rules (reference)
 
 ### Hierarchy
 - Always route: `route-agents` → `@company-coo` → lead CEO → specialists.
 - Never invoke a company CEO directly. Never bypass the board.
-- Never let the board or COO create plans — planning belongs to the lead CEO's planning skill.
+- The board/COO selects content; they do NOT create plans. Planning belongs to the lead CEO's planning skill.
 
 ### File management
-- Never write into `KIT_PATH`. The kit is read-only source.
-- Never copy all of `KIT_PATH/agents/`, `KIT_PATH/commands/`, `KIT_PATH/skills/`, or `KIT_PATH/rules/` in bulk. Only board-selected items. Exception: hooks and contexts copy in full.
-- Never use `@` imports in any generated file. All references are plain `.kit/...` paths relative to the project root.
+- Never write into `KIT_PATH`. Kit is read-only source.
+- Never bulk-copy `KIT_PATH/agents/`, `/commands/`, `/skills/`, or `/rules/`. Only board-selected items. Exception: `hooks/` and `contexts/` copy in full.
+- Never use `@` imports in generated files. All references are plain `.kit/...` paths from `PROJECT_ROOT`.
 - Never create `.claude/skills/` — skills live in `.kit/skills/`.
-- Never write project analysis, architecture, or stack into CLAUDE.md. CLAUDE.md is the fixed tiny stub from Phase 3a.
+- Never put project analysis, architecture, or stack into CLAUDE.md. Those go in `.spec/design.md`. CLAUDE.md is the fixed stub.
 
 ### Skills are task-scoped
 - CLAUDE.md has no `## Skills` section. Ever.
-- Each task file in `.spec/tasks/` declares its own skills, agents, commands, and rules in its header.
-- A session loads CLAUDE.md → reads current task path → opens the task file → the task file tells it what `.kit/` content to pull in.
-- Context per task stays minimal because only task-relevant skills load.
+- Each `.spec/tasks/*.md` declares its own skills/agents/commands/rules.
+- Session flow: CLAUDE.md → current task path → open task file → load only that task's `.kit/` items.
 
-### Flow control
-- Writing files in Phases 2–3 is not the end. Continue to Phase 4.
-- Phase 4 validation passing is not the end. Continue to Phase 5.
-- Phase 5 invoking `route-agents` is not the end. Continue to Phase 6.
-- Phase 6 is the end — and only after 6e confirms task files are self-sufficient.
-- If any phase fails, report the exact step and the error. Do not silently skip.
+### Flow control (the thing the skill keeps failing on)
+- Phase 3 writing stubs is NOT the end. Continue to Phase 4.
+- Phase 4 validation passing is NOT the end. Continue to Phase 5.
+- Phase 5 getting the board selection JSON is NOT the end. Continue to Phase 6.
+- Phase 6 copying kit content is NOT the end. Continue to Phase 7.
+- Phase 7 is the end — and only after 7c (Completion Contract) passes.
+- At every phase boundary the skill has a "NEXT:" directive. Honor it literally. If you find yourself wanting to summarize or return control, re-read the Completion Contract and keep going.
