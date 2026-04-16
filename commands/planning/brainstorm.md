@@ -8,7 +8,7 @@ Invoke the brainstorming skill to collaboratively explore an idea, ask clarifyin
 
 ## Instructions
 
-1. Load and follow the brainstorming skill from `skills/planning/brainstorming/SKILL.md`
+1. Load and follow the brainstorming skill from `skills/_studio/brainstorming/SKILL.md`
 2. Start by exploring the current project context (files, docs, recent commits)
 3. Ask one clarifying question at a time to understand purpose, constraints, and success criteria
 4. Propose 2-3 approaches with trade-offs and your recommendation

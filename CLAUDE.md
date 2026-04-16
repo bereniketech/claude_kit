@@ -18,10 +18,10 @@ claude_kit/
 │   └── skills/claude-kit/SKILL.md    # Meta-skill for working in this repo
 │
 ├── skills/          # 1,228 skill modules organized by category (OS/Systems Userland category folders are phased in over the agentic-OS kit build — Phase 1 shipped)
-│   ├── _studio/                  # (2) ENTRY POINTS — generate-claude-md, new-features-updates (route to agents)
+│   ├── _studio/                  # (4) ENTRY POINTS — generate-claude-md, new-features-updates, route-agents, brainstorming
 │   ├── core/                     # (5) continuous-learning, eval-harness, skill-stocktake, strategic-compact, configure-ecc
 │   ├── development/              # (11) code-writing, build-website, api-design, systematic-debugging, ...
-│   ├── planning/                 # (5) planning-specification, autonomous-agents, multi-model, ...
+│   ├── planning/                 # (4) planning-specification, autonomous-agents, multi-model, ...
 │   ├── testing-quality/          # (24) tdd-workflow, security-review, e2e-testing, playwright, ...
 │   ├── data-backend/             # (25) postgres-patterns, database-migrations, clickhouse-io, nosql, ...
 │   ├── data-science-ml/          # (60) ai-engineer, hugging-face, langchain, rag, llm-app, ...
@@ -185,8 +185,8 @@ When working inside the Skill Builder repository itself:
 
 ### Skills (1,224 across 52 categories)
 
-**Studio / Entry Points** (2)
-`generate-claude-md` · `new-features-updates` — these route project requests to the right department agents
+**Studio / Entry Points** (4)
+`generate-claude-md` · `new-features-updates` · `route-agents` · `brainstorming` — these route project requests to the right department agents and ideation flows
 
 **Core / Meta** (5)
 `continuous-learning` · `strategic-compact` · `eval-harness` · `skill-stocktake` · `configure-ecc`
@@ -194,8 +194,8 @@ When working inside the Skill Builder repository itself:
 **Development** (11)
 `code-writing-software-development` · `build-website-web-app` · `api-design` · `systematic-debugging` · `branch-completion` · `api-endpoint-builder` · `framework-migration-*` · ...
 
-**Planning & Architecture** (5 + 17 architecture)
-`planning-specification-architecture-software` · `planning-specification-architecture-marketing` · `planning-specification-architecture-media` · `autonomous-agents-task-automation` · `brainstorming` · `parallel-agent-dispatch` · `multi-model-model-agnostic-platforms`
+**Planning & Architecture** (4 + 17 architecture)
+`planning-specification-architecture-software` · `planning-specification-architecture-marketing` · `planning-specification-architecture-media` · `autonomous-agents-task-automation` · `parallel-agent-dispatch` · `multi-model-model-agnostic-platforms`
 Architecture: `microservices-patterns` · `ddd-*` · `software-architecture` · `senior-architect` · `backend-architect` · ...
 
 **Testing & Quality** (24)
