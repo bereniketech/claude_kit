@@ -5,10 +5,34 @@ description: Full project bootstrap — 6 mandatory phases executed in strict or
 
 # Project Bootstrap
 
+## HOW TO RUN THIS SKILL
+
+**Do not execute this skill inline. Spawn it as an Agent.**
+
+When you read this file, your only job is to call the `Agent` tool with the full content of this skill as the prompt, plus the user's project description. Everything below (Phases 0–6) runs inside that agent. Do not write any files yourself. Do not read `idea.md` yourself. Do not generate a CLAUDE.md yourself. Spawn the agent and stop.
+
+```
+Agent(
+  description: "Project bootstrap — full 6-phase scaffold + planning",
+  prompt: "<paste full skill content here, then append:>
+
+PROJECT_ROOT: <absolute path to project folder>
+KIT_PATH: C:/Users/Hp/Desktop/Experiment/claude_kit
+User description: <what the user said they are building>
+Existing files: idea.md exists at PROJECT_ROOT (read it in Phase 1)"
+)
+```
+
+---
+
+## AGENT ENTRY POINT
+
+If you are running as the spawned agent, continue below. Execute all phases in order without stopping.
+
 > **HARD STOP — read before doing anything else.**
-> Your first action is NOT to write a file. Your first action is to read `idea.md` (if it exists) and then execute **Phase 0** below.
-> Writing `CLAUDE.md` — at root OR at `.claude/CLAUDE.md` — is **Phase 3, not Phase 1**. Do not write any file until Phase 2 infrastructure is in place.
-> If you find yourself about to call `Write` before completing Phases 0–2, stop and go back to Phase 0.
+> Your first action is NOT to write a file. Your first action is Phase 0 — detect prior run state.
+> Writing `CLAUDE.md` — at root OR at `.claude/CLAUDE.md` — is **Phase 3, not Phase 1**.
+> Do not call `Write` until Phase 2 infrastructure is complete.
 
 ---
 
