@@ -7,6 +7,8 @@ description: Plan and scaffold new features onto an existing project. Analyzes t
 
 Use this skill when new specifications arrive for an existing project. It bridges the gap between `generate-claude-md` (used once at project start) and active feature development.
 
+**CRITICAL:** This skill is analysis + routing ONLY. It does not execute code, create tasks, or invoke execution agents. It gathers information and hands off to the board. If you find yourself about to invoke an agent to execute something, you have left the skill's scope.
+
 ---
 
 ## 1. Gather New Specifications
@@ -81,37 +83,58 @@ Create any that are missing. Agents, commands, rules, hooks, and contexts are no
 
 ---
 
-## 5. Route to the Board
+## 5. Invoke the Board Agent
 
-**This is the last step the skill performs.** Feature branch, planning (requirements → design → tasks → task enrichment), and execution are all owned by the board. Do not do any of those things yourself.
+**STOP HERE. This is the skill's end point.** Do not proceed beyond this section. Do not write code. Do not create todos. Do not edit files. Do not invoke execution agents. Do not execute tasks. Do not spawn subagents.
 
-### 5a — Identify the right board entry point
+The ONLY action the skill performs in Step 5 is invoking a board agent (company-coo, chief-design-officer, etc.). Nothing else.
 
-| If the feature is about… | Start with |
+### 5a — Choose Board Entry Point
+
+Route based on feature scope:
+
+| Feature scope | Invoke |
 |---|---|
-| Code, software, website, AI, infra, product, or spans multiple companies | `@company-coo` |
-| Design coherence across software UI + marketing brand + media visuals | `@chief-design-officer` |
-| Hiring, comp, performance reviews, contracts, handbook | `@people-operations-expert` |
-| Comms triage (email, Slack, LINE, Messenger), decision tracking, weekly reviews | `@chief-of-staff` |
+| Code, software, website, AI, infra, product, or multi-company | `@company-coo` |
+| Design coherence: UI + brand + visuals | `@chief-design-officer` |
+| HR, hiring, comp, performance, contracts | `@people-operations-expert` |
+| Comms, decision tracking, weekly reviews | `@chief-of-staff` |
 
-For anything ambiguous, default to `@company-coo` — the COO routes to board peers when needed.
+Default: `@company-coo`
 
-### 5b — Invoke the board member with a complete brief
+### 5b — Prepare Board Brief
 
-Invoke immediately after Step 4c infrastructure is confirmed. Pass them:
+Collect (do not expand on):
+- **Codebase:** folder structure, tech stack, key files from Step 3
+- **Feature:** the spec + `FEATURE_NAME` from Step 1
+- **Existing tasks:** list any `.spec/*/tasks/task-*.md` files found; mark as "pending" or "done"
+- **Infrastructure:** junctions verified, `.claude/CLAUDE.md` exists, `KIT_PATH` known
+- **Output:** `.spec/FEATURE_NAME/` for artifacts, `.spec/FEATURE_NAME/tasks/` for tasks
 
-1. **Codebase summary** — what the existing code does (from Step 3), tech stack, key files and modules
-2. **Feature spec** — the raw spec from Step 1 + `FEATURE_NAME`
-3. **Infrastructure ready** — junctions confirmed in Step 4c; `.claude/CLAUDE.md` exists (board will select and add skills)
-4. **Output target** — `.spec/FEATURE_NAME/` for all planning artifacts, `.spec/FEATURE_NAME/tasks/` for Haiku-ready task files
-5. **Board's responsibilities from here:**
-   - Decide which CEO (or board peer) should lead this feature
-   - Select only the skills that company needs and add them to `.claude/CLAUDE.md`
-   - Drive all planning (requirements → design → tasks → task enrichment)
-   - Execute task-001 and cascade via `/task-handoff`
+### 5c — Invoke Agent NOW
 
-The board routes internally. Do not prescribe which CEO or specialist to use.
+Use the Agent tool:
+```
+Agent(
+  description: "Route [feature name] to board for planning and execution",
+  prompt: "[Board member], here is a new feature request:
+  
+  **Project:** [project name at PROJECT_ROOT]
+  **Feature:** [FEATURE_NAME]
+  **Spec:** [raw spec text from Step 1]
+  
+  **Codebase Summary:**
+  [folder structure, tech stack, key files]
+  
+  **Existing Tasks Found:**
+  [list .spec/ file paths and their status, or "none"]
+  
+  **Infrastructure:** Junctions ready, CLAUDE.md exists at KIT_PATH = [KIT_PATH]
+  
+  Your role: assess the feature, select required skills, plan (requirements → design → tasks → enrichment), execute task-001 → cascade via /task-handoff."
+)
+```
 
-**Rule:** This step is mandatory and fires immediately after Step 4c. Never bypass the board to call a CEO or specialist directly.
+**The skill ends when the Agent tool is called.** Nothing after this point is the skill's responsibility.
 
-**Rule:** The skill ends at board handoff. Do not write code, edit files, create task todos, or execute any work yourself — not even if task files already exist in `.spec/`. Self-executing is a bypass, not a shortcut.
+**Rule:** If the board agent is not invoked by the end of this section, the skill has failed. Never proceed to code, todos, or task execution without invoking the board.
