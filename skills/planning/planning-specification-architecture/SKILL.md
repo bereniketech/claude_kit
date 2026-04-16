@@ -19,7 +19,29 @@ The planning workflow has three sequential, gated phases. Always move through th
 [Requirements] → user approves → [Design] → user approves → [Tasks] → user approves → DONE
 ```
 
-At each gate, explicitly ask the user whether the document is approved before proceeding. If they request changes, revise and ask again. Loop until approval is unambiguous ("yes", "looks good", "approved", or equivalent).
+**This is mandatory. Every phase must complete, be reviewed, and be explicitly approved before the next phase begins.**
+
+### Phase 1: Requirements
+1. Create `.spec/{feature}/requirements.md` with user stories (EARS format) and acceptance criteria
+2. **STOP.** Do not proceed to design.
+3. Ask the user explicitly: **"Requirements document created at `{path}/requirements.md`. Please review and confirm approval."**
+4. Wait for user response. Only proceed if approved. If changes requested, revise and ask again.
+
+### Phase 2: Design
+1. (Only after Requirements approved) Create `.spec/{feature}/design.md` with architecture, components, data models, API design, ADRs
+2. **STOP.** Do not proceed to tasks.
+3. Ask the user explicitly: **"Design document created at `{path}/design.md`. Please review and confirm approval."**
+4. Wait for user response. Only proceed if approved. If changes requested, revise and ask again.
+
+### Phase 3: Tasks
+1. (Only after Design approved) Create individual `.spec/{feature}/tasks/task-001.md`, `task-002.md`, etc. — complete, executable task files with all context embedded
+2. **STOP.** Do not execute tasks.
+3. Ask the user explicitly: **"Task files created at `{path}/tasks/`. Please review and confirm approval."**
+4. Wait for user response. Only proceed if approved. If changes requested, revise and ask again.
+
+**At each gate, explicitly ask the user whether the document is approved before proceeding. If they request changes, revise and ask again. Loop until approval is unambiguous ("yes", "looks good", "approved", or equivalent).**
+
+**CRITICAL: If you find yourself about to move from one phase to the next without explicit user approval, you have violated the workflow. Stop and ask for approval.**
 
 ---
 
