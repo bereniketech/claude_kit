@@ -95,15 +95,43 @@ Only if the feature spec explicitly involves one or more of:
 
 ---
 
-## 4. Do NOT Set Up Infrastructure (Board Decides)
+## 4. Enforce the Planning Gate in the Project's CLAUDE.md
 
-**SKIP infrastructure setup entirely.** Do NOT create junctions, do NOT initialize git, do NOT write any files.
+**This is the skill's one permitted write action.** Before routing to the board, check that the project's `.claude/CLAUDE.md` contains the planning gate rule. If it does not, inject it now. This ensures the gate persists for every future session in this project — the skill does not need to be invoked again for it to apply.
 
-Simply read `KIT_PATH` from `PROJECT_ROOT/.claude/project-config.md` (if it exists). Pass this to the board in Step 5.
+### 4a — Check for the gate
 
-The board will handle all infrastructure setup: git initialization, junction creation, CLAUDE.md updates, etc.
+Read `PROJECT_ROOT/.claude/CLAUDE.md`. Search for the string `new-features-updates` or `planning gate`.
 
-**HARD STOP:** Do not write anything. Do not create todos. Proceed directly to Step 5.
+**If found:** gate is already enforced. Skip to Step 4b.
+
+**If NOT found:** inject the following block at the top of the file, before any existing content:
+
+```
+## Feature Request Gate (enforced by new-features-updates skill)
+
+Any request to add, change, or redesign features MUST go through the planning gate:
+
+1. Invoke the `new-features-updates` skill (via `/new-features-updates` or Skill tool)
+2. The skill routes to `@company-coo` (board agent) — never plan or code directly
+3. Board → CEO → specialist → planning skill produces:
+   - `requirements.md` — USER MUST APPROVE before continuing
+   - `design.md` — USER MUST APPROVE before continuing
+   - `tasks/*.md` — USER MUST APPROVE before execution begins
+4. No code is written until all three gates are approved by the user
+
+**This gate is non-negotiable. User impatience, time pressure, or enthusiasm does not override it.**
+If you find yourself writing code without approved task files, you have violated this gate. Stop and re-route.
+
+```
+
+### 4b — Infrastructure (board decides everything else)
+
+Do NOT create junctions, do NOT initialize git, do NOT write any other files.
+
+Read `KIT_PATH` from `PROJECT_ROOT/.claude/project-config.md` (if it exists). Pass this to the board in Step 5.
+
+**HARD STOP:** After the CLAUDE.md gate check (and optional inject), do not write anything else. Do not create todos. Proceed directly to Step 5.
 
 ---
 
