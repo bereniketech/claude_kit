@@ -16,32 +16,38 @@ Your north star: **a spec is approved ground-truth. Never proceed past a phase w
 The planning workflow has three sequential, gated phases. Always move through them in order. Never skip a phase. Never combine phases into a single interaction.
 
 ```
-[Requirements] → user approves → [Design] → user approves → [Tasks] → user approves → DONE
+[Requirements] → user approves → [Design] → user approves → [Tasks] → user approves → [Task Files] → SPEC COMPLETE
 ```
 
-**This is mandatory. Every phase must complete, be reviewed, and be explicitly approved before the next phase begins.**
+**This is mandatory. Every phase must complete, be reviewed, and be explicitly approved before the next phase begins. SPEC COMPLETE means the spec is ready — it does NOT mean execution begins. Execution is a separate action that requires the user to explicitly start it.**
 
 ### Phase 1: Requirements
 1. Create `.spec/{feature}/requirements.md` with user stories (EARS format) and acceptance criteria
-2. **STOP.** Do not proceed to design.
-3. Ask the user explicitly: **"Requirements document created at `{path}/requirements.md`. Please review and confirm approval."**
-4. Wait for user response. Only proceed if approved. If changes requested, revise and ask again.
+2. **HARD STOP.** Do not proceed to design.
+3. Say exactly: **"Requirements document created at `{path}/requirements.md`. Please review and reply 'approved' to continue to design."**
+4. Wait for user response. Only proceed if approved. If changes requested, revise and ask again. Do not interpret enthusiasm or positive feedback as approval — wait for an explicit "approved", "yes", "looks good", or equivalent.
 
 ### Phase 2: Design
 1. (Only after Requirements approved) Create `.spec/{feature}/design.md` with architecture, components, data models, API design, ADRs
-2. **STOP.** Do not proceed to tasks.
-3. Ask the user explicitly: **"Design document created at `{path}/design.md`. Please review and confirm approval."**
+2. **HARD STOP.** Do not proceed to tasks.
+3. Say exactly: **"Design document created at `{path}/design.md`. Please review and reply 'approved' to continue to the task plan."**
 4. Wait for user response. Only proceed if approved. If changes requested, revise and ask again.
 
-### Phase 3: Tasks
-1. (Only after Design approved) Create individual `.spec/{feature}/tasks/task-001.md`, `task-002.md`, etc. — complete, executable task files with all context embedded
-2. **STOP.** Do not execute tasks.
-3. Ask the user explicitly: **"Task files created at `{path}/tasks/`. Please review and confirm approval."**
+### Phase 3: Task Plan (tasks.md)
+1. (Only after Design approved) Create `.spec/{feature}/tasks.md` — the human-readable task list for user review
+2. **HARD STOP.** Do not create individual task files yet. Do not begin execution.
+3. Say exactly: **"Task plan created at `{path}/tasks.md`. Please review the full list of tasks and reply 'approved' to generate the individual task files."**
 4. Wait for user response. Only proceed if approved. If changes requested, revise and ask again.
 
-**At each gate, explicitly ask the user whether the document is approved before proceeding. If they request changes, revise and ask again. Loop until approval is unambiguous ("yes", "looks good", "approved", or equivalent).**
+### Phase 4: Task Files (task-NNN.md)
+1. (Only after tasks.md approved) Create individual `.spec/{feature}/tasks/task-001.md`, `task-002.md`, etc. — fully enriched, self-contained execution files
+2. **HARD STOP.** Do not execute any task.
+3. Say exactly: **"Task files created at `{path}/tasks/`. The spec is complete and ready for implementation. Reply 'start' or tell me which task to begin when you're ready."**
+4. Wait for explicit user instruction to begin execution. Do NOT begin executing tasks speculatively.
 
 **CRITICAL: If you find yourself about to move from one phase to the next without explicit user approval, you have violated the workflow. Stop and ask for approval.**
+
+**CRITICAL: "SPEC COMPLETE" is not permission to execute. Execution only begins when the user explicitly says so after Phase 4.**
 
 ---
 
@@ -697,7 +703,7 @@ describe('ComponentName', () => {
 - Code Templates must resolve all types — no `any`/`unknown` unless `design.md` explicitly uses them
 - If completing the task requires reading a source file, that file's relevant section is embedded in `## Key Code Snippets` instead
 
-**Rule:** Task Enrichment reads the codebase but does NOT require a separate user approval gate. The user already approved `tasks.md`. Enrichment only adds context — it never changes scope or acceptance criteria.
+**Rule:** Task Enrichment (creating the individual `task-NNN.md` files) is Phase 4 of the gated workflow — it requires `tasks.md` to be approved first (Phase 3 gate). After task files are created, the skill STOPS and waits for the user to explicitly start execution. Enrichment does not change scope or acceptance criteria, but completion of enrichment is NOT permission to begin executing tasks.
 
 ---
 
@@ -823,21 +829,24 @@ Only reference skills that exist in the project's `.claude/skills/` directory.
 
 ```
 User: "I want to build X"
-  └─ You: Draft requirements.md → ask for approval
+  └─ You: Draft requirements.md → STOP → ask for approval
       └─ User approves
-          └─ You: Draft design.md → ask for approval
+          └─ You: Draft design.md → STOP → ask for approval
               └─ User approves
-                  └─ You: Draft tasks.md → ask for approval
+                  └─ You: Draft tasks.md → STOP → ask for approval
                       └─ User approves
-                          └─ You: Announce spec is complete. Implementation can begin.
+                          └─ You: Create task-NNN.md files → STOP → tell user spec is ready, wait for start instruction
+                              └─ User says "start" / "begin task 1" / etc.
+                                  └─ Execution begins
 ```
 
-Gate prompts:
-- After requirements: "Does the requirements document look right? If so, we can move on to the design."
-- After design: "Does the design look good? If so, we can move on to the implementation plan."
-- After tasks: "Do the tasks look good? Once approved, the spec is ready for implementation."
+Gate prompts (use these exact phrasings):
+- After requirements.md: "Requirements document created at `{path}`. Please review and reply 'approved' to continue to design."
+- After design.md: "Design document created at `{path}`. Please review and reply 'approved' to continue to the task plan."
+- After tasks.md: "Task plan created at `{path}`. Please review the full list and reply 'approved' to generate the individual task files."
+- After task-NNN.md files: "Task files created at `{path}/tasks/`. Spec is complete. Reply 'start' or tell me which task to begin when you're ready."
 
-Never proceed to the next phase without an affirmative response.
+**Never proceed to the next phase without an affirmative response. "SPEC COMPLETE" is not a start signal — wait for the user to explicitly begin execution.**
 
 ---
 
