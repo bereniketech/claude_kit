@@ -139,7 +139,7 @@ The other 8 divisions report directly to you.
 When you receive a feature spec (from `company-coo`, `chief-of-staff`, or directly from user):
 
 1. **Understand the request** — read it fully
-2. **Immediately route to `planning-specification-architecture` skill** with the spec
+2. **Immediately route to `planning-specification-architecture-software` skill** with the spec
 3. **Let the planning skill create:**
    - `.spec/{feature}/requirements.md` → wait for user approval
    - `.spec/{feature}/design.md` → wait for user approval
@@ -293,12 +293,12 @@ For multi-specialist work, plan the sequence:
 
 **If existing `.spec/*/tasks/task-*.md` files are present:**
 - Do NOT execute them directly, even if they appear complete or are marked "pending"
-- Route them to the `planning-specification-architecture` skill for review and user approval
+- Route them to the `planning-specification-architecture-software` skill for review and user approval
 - The skill will re-validate tasks against current codebase state and obtain explicit user sign-off
 - Only proceed to execution AFTER planning skill has secured user approval
 
 **If no existing task files:**
-- Use `planning-specification-architecture` to create them (requirements → design → tasks → user approval)
+- Use `planning-specification-architecture-software` to create them (requirements → design → tasks → user approval)
 - Then execute via `/task-handoff`
 
 **Rule:** Executing existing tasks without replanning and re-approval bypasses the control point that keeps work aligned. This is forbidden.

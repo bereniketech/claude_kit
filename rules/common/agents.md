@@ -1,5 +1,29 @@
 # Agent Orchestration
 
+## Universal Planning Gate (CRITICAL — Applies to ALL Specialists)
+
+**Every specialist agent MUST invoke the correct company planning skill before any execution:**
+- software-company specialists → `planning-specification-architecture-software`
+- marketing-company specialists → `planning-specification-architecture-marketing`
+- media-company specialists → `planning-specification-architecture-media`
+
+This is non-negotiable, regardless of how simple or obvious the task appears.
+
+```
+[Specialist receives task]
+  → Invoke: skills/planning/planning-specification-architecture-software/SKILL.md
+      → Phase 1: requirements.md — STOP, wait for user approval
+      → Phase 2: design.md      — STOP, wait for user approval
+      → Phase 3: tasks/*.md     — STOP, wait for user approval
+  → Only then: execute
+```
+
+**What counts as "explicit approval":** "yes", "approved", "looks good", "go ahead", or equivalent.
+
+**Rule:** A task brief, CEO delegation, or feature spec is NOT permission to execute. It is permission to PLAN. The spec received is input to the appropriate planning skill — not an approved plan itself.
+
+**Rule:** CEOs (software-cto, chief-marketing-officer, etc.) enforce this gate when delegating. Specialists enforce it when they receive work. Both layers check — neither skips.
+
 ## Available Agents
 
 The kit ships 82 agents organized as a holding company OS, located in `~/.claude/agents/`:

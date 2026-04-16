@@ -1,5 +1,5 @@
 ---
-name: planning-specification-architecture
+name: planning-specification-architecture-software
 description: Plan, specify, and architect software systems before implementation. Use when the user wants to define requirements, design system architecture, create implementation plans, or produce technical specifications. Synthesizes best practices from Kiro, Traycer AI, Google Antigravity, Devin AI, Manus Agent, Qoder, and Cursor.
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: new-features-updates
-description: Plan and scaffold new features onto an existing project. Analyzes the current codebase, ingests specs (text or folder of docs/images), installs missing skill library components via @imports and junctions (zero-copy), creates a feature branch and spec folder, then delegates to planning-specification-architecture for the gated requirements → design → tasks workflow.
+description: Plan and scaffold new features onto an existing project. Analyzes the current codebase, ingests specs (text or folder of docs/images), installs missing skill library components via @imports and junctions (zero-copy), creates a feature branch and spec folder, then delegates to planning-specification-architecture-software (or the appropriate company planning skill) for the gated requirements → design → tasks workflow.
 ---
 
 ## CRITICAL: Hierarchy Enforcement
@@ -130,9 +130,10 @@ Agent(
   1. Assess the feature scope
   2. Determine which operating company CEO should own this work
   3. Route this feature request to that CEO (not to specialists directly)
-  4. The CEO will delegate to appropriate specialists for detailed planning
+  4. The CEO will delegate to appropriate specialists
+  5. Each specialist MUST invoke skills/planning/planning-specification-architecture-software/SKILL.md first — producing requirements.md → design.md → tasks/*.md with explicit user approval at each gate — before any execution begins
   
-  DO NOT create a plan yourself. DO NOT call specialist agents directly. Always route through the company CEO."
+  DO NOT create a plan yourself. DO NOT call specialist agents directly. Always route through the company CEO. Planning always goes through the appropriate company planning skill (planning-specification-architecture-software / -marketing / -media) — never custom or abbreviated flows."
 )
 ```
 

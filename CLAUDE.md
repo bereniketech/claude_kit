@@ -195,7 +195,7 @@ When working inside the Skill Builder repository itself:
 `code-writing-software-development` · `build-website-web-app` · `api-design` · `systematic-debugging` · `branch-completion` · `api-endpoint-builder` · `framework-migration-*` · ...
 
 **Planning & Architecture** (5 + 17 architecture)
-`planning-specification-architecture` · `autonomous-agents-task-automation` · `brainstorming` · `parallel-agent-dispatch` · `multi-model-model-agnostic-platforms`
+`planning-specification-architecture-software` · `planning-specification-architecture-marketing` · `planning-specification-architecture-media` · `autonomous-agents-task-automation` · `brainstorming` · `parallel-agent-dispatch` · `multi-model-model-agnostic-platforms`
 Architecture: `microservices-patterns` · `ddd-*` · `software-architecture` · `senior-architect` · `backend-architect` · ...
 
 **Testing & Quality** (24)

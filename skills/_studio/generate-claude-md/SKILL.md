@@ -468,14 +468,14 @@ After updating skills and CLAUDE.md, run the full planning phase exactly as in S
 
 1. Read all existing `.spec/` files (`plan.md`, `requirements.md`, `design.md`, `tasks.md`) before drafting anything. Use their current content as the baseline.
 2. Update `.spec/plan.md` directly to reflect any new goals, stack changes, or scope discovered during the update.
-3. Invoke the Skill tool with `planning-specification-architecture` before writing any of the three gated files.
+3. Invoke the Skill tool with `planning-specification-architecture-software` before writing any of the three gated files.
 4. Follow the same 3-phase gated workflow as Step 7c — present each updated draft inline, wait for explicit approval, then save:
    - **Phase 1 — Requirements:** present updated `requirements.md` showing what changed. Ask for approval before saving.
    - **Phase 2 — Design:** present updated `design.md` reflecting any architectural changes. Ask for approval before saving.
    - **Phase 3 — Tasks:** present updated `tasks.md` with new/revised tasks added and completed tasks preserved. Ask for approval before saving.
 
 **HARD RULES (same as Step 7):**
-- **NEVER write `requirements.md`, `design.md`, or `tasks.md` without first invoking the Skill tool with `planning-specification-architecture`.**
+- **NEVER write `requirements.md`, `design.md`, or `tasks.md` without first invoking the Skill tool with `planning-specification-architecture-software`.**
 - **NEVER save any gated file before the user explicitly approves that phase.**
 - **NEVER present and save in the same step.**
 - **NEVER combine phases.**

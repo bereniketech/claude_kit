@@ -112,6 +112,26 @@ Also carry forward from DESIGN.md: font-family + weight hierarchy, letter-spacin
 
 ---
 
+## 4a. PLANNING GATE (CRITICAL — Use planning-specification-architecture-software)
+
+**STOP HERE. Do not proceed to image generation or site assembly without completing this gate.**
+
+Invoke `skills/planning/planning-specification-architecture-software/SKILL.md` now. Pass it:
+- The business type and description from Step 1
+- The selected DESIGN.md and its aesthetic from Step 2
+- The brand extraction (colors, typography) from Step 3
+- Any cinematic module selections (from Step 4, if applicable)
+
+Let `planning-specification-architecture-software` produce and gate all three phases:
+
+1. **requirements.md** — what the site must achieve (audience, CTA, sections, content goals) → **STOP, wait for explicit user approval**
+2. **design.md** — visual direction (DESIGN.md system, modules, color palette, section structure, animation style, image direction) → **STOP, wait for explicit user approval**
+3. **tasks/task-*.md** — implementation steps (assembly, asset generation, deployment, screenshot) → **STOP, wait for explicit user approval**
+
+**Rule:** Do not proceed past this step until the user has explicitly approved all three planning documents. A feature description is NOT permission to build. Never skip or bypass `planning-specification-architecture-software`.
+
+---
+
 ## 4. Module Selection (Cinematic Path Only)
 
 Select exactly 3 modules — one hero, one body, one ambient:

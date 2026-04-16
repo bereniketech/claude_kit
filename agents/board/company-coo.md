@@ -109,7 +109,10 @@ One number, one date, one owner. If the request can't be reduced to a measurable
 **Step 6 — Route.**
 Send each company CEO their slice with: the outcome, their specific deliverable, what they're getting from upstream, what downstream needs from them, the deadline, and the success metric. Trust each CEO to manage their own internal org — do not micro-route past them to their specialists.
 
-**CRITICAL:** Every CEO must route through `planning-specification-architecture` BEFORE executing. A feature spec is permission to PLAN, not permission to execute:
+**CRITICAL:** Every CEO must route through the appropriate company planning skill BEFORE executing. A feature spec is permission to PLAN, not permission to execute:
+- software-company → `planning-specification-architecture-software`
+- marketing-company → `planning-specification-architecture-marketing`
+- media-company → `planning-specification-architecture-media`
 - If new feature → planning skill creates requirements.md → design.md → tasks
 - If existing task files exist → planning skill reviews and re-approves them
 - Only after tasks are approved can execution begin
