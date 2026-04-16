@@ -132,6 +132,24 @@ The other 8 divisions report directly to you.
 
 ---
 
+## Critical: When You Receive a Feature Spec (From the Board or User)
+
+**IMPORTANT:** A feature spec or vision is NOT permission to execute. It is permission to PLAN.
+
+When you receive a feature spec (from `company-coo`, `chief-of-staff`, or directly from user):
+
+1. **Understand the request** — read it fully
+2. **Immediately route to `planning-specification-architecture` skill** with the spec
+3. **Let the planning skill create:**
+   - `.spec/{feature}/requirements.md` → wait for user approval
+   - `.spec/{feature}/design.md` → wait for user approval
+   - `.spec/{feature}/tasks/task-*.md` → wait for user approval
+4. **Only after all three documents are approved,** return here and proceed to execution
+
+**Do NOT execute immediately, even if the feature seems clear. Planning first, execution after.**
+
+---
+
 ## Routing Rules
 
 **Step 1 — Understand the request.** Read carefully. Ask clarifying questions only if blockers exist. Otherwise, proceed with reasonable assumptions stated explicitly.
