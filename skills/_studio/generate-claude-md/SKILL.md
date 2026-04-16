@@ -48,15 +48,9 @@ From Step 1, understand what's being built:
 
 This becomes the input to the board in Step 6.
 
-## Step 4 — SKIP (Board Responsibility)
+## Step 4 — Infrastructure Setup
 
-**Do not set up any infrastructure.** The board will handle:
-- Git initialization
-- Creating `.claude/`, `.spec/`, `.github/` directories
-- Creating directory junctions to the kit
-- Writing and updating `.claude/CLAUDE.md`, `project-config.md`, etc.
-
-Routing layer does analysis only.
+Set up the project folder so it is git-compliant and ready for the board handoff.
 
 The project folder must be git-compliant so it can be pushed directly to a remote.
 
@@ -429,66 +423,59 @@ When the user types `/command-name`, read the corresponding file and follow its 
 
 ---
 
-## Step 6 — Hand Off to the Board
+## Step 5f — Validate Generated Files
 
-**This is the last step the skill performs.** Skill selection, planning, and execution are all owned by the board. Do not do any of those things yourself.
+Before handing off to the board, verify each expected path exists.
 
-### 6a — Identify the right board entry point
+**Real files (must exist):**
+- `.claude/CLAUDE.md`
+- `.claude/project-config.md`
+- `.gitignore`
+- `.github/copilot-instructions.md`
+- `.git/` directory
 
-Pick the board member whose domain matches the project:
-
-| If the project is about… | Start with |
-|---|---|
-| Building software, a product, a website, AI features, infra, or anything that spans multiple companies | `@company-coo` |
-| Design coherence across software UI + marketing brand + media visuals | `@chief-design-officer` |
-| Hiring, comp, performance reviews, employment contracts, handbook | `@people-operations-expert` |
-| Comms triage (email, Slack, LINE, Messenger), decision tracking, weekly reviews | `@chief-of-staff` |
-
-For anything ambiguous, default to `@company-coo` — the COO routes to board peers when needed.
-
-### 6b — Invoke the board member with a complete brief
-
-Pass them:
-1. **Project description** — what is being built, for whom, and why (from Step 1)
-2. **Project description** — what was captured in Step 1 (the board decides stack, hosting, auth)
-3. **Infrastructure ready** — git initialized, `.claude/CLAUDE.md` stub in place (skills section is empty and awaits board decision), junctions ready
-4. **Board's responsibilities from here:**
-   - Decide which operating company CEO should lead
-   - Route to that CEO (do not route to specialists directly)
-   - The CEO will determine which specialists are needed, select skills, and route to those specialists for detailed planning
-   - Never create plans at board level — plans originate from specialists delegated by company CEOs
-   - Once specialists complete planning (requirements → design → tasks), return to board for final review
-   - Board coordinates execution cascade via `/task-handoff`
-
-The board routes through CEOs to specialists. Do not prescribe specialists directly. Always respect the hierarchy: board → CEO → specialist.
-
-**Rule:** This step is mandatory and fires immediately after Step 5e. Never skip it. Never bypass the board. Never let the board create plans — plans must come from specialists.
-
-## Step 9 — Validate Generated Files
-
-After all files are written (Steps 1–5), verify each expected path exists before handing off to `@company-coo` in Step 6. Check for:
-
-**Real files (must exist as actual files):**
-- `.claude/CLAUDE.md` — stub with empty `## Skills` section (to be filled by `@company-coo`)
-- `.claude/project-config.md` — stub with empty `## Selected Skills` section (to be filled by `@company-coo`)
-- `.gitignore` — generated with sensible defaults
-- `.env.example` (if env vars were already known from the project description)
-- `.git/` directory (git repo initialized)
-- `.github/copilot-instructions.md` — stub, to be filled by `@company-coo` after skill selection
-
-**Junctions (must exist as directory junctions pointing to the kit):**
+**Junctions (must resolve correctly — check a known file through each):**
 - `.claude/agents/` → `KIT_PATH/agents/`
 - `.claude/commands/` → `KIT_PATH/commands/`
 - `.claude/hooks/` → `KIT_PATH/hooks/`
 - `.claude/contexts/` → `KIT_PATH/contexts/`
 - `.claude/rules/common/` → `KIT_PATH/rules/common/`
-- Language-specific rules junctions (if applicable)
 
-**Verify junctions resolve correctly** — check that a known file is accessible through each junction (e.g. `.claude/hooks/hooks.json` should be readable).
+List any missing files or broken junctions as warnings. Only proceed to Step 6 once all checks pass (or warnings are acknowledged by the user).
 
-**Verify @imports in CLAUDE.md** — each `@KIT_PATH/skills/.../SKILL.md` path must point to a file that actually exists in the kit.
+---
 
-List any missing files or broken junctions as warnings. Do not declare success until all checks pass.
+## Step 6 — Route to the Board and Trigger Planning
+
+**This is the last action the skill takes.** Do not plan, select skills, or execute anything beyond this point.
+
+### 6a — Classify the project with route-agents
+
+Invoke the Skill tool with `route-agents`. Pass it the project description from Step 1. `route-agents` will return: the correct board entry point, the lead company, and supporting companies (if any).
+
+### 6b — Hand off to company-coo with a complete brief
+
+Invoke `@company-coo` with:
+1. **Project description** — what is being built, for whom, and why (from Step 1)
+2. **Infrastructure status** — git initialized, `.claude/CLAUDE.md` stub ready (Skills section empty, awaits board decision), junctions created, validation passed (Step 5f)
+3. **route-agents result** — lead company and supporting companies identified in Step 6a
+4. **Instruction to company-coo:** "Select the lead CEO based on the route-agents result. Route to that CEO only — do not route to specialists directly. The lead CEO must invoke their company planning skill before any execution begins."
+
+For anything `route-agents` cannot classify, default to `@company-coo` — the COO will reframe and route.
+
+### 6c — Lead CEO runs the company planning skill
+
+`company-coo` routes to the lead CEO. The lead CEO **must immediately** invoke their company's planning skill:
+
+| Lead company | Planning skill to invoke |
+|---|---|
+| software-company | `planning-specification-architecture-software` |
+| marketing-company | `planning-specification-architecture-marketing` |
+| media-company | `planning-specification-architecture-media` |
+
+The planning skill runs its three gated phases (brief/requirements → design → tasks). Only after all phases are user-approved does execution begin.
+
+**Rule:** Never skip `route-agents`. Never invoke a company CEO directly — always go through `company-coo`. Never let the board or COO create plans — planning belongs to the lead CEO's planning skill.
 
 ## Step 10 — Update / Regenerate Existing Projects
 
@@ -503,24 +490,16 @@ If re-running on an existing project:
 7. Do NOT recreate junctions that already exist and resolve correctly.
 8. Ask the user before overwriting `CLAUDE.md` content other than the `@` import lines.
 
-### 10a — Re-run the Full Planning Phase
+### 10a — Re-run Validation and Board Routing
 
-After updating skills and CLAUDE.md, run the full planning phase exactly as in Step 7 — including the gated workflow. Treat it as a **revision**, not a blank slate:
+After updating skills and CLAUDE.md, re-run Steps 5f and 6:
 
-1. Read all existing `.spec/` files (`plan.md`, `requirements.md`, `design.md`, `tasks.md`) before drafting anything. Use their current content as the baseline.
-2. Update `.spec/plan.md` directly to reflect any new goals, stack changes, or scope discovered during the update.
-3. Invoke the Skill tool with `planning-specification-architecture-software` before writing any of the three gated files.
-4. Follow the same 3-phase gated workflow as Step 7c — present each updated draft inline, wait for explicit approval, then save:
-   - **Phase 1 — Requirements:** present updated `requirements.md` showing what changed. Ask for approval before saving.
-   - **Phase 2 — Design:** present updated `design.md` reflecting any architectural changes. Ask for approval before saving.
-   - **Phase 3 — Tasks:** present updated `tasks.md` with new/revised tasks added and completed tasks preserved. Ask for approval before saving.
+1. Read all existing `.spec/` files (`requirements.md`, `design.md`, `tasks/`) and pass them to `company-coo` as context, so the planning skill treats this as a revision, not a blank slate.
+2. Validate all junctions and `@imports` (Step 5f) — create any missing junctions for newly added language rulesets.
+3. Route the updated project description to `@company-coo` (Step 6) with a note that `.spec/` artifacts already exist and should be revised rather than replaced.
+4. The lead CEO will invoke their company planning skill, which will revise the existing documents through its gated phases.
 
-**HARD RULES (same as Step 7):**
-- **NEVER write `requirements.md`, `design.md`, or `tasks.md` without first invoking the Skill tool with `planning-specification-architecture-software`.**
-- **NEVER save any gated file before the user explicitly approves that phase.**
-- **NEVER present and save in the same step.**
-- **NEVER combine phases.**
-- Preserve tasks already marked done — only add or revise incomplete tasks.
+Preserve tasks already marked done — pass that context to the board so the planning skill only adds or revises incomplete tasks.
 
 ## Rules
 
@@ -537,8 +516,8 @@ After updating skills and CLAUDE.md, run the full planning phase exactly as in S
 - Never copy skill content into the project — use absolute `@KIT_PATH/skills/.../SKILL.md` imports in `.claude/CLAUDE.md`.
 - Keep each section ≤ 3 lines. Cut every word that doesn't change behavior.
 - If the project already has a `plan.md`, read it before generating — use it to pre-fill context for `requirements.md` and `design.md`.
-- NEVER write `requirements.md`, `design.md`, or `tasks.md` directly. These three files are ONLY produced through the gated workflow in Step 7 (new projects) or Step 10a (existing projects) after explicit user approval of each phase.
+- NEVER write `requirements.md`, `design.md`, or `tasks.md`. These are produced by the company planning skill after the board routes in Step 6.
 - If the user's project has existing `workflows/` or `tools/`, mention them in the Layout section rather than overwriting.
 - Always store project config in `.claude/project-config.md` — never hardcode deployment details in CLAUDE.md.
-- If a junction target directory does not exist in the kit, skip it silently and note it as missing in Step 8 output rather than failing.
+- If a junction target directory does not exist in the kit, skip it silently and note it as missing in Step 5f validation output rather than failing.
 - Never create `.claude/skills/` as a directory in the project. Skills are referenced by absolute `@` path only.
