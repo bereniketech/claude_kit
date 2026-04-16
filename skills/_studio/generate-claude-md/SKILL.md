@@ -1,11 +1,14 @@
 ---
-name: generate-claude-md
-description: Bootstrap a new project end-to-end. Runs 6 phases without stopping — gather context, scaffold infrastructure (.git, .gitignore, .claudeignore, .env.example, .claude/, .spec/, .kit/), write the fixed CLAUDE.md stub, select kit content, copy it into .kit/, then invoke the planning skill. CLAUDE.md is always a fixed 10-line navigation stub — never lists skills, never contains architecture or stack. Every task file in .spec/tasks/ declares its own skills/agents/commands/rules so tasks are self-sufficient.
+name: project-bootstrap
+description: Full project bootstrap — 6 mandatory phases executed in strict order. Phase 0 detects prior run. Phase 1 gathers context. Phase 2 scaffolds git + ignore files + folders. Phase 3 writes fixed CLAUDE.md stub (10 lines only — no analysis, no stack) + project-config.md. Phase 4 validates. Phase 5 selects kit content. Phase 6 copies kit into .kit/ then reads and executes the planning skill in-context. DONE only when .spec/tasks/task-001.md exists. Writing CLAUDE.md is Phase 3 — never Phase 1.
 ---
 
 # Project Bootstrap
 
-This skill bootstraps an entire project. It is NOT done when CLAUDE.md is written. It is done after `.kit/` is populated and planning task files exist.
+> **HARD STOP — read before doing anything else.**
+> Your first action is NOT to write a file. Your first action is to read `idea.md` (if it exists) and then execute **Phase 0** below.
+> Writing `CLAUDE.md` — at root OR at `.claude/CLAUDE.md` — is **Phase 3, not Phase 1**. Do not write any file until Phase 2 infrastructure is in place.
+> If you find yourself about to call `Write` before completing Phases 0–2, stop and go back to Phase 0.
 
 ---
 
