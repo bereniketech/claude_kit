@@ -1,83 +1,80 @@
 ---
 name: generate-claude-md
-description: Bootstrap a project end-to-end. Runs 7 phases in strict order — detect/repair prior run, gather context, scaffold infrastructure, write stub files, validate, route through board, lead CEO copies kit content and runs planning. CLAUDE.md is a fixed tiny navigation stub — never lists skills. Every task file in .spec/tasks/ declares its own skills/agents/commands/rules so tasks are self-sufficient.
+description: Bootstrap a new project end-to-end. Runs 6 phases without stopping — gather context, scaffold infrastructure (.git, .gitignore, .claudeignore, .env.example, .claude/, .spec/, .kit/), write the fixed CLAUDE.md stub, select kit content, copy it into .kit/, then invoke the planning skill. CLAUDE.md is always a fixed 10-line navigation stub — never lists skills, never contains architecture or stack. Every task file in .spec/tasks/ declares its own skills/agents/commands/rules so tasks are self-sufficient.
 ---
 
 # Project Bootstrap
 
-This skill does NOT generate a single CLAUDE.md file. It bootstraps an entire project and does not finish until planning is complete, task files exist, and kit content is installed.
+This skill bootstraps an entire project. It is NOT done when CLAUDE.md is written. It is done after `.kit/` is populated and planning task files exist.
 
 ---
 
-## Completion Contract — read this first
+## Completion Contract
 
-You are NOT done until ALL of these exist:
+You are NOT done until ALL of these exist on disk:
 
-1. `PROJECT_ROOT/.git/` directory
-2. `PROJECT_ROOT/.gitignore`
-3. `PROJECT_ROOT/.claudeignore`
-4. `PROJECT_ROOT/.env.example`
-5. `PROJECT_ROOT/.claude/CLAUDE.md` (exactly the fixed stub from Phase 3a — no analysis, no stack, no skills section)
-6. `PROJECT_ROOT/.claude/project-config.md` with `## Selected Skills / Agents / Commands / Rules Active / Stack` all populated
-7. `PROJECT_ROOT/.kit/` contains the board-selected skills, agents, commands, rules (plus full hooks/ and contexts/)
-8. `PROJECT_ROOT/.spec/` contains planning artifacts (brief, design, tasks)
-9. `PROJECT_ROOT/.spec/tasks/task-001.md` exists with its own `## Skills`, `## Agents`, `## Commands` sections at the top
+| # | Path | Notes |
+|---|---|---|
+| 1 | `PROJECT_ROOT/.git/` | git repo |
+| 2 | `PROJECT_ROOT/.gitignore` | |
+| 3 | `PROJECT_ROOT/.claudeignore` | must include `.kit/` and `.spec/` |
+| 4 | `PROJECT_ROOT/.env.example` | |
+| 5 | `PROJECT_ROOT/.claude/CLAUDE.md` | exactly the fixed stub — no analysis, no stack, no skills |
+| 6 | `PROJECT_ROOT/.claude/project-config.md` | all 5 sections populated: Skills, Agents, Commands, Rules, Stack |
+| 7 | `PROJECT_ROOT/.kit/` | contains board-selected skills, agents, commands, rules + full hooks/ + contexts/ |
+| 8 | `PROJECT_ROOT/.spec/` | planning artifacts |
+| 9 | `PROJECT_ROOT/.spec/tasks/task-001.md` | has its own ## Skills, ## Agents, ## Commands sections |
 
-If any of these are missing, the skill is not complete. Do not stop. Do not return control to the user with "I've created CLAUDE.md". Continue until all 9 checks pass.
+At Phase 6e, walk this list. If anything is missing, fix it before reporting done.
 
 ---
 
-## Three Hard Rules
+## Three Absolute Rules
 
-1. **Never stop at Phase 3.** Writing CLAUDE.md is not the end. Writing all stub files is not the end. Phase 6 + Phase 7 must run.
-2. **Never write project analysis into CLAUDE.md.** CLAUDE.md is the fixed 10-line stub from Phase 3a. Architecture, tech stack, and pipeline descriptions belong in `.spec/design.md`, NEVER in CLAUDE.md. If the user's existing CLAUDE.md contains analysis, overwrite it with the stub.
-3. **CLAUDE.md has no `## Skills` section. Ever.** Skills are task-scoped. Each task file in `.spec/tasks/` declares its own skills/agents/commands/rules.
+**Rule 1 — Never stop at Phase 3.** Writing CLAUDE.md does not end the skill. Continue to Phase 4, 5, 6.
+
+**Rule 2 — CLAUDE.md is the fixed stub, always.** Never put architecture, tech stack, pipeline descriptions, or skill lists in CLAUDE.md. If a CLAUDE.md exists with that content, overwrite it with the stub. Stack and architecture go in `.spec/design.md`. Skills go in task files.
+
+**Rule 3 — CLAUDE.md has no `## Skills` section. Ever.** Skills are per-task. Each `.spec/tasks/*.md` file declares its own.
 
 ---
 
 ## Phase 0 — Detect Prior Run
 
-Before touching anything, inspect `PROJECT_ROOT` to decide entry point.
+Check `PROJECT_ROOT` and classify:
 
-Run these checks and classify:
-
-| Observed state | Entry phase |
+| Observed | Action |
 |---|---|
-| Empty or only `README.md` / `idea.md` | Start at Phase 1 |
-| `CLAUDE.md` exists at project root (wrong location — should be `.claude/CLAUDE.md`) | Read it for context, then **overwrite with stub in Phase 3a** at correct path |
-| `.claude/CLAUDE.md` exists but contains `## Stack`, `## Architecture`, or any prose beyond the fixed stub | **Overwrite in Phase 3a** with the correct stub |
-| `.claude/project-config.md` exists and is fully populated, `.kit/` populated, `.spec/tasks/` exists | Jump to Phase 7 (re-plan only) |
-| Partial: some stubs but `.kit/` empty or `.spec/tasks/` missing | Resume from the first incomplete phase, but re-run Phase 3a to ensure stubs are correct |
+| No `.claude/` folder | Start at Phase 1 |
+| `CLAUDE.md` at project root with analysis content | Delete it. Write correct stub at `.claude/CLAUDE.md` in Phase 3 |
+| `.claude/CLAUDE.md` has `## Stack`, `## Architecture`, or `## Skills` | Overwrite with fixed stub in Phase 3 |
+| `.claude/project-config.md` populated + `.kit/` populated + `.spec/tasks/` exists | Jump to Phase 6e (verify only) |
+| Partial state (some files exist, tasks missing) | Resume from first incomplete phase |
 
-State the classification in one line to the user, e.g.: "Detected partial prior run — CLAUDE.md at project root contains full analysis. Will move to `.claude/CLAUDE.md` as fixed stub and continue from Phase 2."
-
-Then continue. Never stop here.
+State the classification in one sentence. Then continue — never stop here.
 
 ---
 
 ## Phase 1 — Gather Context
 
-If the user has not described the project and no `idea.md` exists, ask:
+If `idea.md`, `README.md`, or source files exist, read them — do not ask the user what they're building.
 
-> "What are you building? (e.g. web app, data pipeline, CLI tool, research workflow, document automation)"
+If nothing exists, ask once: "What are you building?"
 
-If `idea.md`, `README.md`, or stub code exists in `PROJECT_ROOT`, read them to build the project brief — do not re-ask the user.
+### Confirm PROJECT_ROOT and KIT_PATH
 
-### Confirm PROJECT_ROOT
-
-- If CWD contains `.claude/skills/*/SKILL.md`, it is the kit library. **Do NOT write project files here.** Ask: "Where should I create the project folder?"
-- If CWD has project files matching the user's description, use CWD as `PROJECT_ROOT`.
+- CWD has `.claude/skills/*/SKILL.md` → this is the kit itself. Ask for the project path.
+- CWD has project files matching the description → use CWD.
 - Otherwise ask once.
 
-### Build the board brief (in working memory, NOT in a file)
+Ask if not already known: "Absolute path to claude_kit? (default: `C:/Users/Hp/Desktop/Experiment/claude_kit`)" — store as `KIT_PATH`. Use forward slashes. Do not ask again in Phase 3b.
 
-Capture:
-- Project name and one-line purpose
+### Build the project brief (working memory only — do not write to any file)
+
+- Project name + one-line purpose
 - Primary users / outcome
-- Existing artifacts (paths only — e.g. `idea.md`, `README.md`)
-- Any tech stack hints from existing files
-
-This brief is input to Phase 5. Do not write it into any file. **Especially not CLAUDE.md.**
+- Existing artifacts by path
+- Tech stack hints from existing files
 
 **NEXT: Phase 2.**
 
@@ -85,13 +82,11 @@ This brief is input to Phase 5. Do not write it into any file. **Especially not 
 
 ## Phase 2 — Scaffold Infrastructure
 
-### 2a — Git init
+### 2a — Git
 
-If `.git/` missing: `cd PROJECT_ROOT && git init && git branch -M main`
+If `.git/` missing: `git init && git branch -M main`
 
 ### 2b — .gitignore
-
-Write `PROJECT_ROOT/.gitignore`:
 
 ```
 # Environment & secrets
@@ -102,7 +97,7 @@ Write `PROJECT_ROOT/.gitignore`:
 # Intermediates
 .tmp/
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
@@ -116,16 +111,9 @@ Thumbs.db
 *.log
 ```
 
-Append dependency/build paths if project type is known:
-- Node/TS: `node_modules/`, `dist/`, `build/`
-- Python: `__pycache__/`, `.venv/`, `*.pyc`, `dist/`, `*.egg-info/`
-- Rust: `target/`
-- Java/Kotlin: `target/`, `build/`, `.gradle/`
-- Go: `bin/`, `vendor/`
+Add stack-specific entries (Node: `node_modules/ dist/ build/` · Python: `__pycache__/ .venv/ *.pyc dist/ *.egg-info/` · Rust: `target/` · Java/Kotlin: `target/ build/ .gradle/` · Go: `bin/ vendor/`)
 
 ### 2c — .claudeignore
-
-Write `PROJECT_ROOT/.claudeignore`:
 
 ```
 .kit/
@@ -140,24 +128,23 @@ build/
 .env.*
 ```
 
-The `.kit/` entry is mandatory — kit files are large and must not auto-load.
+`.kit/` is mandatory — kit files must not auto-load.
 
 ### 2d — .env.example
 
-Write `PROJECT_ROOT/.env.example`. If env vars can be inferred from the project brief, include them with placeholder values. Otherwise minimal:
-
+Stub with known env vars from the project brief. If none known:
 ```
 # Add project environment variables here as they are needed.
 # Never commit real secrets to this file.
 ```
 
-### 2e — Create folders
+### 2e — Folders
 
 ```bash
-mkdir -p "PROJECT_ROOT/.claude" "PROJECT_ROOT/.spec" "PROJECT_ROOT/.kit"
+mkdir "PROJECT_ROOT/.claude" "PROJECT_ROOT/.spec" "PROJECT_ROOT/.kit"
 ```
 
-`.kit/` stays empty until Phase 6a. **Do not create `.claude/skills/`** — skills live in `.kit/skills/`.
+Never create `.claude/skills/` — skills live in `.kit/skills/`.
 
 **NEXT: Phase 3.**
 
@@ -165,9 +152,9 @@ mkdir -p "PROJECT_ROOT/.claude" "PROJECT_ROOT/.spec" "PROJECT_ROOT/.kit"
 
 ## Phase 3 — Write Stub Files
 
-### 3a — CLAUDE.md (fixed stub — no deviation)
+### 3a — CLAUDE.md (fixed — do not deviate)
 
-Write `PROJECT_ROOT/.claude/CLAUDE.md` with EXACTLY the content below. No extra sections. No tech stack. No architecture. No skills list. Replace only `[Project Name]`.
+Write `PROJECT_ROOT/.claude/CLAUDE.md` with EXACTLY this. Replace only `[Project Name]`. Add nothing else.
 
 ```markdown
 # [Project Name]
@@ -188,11 +175,11 @@ Kit content: `.kit/` (agents · commands · hooks · contexts · rules · skills
 `bug-log.md` — date · what broke · root cause · fix · files.
 ```
 
-**If a CLAUDE.md with different content already exists anywhere in the project (root or `.claude/`), OVERWRITE it with this stub.** Tech stack, architecture, and pipeline details belong in `.spec/design.md`, NEVER in CLAUDE.md. If the old CLAUDE.md had a root-level copy (e.g. `PROJECT_ROOT/CLAUDE.md`), delete that file after writing the correct one at `.claude/CLAUDE.md`.
+If `PROJECT_ROOT/CLAUDE.md` (root level) exists, delete it after writing the correct one at `.claude/CLAUDE.md`.
 
 ### 3b — project-config.md
 
-Ask once if unknown: "Absolute path to your claude_kit directory? (default: `C:/Users/Hp/Desktop/Experiment/claude_kit`)". Use forward slashes.
+Use `KIT_PATH` confirmed in Phase 1. Do not ask again.
 
 Write `PROJECT_ROOT/.claude/project-config.md`:
 
@@ -203,19 +190,19 @@ Write `PROJECT_ROOT/.claude/project-config.md`:
 Path: KIT_PATH
 
 ## Selected Skills
-_(To be populated by @company-coo)_
+_(populated in Phase 5)_
 
 ## Selected Agents
-_(To be populated by @company-coo)_
+_(populated in Phase 5)_
 
 ## Selected Commands
-_(To be populated by @company-coo)_
+_(populated in Phase 5)_
 
 ## Rules Active
-_(To be populated by @company-coo)_
+_(populated in Phase 5)_
 
 ## Stack
-_(To be decided by the board)_
+_(populated in Phase 6)_
 ```
 
 **NEXT: Phase 4.**
@@ -224,123 +211,109 @@ _(To be decided by the board)_
 
 ## Phase 4 — Validate
 
-Verify every path exists. If any is missing, create it now. On fundamental failure (e.g. git init failed), report and stop. Otherwise continue immediately.
+Check every path in the Completion Contract rows 1–6. Create any missing item now. If git init fails, report and stop. Otherwise continue.
 
-**Files required:** `.git/`, `.gitignore`, `.claudeignore`, `.env.example`, `.claude/CLAUDE.md`, `.claude/project-config.md`
-**Folders required (may be empty):** `.claude/`, `.spec/`, `.kit/`
+Re-read `.claude/CLAUDE.md` — if it has any content beyond the fixed stub, rewrite it now.
 
-Reading back `.claude/CLAUDE.md`: it must be exactly the fixed stub. If anything else is in it, rewrite it now.
-
-**NEXT: Phase 5 — do NOT stop here.**
+**NEXT: Phase 5 — do not stop here.**
 
 ---
 
-## Phase 5 — Route Through the Board
+## Phase 5 — Select Kit Content (YOU do this inline — no sub-agents)
 
-You do not make architecture decisions. The board does.
+Based on the project brief from Phase 1, select the items to install. Use the routing table and selection rules below. Do not delegate this to `@company-coo` or `route-agents` — those are downstream consumers of a bootstrapped project, not inputs to bootstrapping.
 
-### 5a — Classify with route-agents
+### 5a — Identify lead company
 
-Invoke the `Skill` tool with `route-agents`, passing the project brief from Phase 1. It returns: board entry point, lead company, supporting companies.
+| Project type | Lead company | Planning skill path |
+|---|---|---|
+| Software, product, AI, API, infra, data, security, OS, web app, CLI, pipeline | `software-company` | `KIT_PATH/skills/planning/planning-specification-architecture-software/SKILL.md` |
+| SEO, ads, growth, brand, email campaigns | `marketing-company` | `KIT_PATH/skills/planning/planning-specification-architecture-marketing/SKILL.md` |
+| Blog, video, podcast, newsletter, social, content, docs | `media-company` | `KIT_PATH/skills/planning/planning-specification-architecture-media/SKILL.md` |
 
-### 5b — Invoke @company-coo
+Record `LEAD_COMPANY` and the exact planning skill path for use in Phase 6d.
 
-Use the `Agent` tool (or `@company-coo` invocation) with this exact brief:
+### 5b — Select skills
 
-1. **Project description** — from Phase 1
-2. **Existing artifacts** — paths to `idea.md`, `README.md`, stub code
-3. **Infrastructure status** — "git initialized; `.claude/`, `.spec/`, `.kit/` created; stubs written; validation passed"
-4. **route-agents result** — lead company, supporting companies
-5. **Required return payload** — "Return a JSON block containing:
-   ```
-   {
-     "lead_company": "software-company | marketing-company | media-company",
-     "lead_ceo": "<agent name>",
-     "skills": ["<category>/<skill-name>", ...],
-     "agents": ["<company>/<agent-name>", ...],
-     "commands": ["<category>/<command-name>", ...],
-     "rules": ["<ruleset>", ...]
-   }
-   ```
-   Do not create plans. Do not write files. Only return the selection JSON."
+Pick 3–8 skills from `KIT_PATH/skills/` that directly match the project's tech stack and workload. Use the category structure from CLAUDE.md. Examples for a Python FastAPI + AI project: `languages/python-patterns`, `frameworks-backend/fastapi-patterns`, `data-science-ml/ai-engineer`, `testing-quality/tdd-workflow`, `devops/terminal-cli-devops`.
 
-Never invoke a company CEO directly. Always route through `@company-coo`.
+### 5c — Select agents
 
-**NEXT: Phase 6 — YOU (the main thread) execute 6a–6d using the JSON returned by @company-coo. Do NOT wait for the COO to do the copying. Do NOT hand off to the CEO yet.**
+Pick the relevant agents from `KIT_PATH/agents/`. Always include:
+- `board/company-coo.md`
+- `software-company/software-cto.md` (or equivalent CEO for lead company)
+- 3–6 specialist agents relevant to the stack
+
+### 5d — Select commands
+
+Pick relevant commands from `KIT_PATH/commands/`. Always include: `core/` (task-handoff, wrapup, code-review). Add stack-specific commands (e.g. `languages/python-review`, `testing-quality/tdd`).
+
+### 5e — Select rules
+
+Always include `rules/common/` in full. Add language-specific rule sets if applicable (e.g. `rules/python/`, `rules/golang/`).
+
+**NEXT: Phase 6.**
 
 ---
 
-## Phase 6 — Install Kit Content (YOU do this, not a sub-agent)
+## Phase 6 — Install Kit Content + Run Planning
 
-You — the main thread running this skill — execute all of 6a–6d. This is not delegated. The board returned a selection; your job is to install it.
-
-### 6a — Copy board-selected content into .kit/
-
-For each item in the JSON returned by @company-coo:
+### 6a — Copy selected content into .kit/
 
 ```bash
-# Skills (one dir per skill):
-xcopy /E /I /Y "KIT_PATH\skills\<category>\<skill>"    "PROJECT_ROOT\.kit\skills\<category>\<skill>"
+# For each selected skill:
+xcopy /E /I /Y "KIT_PATH\skills\<category>\<skill>" "PROJECT_ROOT\.kit\skills\<category>\<skill>"
 
-# Agents (one file per agent):
-xcopy /Y "KIT_PATH\agents\<company>\<agent>.md"        "PROJECT_ROOT\.kit\agents\<company>\"
+# For each selected agent:
+copy "KIT_PATH\agents\<company>\<agent>.md" "PROJECT_ROOT\.kit\agents\<company>\"
 
-# Commands (one file per command):
-xcopy /Y "KIT_PATH\commands\<category>\<cmd>.md"       "PROJECT_ROOT\.kit\commands\<category>\"
+# For each selected command:
+copy "KIT_PATH\commands\<category>\<cmd>.md" "PROJECT_ROOT\.kit\commands\<category>\"
 
-# Rules (one dir per ruleset):
-xcopy /E /I /Y "KIT_PATH\rules\<ruleset>"              "PROJECT_ROOT\.kit\rules\<ruleset>"
+# Selected rules:
+xcopy /E /I /Y "KIT_PATH\rules\<ruleset>" "PROJECT_ROOT\.kit\rules\<ruleset>"
 
-# Hooks + contexts — always full copy:
+# Always — hooks and contexts in full:
 xcopy /E /I /Y "KIT_PATH\hooks"    "PROJECT_ROOT\.kit\hooks"
 xcopy /E /I /Y "KIT_PATH\contexts" "PROJECT_ROOT\.kit\contexts"
-```
 
-Also copy `rules/common/` in full if it exists:
-```bash
+# Always — rules/common/ in full:
 xcopy /E /I /Y "KIT_PATH\rules\common" "PROJECT_ROOT\.kit\rules\common"
 ```
 
-**Never modify any file under `KIT_PATH`.** The kit is read-only source.
+Never modify any file under `KIT_PATH`. Kit is read-only source.
 
-### 6b — Record selections in project-config.md
+### 6b — Update project-config.md
 
-Update `PROJECT_ROOT/.claude/project-config.md` — fill `## Selected Skills`, `## Selected Agents`, `## Selected Commands`, `## Rules Active` with the exact items the board chose. Leave `## Stack` alone for now (Phase 7d sets it).
+Fill in all five sections (Selected Skills, Selected Agents, Selected Commands, Rules Active, leave Stack for 6e).
 
-### 6c — Verify .kit/ contents match the selection
+### 6c — Verify .kit/ contents
 
-List `PROJECT_ROOT/.kit/` and confirm every skill/agent/command/rule from the JSON is present as a file. If any is missing, re-copy it. Do not proceed until the kit matches the selection.
+List `.kit/` and confirm every selected file exists. If any is missing, re-copy it now.
 
-### 6d — Confirm completion of Phase 6
+### 6d — Execute the planning skill NOW
 
-Report to the user, one line: "Kit installed: N skills, M agents, K commands, R rulesets. Lead CEO: `<lead_ceo>`. Invoking planning skill now."
+Read the planning skill file for the lead company (from Phase 5a) and execute it in-context. Do not delegate to a sub-agent. Do not use the Skill tool. Read the file and run it as if its instructions were written here.
 
-**NEXT: Phase 7 — invoke the planning skill immediately. Do NOT stop.**
-
----
-
-## Phase 7 — Run the Lead CEO's Planning Skill
-
-Invoke the `Skill` tool RIGHT NOW with the correct planning skill for the lead company. This is a direct `Skill` tool call — not a sub-agent, not a description of what should happen. Actually call the tool.
-
-| Lead company | Planning skill argument |
+| Lead company | File to read |
 |---|---|
-| software-company | `planning-specification-architecture-software` |
-| marketing-company | `planning-specification-architecture-marketing` |
-| media-company | `planning-specification-architecture-media` |
+| `software-company` | `KIT_PATH/skills/planning/planning-specification-architecture-software/SKILL.md` |
+| `marketing-company` | `KIT_PATH/skills/planning/planning-specification-architecture-marketing/SKILL.md` |
+| `media-company` | `KIT_PATH/skills/planning/planning-specification-architecture-media/SKILL.md` |
 
-Pass in the skill input:
+Pass into the planning skill execution:
 - `PROJECT_ROOT`
 - Project brief from Phase 1
-- Path to `idea.md` if it exists — treat as prior input, run as a revision not a blank slate
-- **Mandatory task file header format** (planning skill MUST emit this for every task):
+- Path to `idea.md` if it exists (treat as prior input — revision run, not blank slate)
+- Instruction: every task file must have `## Skills`, `## Agents`, `## Commands` sections at the top using `.kit/...` paths
+
+Task file format the planning skill must emit:
 
 ```markdown
-# Task NNN: <short title>
+# Task NNN: <title>
 
 ## Skills
 - .kit/skills/<category>/<skill>/SKILL.md
-- .kit/rules/<ruleset>/<rule>.md
 
 ## Agents
 - @<agent-name>
@@ -355,72 +328,46 @@ Pass in the skill input:
 ...
 ```
 
-The planning skill runs its own gated phases (brief → design → tasks) — each gated on user approval. Artifacts land in `PROJECT_ROOT/.spec/`.
+The planning skill runs gated phases (brief → design → tasks) with user approval at each gate. Artifacts land in `.spec/`.
 
-### 7a — After planning returns: stack decision
+### 6e — After planning: verify Completion Contract
 
-Update `## Stack` in `PROJECT_ROOT/.claude/project-config.md` with the decided stack (language, framework, hosting, database, auth) from the design doc.
+After the planning skill returns:
 
-### 7b — Verify task files are self-sufficient
+1. Update `## Stack` in `project-config.md` with the stack from the design doc.
+2. Walk the Completion Contract table at the top of this skill. Check every row.
+3. For every `.spec/tasks/*.md` file: confirm it has `## Skills`, `## Agents`, `## Commands` at the top with `.kit/...` paths. If any task references a `.kit/` item not yet copied, copy it now and add to `project-config.md`.
+4. If any Completion Contract row fails, fix it before reporting.
 
-For every file in `.spec/tasks/`:
-- Has `## Skills`, `## Agents`, `## Commands` sections at the top
-- Uses plain `.kit/...` paths (NO `@` imports, NO `KIT_PATH`)
-- Every referenced `.kit/skills/...` and `.kit/agents/...` file actually exists on disk
+### 6f — Final report (3 lines)
 
-If a task references a skill not copied in 6a: copy it from `KIT_PATH` now and append it to `## Selected Skills` in `project-config.md`. Repeat until every task file's references resolve.
+```
+Bootstrap complete. Lead: [LEAD_COMPANY].
+Kit: N skills, M agents, K commands installed in .kit/.
+Planning: .spec/tasks/task-001.md … task-NNN.md written. Open task-001.md to start.
+```
 
-### 7c — Run the Completion Contract
-
-Walk through all 9 items in the Completion Contract at the top of this file. If any fails, fix it before reporting done.
-
-### 7d — Report
-
-Final report to user, 3 lines max:
-1. "Bootstrap complete. Lead: `<lead_ceo>`."
-2. "Kit: N skills, M agents, K commands installed under `.kit/`."
-3. "Planning: `.spec/tasks/task-001.md` … `.spec/tasks/task-NNN.md` written. Open `task-001.md` to start."
-
-**This — and only this — is the end of the skill.**
+**This is the end of the skill.**
 
 ---
 
 ## Re-Run Behavior
 
-If `PROJECT_ROOT/.claude/project-config.md` already exists and is populated:
+If `project-config.md` already exists and is populated:
 
-1. Read `project-config.md` for `KIT_PATH` — do not ask again.
-2. Verify the fixed CLAUDE.md stub at `.claude/CLAUDE.md`. If it drifted (has Stack, Architecture, Skills sections, or is at the wrong location), rewrite it as the stub.
+1. Read `KIT_PATH` from it — do not ask again.
+2. Verify `.claude/CLAUDE.md` is still the fixed stub. Rewrite if it has drifted.
 3. Read existing `.spec/` artifacts.
-4. Re-run Phase 5 with the existing `.spec/` content as prior input — planning treats it as a revision, not a blank slate.
-5. Copy any newly-referenced `.kit/` items not already on disk.
-6. CLAUDE.md stays the fixed stub forever. Do not edit it to reflect project state.
+4. Re-run Phase 5 (re-select if needed) and Phase 6d with existing `.spec/` as prior input.
+5. Copy any newly-required `.kit/` items missing on disk.
 
 ---
 
-## Global Rules (reference)
+## Global Rules
 
-### Hierarchy
-- Always route: `route-agents` → `@company-coo` → lead CEO → specialists.
-- Never invoke a company CEO directly. Never bypass the board.
-- The board/COO selects content; they do NOT create plans. Planning belongs to the lead CEO's planning skill.
-
-### File management
-- Never write into `KIT_PATH`. Kit is read-only source.
-- Never bulk-copy `KIT_PATH/agents/`, `/commands/`, `/skills/`, or `/rules/`. Only board-selected items. Exception: `hooks/` and `contexts/` copy in full.
-- Never use `@` imports in generated files. All references are plain `.kit/...` paths from `PROJECT_ROOT`.
+- Never write into `KIT_PATH`.
+- Never bulk-copy `KIT_PATH/agents/`, `/commands/`, `/skills/`, `/rules/` in their entirety. Only selected items. Exception: `hooks/`, `contexts/`, `rules/common/` copy in full.
+- Never use `@` imports in any generated file. All references are `.kit/...` paths from project root.
 - Never create `.claude/skills/` — skills live in `.kit/skills/`.
-- Never put project analysis, architecture, or stack into CLAUDE.md. Those go in `.spec/design.md`. CLAUDE.md is the fixed stub.
-
-### Skills are task-scoped
-- CLAUDE.md has no `## Skills` section. Ever.
-- Each `.spec/tasks/*.md` declares its own skills/agents/commands/rules.
-- Session flow: CLAUDE.md → current task path → open task file → load only that task's `.kit/` items.
-
-### Flow control (the thing the skill keeps failing on)
-- Phase 3 writing stubs is NOT the end. Continue to Phase 4.
-- Phase 4 validation passing is NOT the end. Continue to Phase 5.
-- Phase 5 getting the board selection JSON is NOT the end. Continue to Phase 6.
-- Phase 6 copying kit content is NOT the end. Continue to Phase 7.
-- Phase 7 is the end — and only after 7c (Completion Contract) passes.
-- At every phase boundary the skill has a "NEXT:" directive. Honor it literally. If you find yourself wanting to summarize or return control, re-read the Completion Contract and keep going.
+- Never put project analysis into CLAUDE.md. It goes in `.spec/design.md`.
+- Phase boundary reminder: Phase 3 done → continue. Phase 4 done → continue. Phase 5 done → continue. Phase 6d done → verify and report. Never stop between phases.
