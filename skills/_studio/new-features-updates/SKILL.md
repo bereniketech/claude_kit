@@ -41,7 +41,7 @@ Use `Glob` and `Grep` to understand what already exists in `PROJECT_ROOT`:
 - Top-level folder structure
 - Tech stack (infer from `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, etc.)
 - Key source files: entry points, API routes, data models, main modules
-- Existing `.spec/` folders and files — read all present to understand prior plans
+- Existing `.spec/` folders and files — read all present to understand prior plans. If task files exist, note their status and include them in the board brief (Step 5). **Never execute or continue any task yourself — existing task files are context for the board, not a signal to self-execute.**
 - Already-installed components: read `.claude/CLAUDE.md` to list `@` imported skills
 - Existing junctions: check `.claude/agents/`, `.claude/commands/`, `.claude/rules/`, `.claude/hooks/`, `.claude/contexts/`
 
@@ -113,3 +113,5 @@ Invoke immediately after Step 4c infrastructure is confirmed. Pass them:
 The board routes internally. Do not prescribe which CEO or specialist to use.
 
 **Rule:** This step is mandatory and fires immediately after Step 4c. Never bypass the board to call a CEO or specialist directly.
+
+**Rule:** The skill ends at board handoff. Do not write code, edit files, create task todos, or execute any work yourself — not even if task files already exist in `.spec/`. Self-executing is a bypass, not a shortcut.
