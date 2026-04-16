@@ -37,17 +37,26 @@ If the CWD contains existing project files (source code, `package.json`, `pyproj
 
 **Skip all deployment, hosting, stack, and auth decisions.** The board will assess the project and decide the right stack, package manager, hosting, database, and auth. Pre-filling these before the board has seen the project produces wrong defaults that the board then has to undo.
 
-## Step 3 — Do NOT Select Skills (Board Decides)
+## Step 3 — Analyze Project Description (STOP — No Infrastructure)
 
-**Skip skill selection.** The board (`@company-coo`) will decide which CEO and which skills that CEO needs.
+From Step 1, understand what's being built:
+- Type of project (web app, CLI, data pipeline, etc.)
+- Primary purpose and users
+- Any existing codebase or starting point
 
-Instead, document what the project involves (from Step 1) as a brief for the board. This brief becomes the input to `@company-coo` in Step 6, and the board uses it to decide:
-1. Which operating company (software / marketing / media)?
-2. Which skills does *that company* need for this specific project?
+**STOP HERE.** Do not set up infrastructure, create files, or select skills. Analysis only.
 
-Only skills the board approves will be added to `.claude/CLAUDE.md`. No random skills loaded upfront.
+This becomes the input to the board in Step 6.
 
-## Step 4 — Initialize Git-Ready Project
+## Step 4 — SKIP (Board Responsibility)
+
+**Do not set up any infrastructure.** The board will handle:
+- Git initialization
+- Creating `.claude/`, `.spec/`, `.github/` directories
+- Creating directory junctions to the kit
+- Writing and updating `.claude/CLAUDE.md`, `project-config.md`, etc.
+
+Routing layer does analysis only.
 
 The project folder must be git-compliant so it can be pushed directly to a remote.
 
@@ -203,10 +212,12 @@ When you need context about past decisions, patterns, architecture, or session h
 | `@people-operations-expert` | Hiring, comp bands, performance reviews, employment contracts, handbook, onboarding |
 | `@chief-of-staff` | Comms triage (email, Slack, LINE, Messenger), decision tracking, weekly reviews, escalations between CEOs |
 
-### How the board routes
+### How the board routes (ALWAYS respect hierarchy)
 - `@company-coo` routes to: `@software-cto` (code, AI, infra, product, security, OS), `@chief-marketing-officer` (SEO, ads, growth, brand), `@chief-content-officer` (blog, video, podcast, social)
+- Each CEO routes to specialists *within their company* for detailed planning and execution
 - `@chief-design-officer` coordinates: `ui-design-expert` (inside software-company), `brand-expert` (inside marketing-company), `presentation-expert` (inside media-company)
-- Never reach past a board member into the operating companies or their specialists directly.
+- **CRITICAL:** Never reach past a board member into operating companies. Never reach past a CEO into specialists. Always respect the chain: board → CEO → specialist.
+- **Planning rule:** Plans (requirements → design → tasks) originate from specialists, never from board members or CEOs directly.
 
 ## Active Feature
 Feature: _(to be updated after planning starts)_
@@ -401,15 +412,16 @@ Pass them:
 2. **Project description** — what was captured in Step 1 (the board decides stack, hosting, auth)
 3. **Infrastructure ready** — git initialized, `.claude/CLAUDE.md` stub in place (skills section is empty and awaits board decision), junctions ready
 4. **Board's responsibilities from here:**
-   - Decide which operating company CEO (or board peer) should lead
-   - Select only the skills that company actually needs and fill in `.claude/CLAUDE.md`
-   - Update `.claude/project-config.md` and `.github/copilot-instructions.md` to match
-   - Drive all planning (requirements → design → tasks → task enrichment)
-   - Execute task-001 and cascade via `/task-handoff`
+   - Decide which operating company CEO should lead
+   - Route to that CEO (do not route to specialists directly)
+   - The CEO will determine which specialists are needed, select skills, and route to those specialists for detailed planning
+   - Never create plans at board level — plans originate from specialists delegated by company CEOs
+   - Once specialists complete planning (requirements → design → tasks), return to board for final review
+   - Board coordinates execution cascade via `/task-handoff`
 
-The board routes internally. Do not prescribe which CEO or specialist to use.
+The board routes through CEOs to specialists. Do not prescribe specialists directly. Always respect the hierarchy: board → CEO → specialist.
 
-**Rule:** This step is mandatory and fires immediately after Step 5e. Never skip it. Never bypass the board.
+**Rule:** This step is mandatory and fires immediately after Step 5e. Never skip it. Never bypass the board. Never let the board create plans — plans must come from specialists.
 
 ## Step 9 — Validate Generated Files
 
@@ -471,6 +483,13 @@ After updating skills and CLAUDE.md, run the full planning phase exactly as in S
 
 ## Rules
 
+### Hierarchy (CRITICAL)
+- **ALWAYS route through the proper chain: board → company CEO → specialist.**
+- **NEVER let board members (company-coo, chief-of-staff, chief-design-officer, people-operations-expert) create plans.** Plans originate from specialists delegated by company CEOs.
+- **NEVER create a plan at routing level.** Analysis and infrastructure setup only — routing hands off to the board for delegation.
+- **If you find yourself about to plan, stop.** The current agent is either at the wrong hierarchy level, or needs to route to a specialist.
+
+### File Management
 - **NEVER write any project file into the skill library directory.** Always confirm `PROJECT_ROOT` in Step 1b before writing anything.
 - **If the CWD contains `.claude/skills/*/SKILL.md` files, it is the skill library — ask for a separate project folder.**
 - Never include a skill the project doesn't need. Select only the 2–6 skills whose guidance applies to every task in this project.

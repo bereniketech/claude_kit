@@ -3,6 +3,12 @@ name: new-features-updates
 description: Plan and scaffold new features onto an existing project. Analyzes the current codebase, ingests specs (text or folder of docs/images), installs missing skill library components via @imports and junctions (zero-copy), creates a feature branch and spec folder, then delegates to planning-specification-architecture for the gated requirements → design → tasks workflow.
 ---
 
+## CRITICAL: Hierarchy Enforcement
+
+**THIS SKILL IS ANALYSIS + ROUTING ONLY.** It must NEVER create plans, select specialists, or execute code. It routes to the board, and the board routes through CEOs to specialists. Plans originate from specialists, never from board members.
+
+---
+
 # New Features & Updates
 
 Use this skill when new specifications arrive for an existing project. It bridges the gap between `generate-claude-md` (used once at project start) and active feature development.
@@ -62,24 +68,13 @@ Only if the feature spec explicitly involves one or more of:
 
 ---
 
-## 4. Do NOT Add Skills Yet (Board Decides)
+## 4. Do NOT Set Up Infrastructure (Board Decides)
 
-Read `KIT_PATH` from `PROJECT_ROOT/.claude/project-config.md`. Do NOT add or select skills here — the board will decide which skills are needed after assessing the feature spec.
+**SKIP infrastructure setup entirely.** Do NOT create junctions, do NOT initialize git, do NOT write any files.
 
-Simply confirm that junctions are ready and that `.claude/CLAUDE.md` exists (board will update it with selected skills).
+Simply read `KIT_PATH` from `PROJECT_ROOT/.claude/project-config.md` (if it exists). Pass this to the board in Step 5b.
 
-### 4c — Verify Junctions Exist
-
-Junctions should already exist from project generation. Verify:
-```bash
-cmd /c mklink /J "PROJECT_ROOT\.claude\agents"   "KIT_PATH\agents"
-cmd /c mklink /J "PROJECT_ROOT\.claude\commands" "KIT_PATH\commands"
-cmd /c mklink /J "PROJECT_ROOT\.claude\hooks"    "KIT_PATH\hooks"
-cmd /c mklink /J "PROJECT_ROOT\.claude\contexts" "KIT_PATH\contexts"
-cmd /c mklink /J "PROJECT_ROOT\.claude\rules\common" "KIT_PATH\rules\common"
-```
-
-Create any that are missing. Agents, commands, rules, hooks, and contexts are now available on-demand via the junctions.
+The board will handle all infrastructure setup: git initialization, junction creation, CLAUDE.md updates, etc.
 
 ---
 
@@ -116,7 +111,7 @@ Collect (do not expand on):
 Use the Agent tool:
 ```
 Agent(
-  description: "Route [feature name] to board for planning and execution",
+  description: "Route [feature name] to board for assessment and CEO delegation",
   prompt: "[Board member], here is a new feature request:
   
   **Project:** [project name at PROJECT_ROOT]
@@ -131,10 +126,30 @@ Agent(
   
   **Infrastructure:** Junctions ready, CLAUDE.md exists at KIT_PATH = [KIT_PATH]
   
-  Your role: assess the feature, select required skills, plan (requirements → design → tasks → enrichment), execute task-001 → cascade via /task-handoff."
+  Your role: 
+  1. Assess the feature scope
+  2. Determine which operating company CEO should own this work
+  3. Route this feature request to that CEO (not to specialists directly)
+  4. The CEO will delegate to appropriate specialists for detailed planning
+  
+  DO NOT create a plan yourself. DO NOT call specialist agents directly. Always route through the company CEO."
 )
 ```
 
 **The skill ends when the Agent tool is called.** Nothing after this point is the skill's responsibility.
 
-**Rule:** If the board agent is not invoked by the end of this section, the skill has failed. Never proceed to code, todos, or task execution without invoking the board.
+**Rule:** If the board agent is not invoked by the end of this section, the skill has failed. Never proceed to code, todos, or task execution without invoking the board. Never create a plan at board level—plans originate from specialists, not from board members.
+
+---
+
+## Rules
+
+### Hierarchy (CRITICAL)
+- **ALWAYS route to the board.** The board (company-coo in most cases) decides which company CEO should lead, then CEOs delegate to specialists.
+- **NEVER create a plan yourself.** Plans originate from specialists delegated by company CEOs, never from routing-level agents.
+- **NEVER invoke specialist agents directly.** Always route through the board and company CEOs.
+- **Analysis + routing only.** Read the codebase, gather specs, verify infrastructure (junctions, CLAUDE.md stub). Then invoke the board. Stop.
+
+### Scope Boundaries
+- **In scope:** Analyze feature spec + existing codebase, confirm project root, verify junctions, read existing tasks
+- **Out of scope:** Planning, specialist selection, code changes, task execution, skill selection, creating .spec/ files
