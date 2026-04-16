@@ -561,7 +561,26 @@ Length: [Duration / Word count]
 
 Save to `.spec/{content-slug}/tasks/task-NNN.md`.
 
-Every task MUST include:
+**Hard rule — every task file is self-sufficient.** Each task file declares every skill, agent, and command it needs in its own header, using plain `.kit/...` paths relative to the project root. Do not rely on CLAUDE.md or a project-wide skill list. A session must be able to open the task file and know exactly what context to load without reading any other file first.
+
+Every task file MUST begin with this header, then be followed by the task content:
+
+```markdown
+# Task NNN: {Short Title}
+
+## Skills
+- .kit/skills/<category>/<skill-name>/SKILL.md
+
+## Agents
+- @<agent-name>
+
+## Commands
+- /task-handoff
+
+> Load the skills, agents, and commands listed above before reading anything else.
+```
+
+Every task MUST also include:
 - Description of work
 - `_Brief Reference:_` — which brief section this satisfies
 - `_Format:_` — what type of asset is being produced
@@ -700,7 +719,7 @@ These files are the source of truth. During production, reference them constantl
 When the spec is approved and production begins:
 
 1. Open the task file — `.spec/{content-slug}/tasks/task-NNN.md`
-2. Load `## Session Bootstrap` — invoke each listed skill before reading further
+2. Load `## Skills`, `## Agents`, and `## Commands` from the task file header — these are the only context to load. Use the plain `.kit/...` paths listed there. Do not load any skill not declared in the task file's own header.
 3. Read "Handoff from Previous Task" — understand what was produced
 4. Read "Context" — brief, outline, voice, and SEO requirements are embedded
 5. Execute — follow production steps in order

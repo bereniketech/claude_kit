@@ -535,7 +535,7 @@ Save to `.spec/{feature-name}/tasks.md`.
 Every task MUST include:
 - Description of work (bullet points)
 - `_Requirements:_` — which requirement numbers this task satisfies
-- `_Skills:_` — which skills to invoke before starting (use `/skill-name` syntax)
+- `_Skills:_` — which skills this task needs, as plain `.kit/skills/<category>/<skill>/SKILL.md` paths
 - `**AC:**` — acceptance criteria (how to verify the task is done)
 
 ```markdown
@@ -545,7 +545,7 @@ Every task MUST include:
   - Create directory structure for models, services, repositories, and API layers.
   - Define interfaces that establish system boundaries.
   - _Requirements: 1.1, 1.2_
-  - _Skills: /build-website-web-app (project structure), /code-writing-software-development (interfaces)_
+  - _Skills: .kit/skills/development/build-website-web-app/SKILL.md (project structure), .kit/skills/development/code-writing-software-development/SKILL.md (interfaces)_
   - **AC:** Directory structure exists. All interfaces compile without errors.
 
 - [ ] 2. Implement data models and validation
@@ -553,7 +553,7 @@ Every task MUST include:
   - Write type definitions for all data models.
   - Implement validation functions for data integrity.
   - _Requirements: 2.1, 3.3_
-  - _Skills: /code-writing-software-development (typed models, validation logic)_
+  - _Skills: .kit/skills/development/code-writing-software-development/SKILL.md (typed models, validation logic)_
   - **AC:** All model types defined. Validation functions pass unit tests.
 ```
 
@@ -563,11 +563,14 @@ Tasks must NOT include: UAT, production deployments, load testing in live enviro
 
 After the user approves `tasks.md`, create individual task files under `.spec/{feature-name}/tasks/`.
 
+**Hard rule — every task file is self-sufficient.** A task file is the single source of truth for executing that task. It must declare every skill, agent, and command it needs in its own header, using plain `.kit/...` paths relative to the project root. Never reference CLAUDE.md or a project-wide skill list from a task file. A fresh session must be able to open the task file and know exactly what context to load — without reading any other file first.
+
 **For each task in `tasks.md`:**
 
 1. Create `.spec/{feature-name}/tasks/task-NNN.md` (zero-padded three digits: `task-001.md`, `task-002.md`, etc.).
-2. Populate `## Session Bootstrap` with only the skills this specific task requires (from its `_Skills:_` annotation). Never list all project skills — only what this task needs.
-3. Populate the file using this format:
+2. Populate `## Skills`, `## Agents`, and `## Commands` with only what this specific task requires (from its `_Skills:_` annotation). Use plain `.kit/...` paths — no `@` imports, no `/skill-name` shortcuts, no `KIT_PATH` variables. Never list skills not needed for this task.
+3. Verify that every `.kit/skills/...` path listed in the task header actually exists inside the project's `.kit/` folder (copied during bootstrap). If a path is missing, flag it — do not write a broken reference.
+4. Populate the file using this format:
 
 ```markdown
 ---
@@ -582,11 +585,18 @@ depends_on: []
 
 # Task NNN: {Short Title}
 
-## Session Bootstrap
-> Load these before reading anything else. Do not load skills not listed here.
+## Skills
+- .kit/skills/<category>/<skill-name>/SKILL.md
+- .kit/rules/<ruleset>/<rule>.md
 
-Skills: /skill-one, /skill-two
-Commands: /verify, /task-handoff
+## Agents
+- @<agent-name>
+
+## Commands
+- /verify
+- /task-handoff
+
+> Load the skills, agents, and commands listed above before reading anything else. Do not load context not listed here.
 
 ---
 
@@ -691,7 +701,7 @@ _(none)_ if this task makes no API calls.
 4. Run: `/verify`
 
 _Requirements: {req IDs}_
-_Skills: /skill-name — [reason this skill applies]_
+_Skills: .kit/skills/<category>/<skill>/SKILL.md — [reason this skill applies]_
 
 ---
 
@@ -915,7 +925,7 @@ These files are the source of truth. During implementation, reference them const
 When the spec is approved and implementation begins, the executing agent MUST:
 
 1. Open the task file — `.spec/{feature}/tasks/task-NNN.md`.
-2. Load `## Session Bootstrap` immediately — invoke each listed skill with `/skill-name` before reading any further. Do not load skills not listed there.
+2. Load `## Skills`, `## Agents`, and `## Commands` immediately — these are the only context to load. Use the plain `.kit/...` paths listed there. Do not load any skill not declared in the task file's own header.
 3. Read "Handoff from Previous Task" — understand what was built and any open questions.
 4. Read "Codebase Context" — snippets are embedded; no file reading required unless a gap is encountered.
 5. Implement — follow Implementation Steps in order.
@@ -968,7 +978,7 @@ When the spec is approved and implementation begins, the executing agent MUST:
 | Documentation, READMEs, content | `/document-content-writing-editing` |
 | Shell scripts, CLI tooling | `/terminal-cli-devops` |
 
-Only reference skills that exist in the project's `.claude/skills/` directory. If a skill is not installed, omit it — do not add a reference to a skill that is not present.
+Only reference skills that exist in the project's `.kit/skills/` directory. Use plain `.kit/skills/<category>/<skill>/SKILL.md` paths — never `/skill-name` shortcuts, never `@` imports. If a skill was not copied into `.kit/` during bootstrap, omit it — do not write a broken reference.
 
 ---
 

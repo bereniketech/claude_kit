@@ -612,7 +612,26 @@ Use the appropriate framework per channel and funnel stage:
 
 Save to `.spec/{campaign}/tasks/task-NNN.md`.
 
-Every task MUST include:
+**Hard rule — every task file is self-sufficient.** Each task file declares every skill, agent, and command it needs in its own header, using plain `.kit/...` paths relative to the project root. Do not rely on CLAUDE.md or a project-wide skill list. A session must be able to open the task file and know exactly what context to load without reading any other file first.
+
+Every task file MUST begin with this header, then be followed by the task content:
+
+```markdown
+# Task NNN: {Short Title}
+
+## Skills
+- .kit/skills/<category>/<skill-name>/SKILL.md
+
+## Agents
+- @<agent-name>
+
+## Commands
+- /task-handoff
+
+> Load the skills, agents, and commands listed above before reading anything else.
+```
+
+Every task MUST also include:
 - Description of work
 - `_Brief Reference:_` — which brief section this satisfies
 - `_Channel:_` — which platform/channel this task is for
@@ -795,7 +814,7 @@ These files are the source of truth. During execution, reference them constantly
 When the spec is approved and execution begins:
 
 1. Open the task file — `.spec/{campaign}/tasks/task-NNN.md`
-2. Load `## Session Bootstrap` — invoke each listed skill before reading further
+2. Load `## Skills`, `## Agents`, and `## Commands` from the task file header — these are the only context to load. Use the plain `.kit/...` paths listed there. Do not load any skill not declared in the task file's own header.
 3. Read "Handoff from Previous Task" — understand what was completed
 4. Read "Context" — targeting, copy, and creative direction are embedded
 5. Execute — follow implementation steps in order
