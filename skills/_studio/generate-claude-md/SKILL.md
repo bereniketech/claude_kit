@@ -1,9 +1,33 @@
 ---
 name: generate-claude-md
-description: Set up a new project — git, .gitignore, .env.example, .claude/, .spec/, .kit/ — then route through the board to select skills, copy them into .kit/, run the company planning skill, and write a lean CLAUDE.md. Use when starting a new project.
+description: Full project bootstrap — runs all setup steps in sequence without stopping. Creates git repo, .gitignore, .claudeignore, .env.example, .claude/, .spec/, .kit/, writes lean CLAUDE.md and project-config.md, then routes through the board (route-agents → company-coo → lead CEO) who selects and copies skills into .kit/ and runs the company planning skill. Does NOT stop after writing CLAUDE.md — writing CLAUDE.md is step 5c of 6, not the final step.
 ---
 
-# Generate CLAUDE.md Skill
+# Project Bootstrap Skill
+
+**This skill runs all steps below in sequence. Writing CLAUDE.md (Step 5c) is NOT the final step — the skill is only complete after Step 6e (lead CEO writes skills into CLAUDE.md). Do not stop early.**
+
+Checklist — mark each done before moving to the next:
+- [ ] Step 1 — Gather context
+- [ ] Step 1b — Confirm PROJECT_ROOT
+- [ ] Step 3 — Analyze description
+- [ ] Step 4a — Git init
+- [ ] Step 4b — .gitignore
+- [ ] Step 4c — .env.example
+- [ ] Step 4d — Create .claude/ .spec/
+- [ ] Step 4e — .claudeignore
+- [ ] Step 5a — Determine KIT_PATH
+- [ ] Step 5b — Create .kit/
+- [ ] Step 5c — Write CLAUDE.md stub
+- [ ] Step 5d — Write project-config.md
+- [ ] Step 5f — Validate
+- [ ] Step 6a — route-agents
+- [ ] Step 6b — company-coo handoff
+- [ ] Step 6c — Copy selected content into .kit/
+- [ ] Step 6d — Lead CEO runs planning skill
+- [ ] Step 6e — Lead CEO writes skills into CLAUDE.md
+
+---
 
 ## Step 1 — Gather Context
 
