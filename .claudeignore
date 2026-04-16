@@ -1,0 +1,39 @@
+# Claude Code — context exclusions
+# Files/dirs listed here are not loaded into Claude's context window.
+# Syntax mirrors .gitignore (glob patterns, negation with !, comments with #).
+
+# ── Large reference repos ──────────────────────────────────────────────────────
+everything-claude-code/
+
+# ── Scaffolded-but-empty OS phase directories ──────────────────────────────────
+skills/os-boot-and-firmware/
+skills/os-system-services/
+skills/os-distribution/
+skills/os-desktop-stack/
+
+# ── Build / dependency artefacts ───────────────────────────────────────────────
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+dist/
+build/
+.next/
+.nuxt/
+out/
+
+# ── Secrets and env files ──────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── OS & editor noise ─────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+
+# ── Logs and temp ─────────────────────────────────────────────────────────────
+*.log
+.tmp/

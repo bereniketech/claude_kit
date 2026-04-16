@@ -294,7 +294,58 @@ Use PostgreSQL with pgvector extension rather than a dedicated vector DB.
 
 ---
 
-## 9. Output Format
+## 9. Advisor Strategy
+
+Use the **advisor pattern** to pair a cost-efficient executor with Opus-level reasoning only when needed.
+
+### When to apply
+- Complex architectural decisions with significant trade-offs
+- Technology selection where the decision has long-term cost/scale consequences
+- Ambiguous requirements that need frontier-level reasoning to untangle
+- Any design where a wrong call would require a costly rewrite
+
+### How it works
+The executor model (Sonnet or Haiku) drives the task end-to-end — calls tools, reads code, iterates. It calls the advisor (Opus) only for hard decisions. The advisor never invokes tools or produces user-facing output; it returns a short guidance block (400–700 tokens) that the executor then acts on.
+
+### API setup
+
+```python
+import anthropic
+
+client = anthropic.Anthropic()
+
+response = client.messages.create(
+    model="claude-sonnet-4-6",          # executor — drives the task
+    tools=[
+        {
+            "type": "advisor_20260301",
+            "name": "advisor",
+            "model": "claude-opus-4-6", # advisor — consulted only when needed
+            "max_uses": 3,              # cap Opus calls per request
+        },
+        # ...other tools
+    ],
+    messages=[{"role": "user", "content": "Design the auth service architecture."}],
+    extra_headers={"anthropic-beta": "advisor-tool-2026-03-01"},
+)
+```
+
+### Rules
+- **Executor owns the work.** Never route all decisions through the advisor — only hard calls.
+- **`max_uses`**: Set to 2–4 per request. More than 5 signals the task is too broad.
+- **Advisor tokens billed separately** at Opus rates; executor at Sonnet/Haiku rates. Overall cost stays lower than running Opus end-to-end because the advisor runs selectively.
+- **Advisor never writes files, calls tools, or produces output** the user sees directly.
+- For architecture work: use the advisor for §2 pattern selection and §7 ADR decisions; let the executor handle §1 code reading and §9 output formatting.
+
+### Performance benchmarks (from Anthropic)
+| Setup | Gain |
+|---|---|
+| Sonnet + Opus advisor | +2.7pp on SWE-bench Multilingual, −11.9% cost per task |
+| Haiku + Opus advisor | 41.2% on BrowseComp (vs 19.7% solo), 85% cheaper than Sonnet |
+
+---
+
+## 10. Output Format
 
 ```markdown
 # Architecture: [System Name]

@@ -168,11 +168,14 @@ Write `PROJECT_ROOT/.claude/CLAUDE.md` with absolute-path `@` imports for **only
 
 Always-include skills for every project (add their absolute paths):
 - `code-writing-software-development` (`skills/development/code-writing-software-development/SKILL.md`)
-- `continuous-learning` (`skills/core/continuous-learning/SKILL.md`)
 - `strategic-compact` (`skills/core/strategic-compact/SKILL.md`)
-- `autonomous-agents-task-automation` (`skills/planning/autonomous-agents-task-automation/SKILL.md`)
-- `notebooklm` (`skills/ai-platform/notebooklm/SKILL.md`)
-- `wrapup` (`skills/core/wrapup/SKILL.md`)
+- `token-cost` (`rules/common/token-cost.md`) — load via `@KIT_PATH/rules/common/token-cost.md`
+
+Add only when the project needs them (do NOT include by default — each adds context cost):
+- `continuous-learning` — long-running projects with evolving patterns
+- `autonomous-agents-task-automation` — projects that orchestrate agents or automate pipelines
+- `notebooklm` — projects that use NotebookLM as a second brain
+- `wrapup` — projects with multi-session workflows
 
 Add from Step 3 selections (examples):
 - `tdd-workflow` → `skills/testing-quality/tdd-workflow/SKILL.md`
@@ -219,6 +222,31 @@ When you need context about past decisions, patterns, architecture, or session h
 - **CRITICAL:** Never reach past a board member into operating companies. Never reach past a CEO into specialists. Always respect the chain: board → CEO → specialist.
 - **Planning rule:** Plans (requirements → design → tasks) originate from specialists, never from board members or CEOs directly.
 
+## Advisor Strategy
+
+Use a cost-efficient executor paired with Opus-level reasoning only on hard decisions.
+
+```python
+import anthropic
+client = anthropic.Anthropic()
+response = client.messages.create(
+    model="claude-sonnet-4-6",        # executor drives the task
+    tools=[
+        {
+            "type": "advisor_20260301",
+            "name": "advisor",
+            "model": "claude-opus-4-6",   # consulted only when needed
+            "max_uses": 3,
+        },
+        # ...your other tools
+    ],
+    messages=[{"role": "user", "content": "..."}],
+    extra_headers={"anthropic-beta": "advisor-tool-2026-03-01"},
+)
+```
+
+**Rules:** Executor owns the work end-to-end. Advisor returns guidance only (400–700 tokens) — never writes files, calls tools, or produces user-facing output. Set `max_uses` to 2–4; >5 signals the task scope is too broad. Advisor tokens billed at Opus rates; executor at Sonnet/Haiku rates — overall cost stays below full-Opus runs.
+
 ## Active Feature
 Feature: _(to be updated after planning starts)_
 Tasks: .spec/tasks/
@@ -250,6 +278,21 @@ Append to `bug-log.md` immediately after any fix:
 
 ## End of Session
 Run `/wrapup` after `/task-handoff` or when ending any work session. This captures decisions, learnings, and open threads into the AI Brain notebook for future retrieval.
+
+## Token Cost & Usage Limits
+
+| Task | Model | Rule |
+|---|---|---|
+| Scaffolding, simple edits | Haiku 4.5 | Default for worker agents |
+| Feature dev, multi-file | Sonnet 4.6 | Default executor |
+| Architecture, hard decisions | Opus 4.6 (advisor only) | `max_uses: 2–4`, never full-session |
+
+- Load only the skills this task needs — do not `@`-import unused skills.
+- Read files with `Grep`/targeted `Read`; never `Read` an entire large file.
+- Run `/compact` at phase boundaries (not mid-task) when tool call count exceeds 40.
+- Set `max_tokens` explicitly on API calls with predictable output size.
+- On `429` rate-limit: exponential back-off (1 s → 2 s → 4 s … cap 60 s).
+- Full rules: `rules/common/token-cost.md`
 
 ## Output Discipline
 Lead with the action. No preamble, no post-summary. Bullet points over prose.
@@ -286,10 +329,8 @@ Generate `PROJECT_ROOT/.github/copilot-instructions.md` as a Copilot-compatible 
 ## Skills — Read These Files for Coding Standards
 When implementing tasks, read these files for detailed coding standards:
 - KIT_PATH/skills/development/code-writing-software-development/SKILL.md
-- KIT_PATH/skills/core/continuous-learning/SKILL.md
 - KIT_PATH/skills/core/strategic-compact/SKILL.md
-- KIT_PATH/skills/planning/autonomous-agents-task-automation/SKILL.md
-- KIT_PATH/skills/ai-platform/notebooklm/SKILL.md
+- KIT_PATH/rules/common/token-cost.md
 - KIT_PATH/skills/core/wrapup/SKILL.md
 - [one line per project-specific selected skill]
 ```

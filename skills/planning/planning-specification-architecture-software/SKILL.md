@@ -21,6 +21,14 @@ The planning workflow has three sequential, gated phases. Always move through th
 
 **This is mandatory. Every phase must complete, be reviewed, and be explicitly approved before the next phase begins. SPEC COMPLETE means the spec is ready — it does NOT mean execution begins. Execution is a separate action that requires the user to explicitly start it.**
 
+**Planning agent ownership:**
+All planning phases are supervised by `software-cto` (`agents/software-company/software-cto.md`). Before beginning each phase, `software-cto` selects which specialist(s) from `agents/software-company/` perform the work:
+- **Phase 2 (Design):** `software-cto` delegates to `architect` (`agents/software-company/engineering/architect.md`) for system design, ADRs, and architecture decisions.
+- **Phase 3 (Task Plan):** `software-cto` delegates to `planner` (`agents/software-company/engineering/planner.md`) for task decomposition when >5 tasks or cross-cutting concerns are present (see Section 4a).
+- For both phases, `software-cto` reviews and signs off the output before the user approval gate is presented.
+
+The skill does not prescribe agents — `software-cto` makes all routing decisions based on the feature's domain and scope.
+
 ### Phase 1: Requirements
 1. Create `.spec/{feature}/requirements.md` with user stories (EARS format) and acceptance criteria
 2. **HARD STOP.** Do not proceed to design.
@@ -28,10 +36,25 @@ The planning workflow has three sequential, gated phases. Always move through th
 4. Wait for user response. Only proceed if approved. If changes requested, revise and ask again. Do not interpret enthusiasm or positive feedback as approval — wait for an explicit "approved", "yes", "looks good", or equivalent.
 
 ### Phase 2: Design
-1. (Only after Requirements approved) Create `.spec/{feature}/design.md` with architecture, components, data models, API design, ADRs
-2. **HARD STOP.** Do not proceed to tasks.
-3. Say exactly: **"Design document created at `{path}/design.md`. Please review and reply 'approved' to continue to the task plan."**
-4. Wait for user response. Only proceed if approved. If changes requested, revise and ask again.
+1. (Only after Requirements approved) Create `.spec/{feature}/design.md` using the full Design Document Format below. Every applicable section must be authored by the specialist agent listed — `software-cto` owns the merge and the user approval gate.
+
+2. **Specialist delegation during design (software-cto routes each section to the right agent):**
+
+   - **UI/UX** — If the feature has any user-facing screens, flows, or components: delegate `## UI/UX Design` to `ui-design-expert` (`agents/software-company/design/ui-design-expert.md`). Covers: user flows, wireframe descriptions, component hierarchy, design tokens, responsive behaviour, accessibility, interaction states, empty/error states.
+
+   - **Database** — If the feature introduces or modifies persistent data: delegate `## Database Architecture` to `database-architect` (`agents/software-company/data/database-architect.md`). Covers: database technology choice (ADR), schema definition, ERD, partitioning/sharding strategy, migration approach, indexing, CQRS/event-sourcing patterns if applicable.
+
+   - **Infrastructure & Deployment** — If the feature requires infrastructure changes, new services, or deployment pipelines: delegate `## Deployment & Infrastructure` to `devops-infra-expert` (`agents/software-company/devops/devops-infra-expert.md`). Cloud architecture decisions (AWS/GCP/Cloudflare, managed services, IaC) route to `cloud-architect` (`agents/software-company/devops/cloud-architect.md`). Covers: containerisation, orchestration, CI/CD pipeline, environments, rollback strategy, IaC, managed service selections.
+
+   - **Observability** — If the feature runs in production or adds new services: delegate `## Observability` to `observability-engineer` (`agents/software-company/devops/observability-engineer.md`). Covers: instrumentation points (traces, metrics, logs), SLO/SLI definitions, alerting rules, dashboards, incident runbooks.
+
+   - **Testing Strategy** — For every feature: delegate `## Testing Strategy` to `test-expert` (`agents/software-company/qa/test-expert.md`). Covers: test pyramid split (unit/integration/e2e), mutation and property-based testing scope, performance testing thresholds, accessibility and visual regression testing, contract testing, security testing touchpoints.
+
+   - **Security** — For every feature: delegate `## Security Architecture` to `security-reviewer` (`agents/software-company/qa/security-reviewer.md`) for OWASP-level threat review, and to `security-architect` (`agents/software-company/security/security-architect.md`) for auth/authz, secrets management, and compliance requirements (GDPR/HIPAA/SOC 2/PCI-DSS as applicable).
+
+3. **HARD STOP.** Do not proceed to tasks.
+4. Say exactly: **"Design document created at `{path}/design.md`. Please review and reply 'approved' to continue to the task plan."**
+5. Wait for user response. Only proceed if approved. If changes requested, revise and ask again.
 
 ### Phase 3: Task Plan (tasks.md)
 1. (Only after Design approved) Create `.spec/{feature}/tasks.md` — the human-readable task list for user review
@@ -192,9 +215,9 @@ Only after requirements are explicitly approved.
 
 Only if the task decomposition is likely to produce >5 tasks OR there are unclear cross-cutting concerns (e.g., shared state, cross-service dependencies, ambiguous ownership):
 
-Call the `@planner` agent with: the approved requirements doc + a draft task list. Use its output to validate and reorder tasks before finalizing `tasks.md`.
+`software-cto` invokes the `planner` agent (`agents/software-company/engineering/planner.md`) with: the approved requirements doc + a draft task list. Use its output to validate and reorder tasks before finalizing `tasks.md`.
 
-**Otherwise: skip. Do not call @planner when scope is clear and tasks are straightforward.**
+**Otherwise: skip. Do not invoke `planner` when scope is clear and tasks are straightforward.**
 
 ### Research Before Designing
 
@@ -210,15 +233,66 @@ Save to `.spec/{feature-name}/design.md`.
 # Design: {Feature Name}
 
 ## Overview
-## Architecture        ← Mermaid diagram required
+## Architecture                    ← Mermaid diagram required; authored by architect
 ## Components and Interfaces
-## Data Models
+## Data Models                     ← high-level; detail in Database Architecture section below
 ## API Design
 ## Error Handling Strategy
-## Testing Strategy
-## Security Architecture
+
+## Database Architecture           ← authored by database-architect; omit only if feature has zero persistent data
+  ### Technology Choice            ← ADR: which DB and why (Postgres, Mongo, ClickHouse, Redis, vector DB…)
+  ### Schema / ERD                 ← Mermaid erDiagram; all entities, types, constraints, relationships
+  ### Migration Strategy           ← how schema changes are applied (zero-downtime, reversible)
+  ### Indexing & Query Patterns    ← indexes for all primary query shapes; estimated cardinalities
+  ### Partitioning / Sharding      ← strategy if data volume warrants it
+  ### Specialised Patterns         ← CQRS, event sourcing, vector search — only if applicable; ADR required
+
+## Deployment & Infrastructure     ← authored by devops-infra-expert + cloud-architect; omit only if pure frontend
+  ### Cloud Services               ← provider + managed services chosen (ADR); region/AZ strategy
+  ### Infrastructure as Code       ← Terraform / CloudFormation / Bicep modules required
+  ### Container & Orchestration    ← Dockerfile, Kubernetes manifests, Helm chart changes
+  ### CI/CD Pipeline               ← branch strategy, pipeline stages, environment promotion gates
+  ### Environment Config           ← env vars, secrets injection (names only — no values in spec)
+  ### Rollback Strategy            ← how to revert a bad deploy; feature flags if applicable
+  ### Cost Estimate                ← rough monthly cost for new infrastructure; flag if >10% of existing
+
+## Observability                   ← authored by observability-engineer; required for every production feature
+  ### Instrumentation Points       ← which spans, metrics, and log lines are emitted; attribute names
+  ### SLO / SLI Definitions        ← one SLO per user-facing operation (target %, measurement window)
+  ### Alerting Rules               ← alert name, condition, severity, and notification channel
+  ### Dashboards                   ← panels to add/update; which existing board or new board
+  ### Runbook                      ← step-by-step incident response for each alert
+
+## Testing Strategy                ← authored by test-expert; required for every feature
+  ### Test Pyramid                 ← unit / integration / e2e split and rationale
+  ### Unit Tests                   ← scope, coverage target, framework
+  ### Integration Tests            ← which seams to test; real vs. mock boundaries
+  ### E2E Tests                    ← critical user journeys covered; tool (Playwright, Cypress…)
+  ### Performance Tests            ← thresholds (p95 latency, RPS), tool (k6, Locust), baseline
+  ### Accessibility Tests          ← automated checks (axe-core, Playwright), WCAG level
+  ### Contract Tests               ← API contracts, consumer-driven if applicable
+  ### Security Tests               ← SAST, dependency scan, fuzz targets
+
+## Security Architecture           ← authored by security-reviewer + security-architect
+  ### Threat Model                 ← assets, actors, attack vectors, mitigations (table)
+  ### Auth & Authz                 ← authentication method, authorisation model (RBAC/ABAC), token lifecycle
+  ### Secrets Management           ← where secrets live, rotation strategy, injection method
+  ### Input Validation & Sanitisation ← validation points, libraries, rejection policy
+  ### Compliance Requirements      ← GDPR/HIPAA/SOC 2/PCI-DSS obligations this feature triggers
+  ### Container & Supply Chain     ← image scanning, base image pinning, dependency audit cadence
+
 ## Scalability and Performance
 ## Dependencies and Risks
+
+## UI/UX Design                    ← authored by ui-design-expert; omit only if feature has zero user-facing surfaces
+  ### User Flows                   ← step-by-step flows for each user story (numbered, with decision branches)
+  ### Screen / Component Inventory ← every screen and reusable component; one row per item
+  ### Wireframes                   ← ASCII or Mermaid flowchart per key screen; enough detail to implement without Figma
+  ### Design Tokens                ← colours, typography scale, spacing, shadows, border-radius
+  ### Responsive Behaviour         ← breakpoints and layout changes per screen
+  ### Accessibility                ← WCAG 2.2 AA requirements per component; keyboard nav, ARIA roles, focus order
+  ### Interaction & Motion         ← hover/focus/active states; loading skeletons; transitions (duration + easing)
+  ### Empty & Error States         ← exact copy and visual treatment for every empty, error, and loading state
 ```
 
 ### Architecture Decision Records (ADRs)
@@ -501,6 +575,8 @@ task: NNN
 feature: {feature-name}
 status: pending
 model: haiku
+supervisor: software-cto
+agent: {agent-name}
 depends_on: []
 ---
 
@@ -673,21 +749,49 @@ describe('ComponentName', () => {
 **Open questions:** _(fill via /task-handoff)_
 ```
 
+**Agent assignment (required before saving each task file):**
+`software-cto` reads this task's Objective and Implementation Steps, then sets `agent:` to the single best domain specialist from `agents/software-company/` — any division is in scope:
+- Engineering: `architect`, `planner`, `software-developer-expert`, `web-frontend-expert`, `web-backend-expert`, `mobile-expert`, `desktop-expert`, `mcp-server-expert`, `python-expert`, `typescript-expert`, `polyglot-expert`, `systems-programming-expert`, `cinematic-website-builder`, `code-reviewer`, `refactor-cleaner`, `doc-updater`, `build-error-resolver`
+- AI/ML (via `ai-cto`): `ai-ml-expert`, `ai-platform-expert`, `orchestration-expert`, `data-scientist-expert`
+- DevOps: `devops-infra-expert`, `cloud-architect`, `azure-expert`, `observability-engineer`
+- Data: `database-architect`, `database-reviewer`
+- QA: `test-expert`, `tdd-guide`, `e2e-runner`, `security-reviewer`
+- Security (via `chief-security-officer`): `pentest-expert`, `security-architect`, `legal-compliance-expert`
+- Product (via `chief-product-officer`): `product-manager-expert`, `ecommerce-expert`, `startup-analyst`, `customer-success-expert`, `sales-automation-expert`, `saas-integrations-expert`, `workflow-automation-expert`, `erp-odoo-expert`, `fintech-payments-expert`
+- Design: `ui-design-expert`
+- Specialists: `game-dev-expert`, `office-automation-expert`, `search-expert`, `enterprise-operations-expert`, `conversational-agent-expert`, `cms-expert`, `reverse-engineering-expert`
+- OS Engineering: `linux-platform-expert`, `os-userland-architect`
+- Languages: `go-reviewer`, `go-build-resolver`, `kotlin-reviewer`, `kotlin-build-resolver`, `python-reviewer`
+
+Every part of the implementation is owned by the relevant domain specialist. If a task spans two domains, split the task first, then assign one agent per part. Default to `software-developer-expert` only when no specialist clearly fits. Never leave `agent:` as `{agent-name}` placeholder — an unresolved agent field is a spec defect.
+
 **Goal: task files must be complete enough for Claude Haiku to execute with zero file reads, zero decisions, and zero open questions.** Every ambiguity is resolved in the task file before execution begins.
+
+**Haiku-runnable standard (enforced before saving each task file):**
+- The `agent:` frontmatter field is populated with a real agent name from `agents/software-company/` — Haiku must know which agent it is before reading the task body.
+- Haiku has no project context. Every fact it needs must be inside the task file.
+- Every import path must be spelled out exactly — no "import from the usual place".
+- Every function signature that this task calls must be quoted verbatim from `## Key Code Snippets`.
+- Every shell command must be the full runnable string — no `<fill in>` tokens.
+- Every Decision Rule row must name the exact function + exact string — no "show appropriate error".
+- Every test `it()` body must be fully written — no `// ...` or `/* TODO */` bodies.
+- If completing any Implementation Step would require Haiku to open a source file, that file's relevant lines must be embedded in `## Key Code Snippets` instead.
+- More than 3 `// FILL:` markers in any Code Template → split the task into two smaller tasks.
 
 **Inputs available during enrichment:** `design.md`, `requirements.md`, `tasks.md`, `project-config.md`, and the real source tree via Glob/Grep (for existing projects).
 
 3. **Files** — derive from `design.md` file structure + this task's scope. List every file created or modified. No surprises.
 4. **Dependencies** — scan `design.md` stack + task description for new packages. Write exact install command. List any new env var names. Write `_(none)_` if not applicable.
 5. **API Contracts** — for every API call: derive from `design.md` API section. Write method, path, request shape, success response shape, and every named error shape. Write `_(none)_` if not applicable.
-6. **Code Templates** — write the full working implementation for every new file (not a skeleton — actual runnable code). Rules:
+6. **Code Templates** — write the full working implementation for every new file (not a skeleton — actual runnable code). **Haiku will copy-paste these templates directly; if the template is incomplete, the task fails.** Rules:
    - Imports exact and complete (module aliases from tsconfig/pyproject in `design.md`)
    - Types match `## Key Code Snippets`
    - Error handling follows `## Decision Rules`
    - All business logic written out — not referenced, written
    - `// FILL:` only for values unknowable without runtime context. More than 3 `// FILL:` lines → split the task
    - For modified files: embed the exact before-block then the replacement after-block
-7. **Codebase Context → Key Code Snippets** — existing projects: Grep/Glob for interfaces, base classes, types this task must conform to; embed with `// path:line` label. Greenfield: extract relevant interfaces/types from `design.md` and format as code. Never leave empty if the task implements an interface.
+   - No "// see design.md", "// follow pattern X", or "// similar to Y" — write the actual code
+7. **Codebase Context → Key Code Snippets** — existing projects: Grep/Glob for interfaces, base classes, types this task must conform to; embed with `// path:line` label. Greenfield: extract relevant interfaces/types from `design.md` and format as code. Never leave empty if the task implements an interface. **Rule:** embed every code block that an Implementation Step references — Haiku must not need to open any file to understand what it is implementing or extending.
 8. **Key Patterns** — 3–5 one-sentence rules from `design.md` ADRs constraining this task. Never "follow project conventions" — state the rule explicitly.
 9. **Implementation Steps** — each step names the exact file path and exact function/block to write or edit, plus any shell command. No step uses the words "appropriate", "similar", "follow", "refer to", "see", or "based on context".
 10. **Test Cases** — write the complete test file: imports, mock setup with return values, `beforeEach`/`afterEach`, every `it` block with full assertions. One test per AC item + one per Decision Rule row. No `/* ... */` bodies.
@@ -695,13 +799,17 @@ describe('ComponentName', () => {
 12. **Acceptance Criteria** — WHEN/THEN format. Each item maps 1:1 to a test case name in `## Test Cases`.
 13. Leave all **Handoff** sections with `_(fill via /task-handoff)_` placeholders.
 
-**Hard rules:**
+**Hard rules (each task file must pass ALL of these before it is saved):**
 - No Implementation Step uses "appropriate", "similar", "follow", "refer to", "see", or "based on context"
 - No `// TODO:` without the exact answer written in the same file
 - No test body that is `/* ... */` or empty
 - No Decision Rule row that says "show error" — name the exact function + message string
 - Code Templates must resolve all types — no `any`/`unknown` unless `design.md` explicitly uses them
 - If completing the task requires reading a source file, that file's relevant section is embedded in `## Key Code Snippets` instead
+- Every file path in `## Files` and `## Implementation Steps` is absolute from the repo root — no `../` or "relative to X"
+- Every external package referenced in Code Templates appears in `## Dependencies` with the exact install command
+- `## Objective` is one sentence a non-expert can act on — no jargon without definition
+- After writing a task file, do a self-check: "Could Haiku open this file, read only this file, and produce a correct PR?" If the answer is no, find the gap and fill it before proceeding to the next task.
 
 **Rule:** Task Enrichment (creating the individual `task-NNN.md` files) is Phase 4 of the gated workflow — it requires `tasks.md` to be approved first (Phase 3 gate). After task files are created, the skill STOPS and waits for the user to explicitly start execution. Enrichment does not change scope or acceptance criteria, but completion of enrichment is NOT permission to begin executing tasks.
 
@@ -743,6 +851,12 @@ Keep diagrams focused — one concept per diagram. Label all arrows and connecti
 - [ ] API endpoints are documented with request/response schemas.
 - [ ] Security threats are identified and mitigated.
 - [ ] Risks and dependencies are listed.
+- [ ] If the feature has persistent data: `## Database Architecture` section is present and authored by `database-architect` — technology choice ADR, ERD, migration strategy, indexing, and any CQRS/event-sourcing patterns are defined.
+- [ ] If the feature requires infrastructure changes or new services: `## Deployment & Infrastructure` section is present and authored by `devops-infra-expert` + `cloud-architect` — cloud services, IaC, CI/CD pipeline, environments, and rollback strategy are defined.
+- [ ] `## Observability` section is present and authored by `observability-engineer` — instrumentation points, SLO/SLI definitions, alerting rules, dashboards, and runbook are defined.
+- [ ] `## Testing Strategy` section is present and authored by `test-expert` — test pyramid, unit/integration/e2e split, performance thresholds, accessibility and security test scope are defined.
+- [ ] `## Security Architecture` section is present and authored by `security-reviewer` + `security-architect` — threat model, auth/authz, secrets management, input validation, compliance obligations, and container/supply-chain security are defined.
+- [ ] If the feature has user-facing surfaces: `## UI/UX Design` section is present and authored by `ui-design-expert` — user flows, wireframes, design tokens, responsive behaviour, accessibility, and all empty/error states are defined.
 
 ### Task List
 
@@ -813,15 +927,48 @@ When the spec is approved and implementation begins, the executing agent MUST:
 
 | Work type | Skill to annotate |
 |---|---|
+| **Frontend / UI** | |
 | React components, pages, routing, Tailwind | `/build-website-web-app` |
+| Design system, component library, design tokens, UI polish | `/ui-ux-pro-max` |
+| SVG visualizations, data viz, presentations | `/presentations-ui-design` |
+| Landing pages, conversion-focused UI, cinematic sites | `/build-website-web-app` + `/ui-ux-pro-max` |
+| Accessibility audit and remediation | `/ui-ux-pro-max` |
+| **Backend / Logic** | |
 | TypeScript logic, APIs, data layer, tests | `/code-writing-software-development` |
-| SVG visualizations, design tokens, UI polish | `/presentations-ui-design` |
-| Shell scripts, CI/CD, deployment | `/terminal-cli-devops` |
-| Documentation, READMEs, content | `/document-content-writing-editing` |
 | Claude API / Anthropic SDK integration | `/claude-developer-platform` |
 | Multi-step autonomous workflows | `/autonomous-agents-task-automation` |
+| **Database** | |
+| Schema design, migrations, ERD, indexing | `/postgres-patterns` |
+| NoSQL design (MongoDB, DynamoDB, Cassandra) | `/nosql-expert` |
+| ClickHouse analytics, time-series | `/clickhouse-io` |
+| Vector database design | `/vector-database-engineer` |
+| CQRS, event sourcing | `/cqrs-implementation` |
+| **DevOps / Infrastructure** | |
+| Docker, Kubernetes, Helm, container orchestration | `/docker-expert` |
+| CI/CD pipelines, GitHub Actions, GitLab CI, GitOps | `/github-actions-cicd` |
+| Terraform, CloudFormation, IaC | `/terraform-expert` |
+| AWS services, serverless, Lambda, ECS | `/aws-serverless` |
+| GCP, Cloud Run, serverless | `/gcp-cloud-run` |
+| Azure services, AKS, Bicep | `/azure-expert` |
+| Cloudflare Workers, edge deployment | `/cloudflare-workers` |
+| **Observability** | |
+| OpenTelemetry instrumentation, distributed tracing | `/distributed-tracing` |
+| Prometheus metrics, Grafana dashboards | `/prometheus-configuration` |
+| SLO/SLI definition and alerting | `/slo-implementation` |
+| **Testing** | |
+| Unit and integration tests | `/tdd-workflow` |
+| E2E tests (Playwright) | `/playwright-expert` |
+| Performance / load testing (k6, Locust) | `/k6-load-testing` |
+| Security testing, OWASP checks | `/security-review` |
+| **Security** | |
+| Auth implementation (OAuth, OIDC, SAML, JWT) | `/auth-implementation-patterns` |
+| Secrets management | `/secrets-management` |
+| Threat modelling, security architecture | `/threat-modeling` |
+| **Documentation / Content** | |
+| Documentation, READMEs, content | `/document-content-writing-editing` |
+| Shell scripts, CLI tooling | `/terminal-cli-devops` |
 
-Only reference skills that exist in the project's `.claude/skills/` directory.
+Only reference skills that exist in the project's `.claude/skills/` directory. If a skill is not installed, omit it — do not add a reference to a skill that is not present.
 
 ---
 

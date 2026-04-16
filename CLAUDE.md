@@ -398,7 +398,7 @@ The agent suite is structured as a holding company. The **board** contains cross
 `dev.md` · `review.md` · `research.md` · `content.md` · `marketing.md` · `design.md`
 
 ### Rules
-`rules/common/` — 9 files (agents, coding-style, development-workflow, git-workflow, hooks, patterns, performance, security, testing)
+`rules/common/` — 10 files (agents, coding-style, development-workflow, git-workflow, hooks, patterns, performance, security, testing, **token-cost**)
 `rules/<lang>/` — 5 files each for: golang, kotlin, python, swift, perl, php, typescript
 
 ---
