@@ -125,11 +125,15 @@ Completed: <ISO timestamp>
 
 ### 3g. Run /wrapup
 
-Save session memories and push session log to NotebookLM brain if configured.
+Execute `/wrapup` now. This is mandatory after every task — do not skip it.
+
+`/wrapup` saves session memories, records what was built, decisions made, and open questions, then pushes the session log to the NotebookLM brain if configured.
+
+Do not proceed to 3h until `/wrapup` completes.
 
 ### 3h. Run /clear
 
-Reset context window before the next task. Skills from this task do not carry into the next — the next task's `## Skills` section governs its own context.
+Execute `/clear` to reset the context window before the next task. Skills, agent context, and implementation details from this task must not bleed into the next — each task starts fresh from its own `## Skills` and `## Agents` sections.
 
 ---
 
