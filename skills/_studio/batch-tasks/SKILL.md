@@ -123,17 +123,67 @@ Status: COMPLETE
 Completed: <ISO timestamp>
 ```
 
-### 3g. Run /wrapup
+### 3g. Inline wrapup (mandatory — execute every step)
 
-Execute `/wrapup` now. This is mandatory after every task — do not skip it.
+Do NOT call `/wrapup` as a command — it will not execute. Run these steps directly:
 
-`/wrapup` saves session memories, records what was built, decisions made, and open questions, then pushes the session log to the NotebookLM brain if configured.
+**3g-1. Verify NotebookLM CLI:**
+```bash
+export PATH="$HOME/bin:$PATH"
+notebooklm --help > /dev/null 2>&1 && notebooklm auth check
+```
+If CLI missing or auth fails, skip NotebookLM steps (3g-2 through 3g-5) but continue with memory saves.
 
-Do not proceed to 3h until `/wrapup` completes.
+**3g-2. Ensure AI Brain notebook exists:**
+```bash
+REPO=$(basename "$(git rev-parse --show-toplevel 2>/dev/null || basename "$PWD")")
+notebooklm list --json
+```
+Find notebook named `<repo> AI Brain`. If not found, create it:
+```bash
+notebooklm create "${REPO} AI Brain" --json
+```
+Save the notebook ID to `memory/reference_brain_notebook.md` and update `MEMORY.md`.
 
-### 3h. Run /clear
+**3g-3. Write task session summary** to `/tmp/task-summary-NNN.md`:
+```markdown
+# Task NNN Summary — <ISO date>
 
-Execute `/clear` to reset the context window before the next task. Skills, agent context, and implementation details from this task must not bleed into the next — each task starts fresh from its own `## Skills` and `## Agents` sections.
+## Task
+<title from task file>
+
+## What Was Built
+<bullet points of files created/modified>
+
+## Decisions Made
+<key decisions and reasoning>
+
+## Open Threads
+<anything unresolved>
+```
+
+**3g-4. Push summary to AI Brain:**
+```bash
+notebooklm use <BRAIN_NOTEBOOK_ID>
+notebooklm source add /tmp/task-summary-NNN.md --notebook <BRAIN_NOTEBOOK_ID>
+```
+
+**3g-5. Save memories** — check existing memory index, then save/update:
+- `project` memory if work or decisions affect future tasks
+- `feedback` memory if the agent made a non-obvious choice
+- Do not duplicate existing memories — update them
+
+Do not advance to 3h until 3g-1 through 3g-5 are complete.
+
+### 3h. Clear context (mandatory — execute every step)
+
+Do NOT call `/clear` as a command. Run these steps directly:
+
+**3h-1.** Record the next task number to resume at.
+**3h-2.** Drop all in-context information from this task (code, decisions, skill content).
+**3h-3.** Re-read this batch-tasks SKILL.md from disk.
+**3h-4.** Re-read the next task file from disk — do not use anything cached from the previous task.
+**3h-5.** Continue the execution loop from step 3a for the next task.
 
 ---
 
@@ -163,6 +213,10 @@ Next: open the first blocked task file to diagnose.
 **Rule:** Tasks always run sequentially — never in parallel. Each task's output is the codebase the next task builds on.
 
 **Rule:** Never skip /verify. A task is not complete until verification passes (or is explicitly marked BLOCKED after retry).
+
+**Rule:** Never skip wrapup (step 3g). All 5 sub-steps must run — CLI check, brain notebook, summary file, NotebookLM push, memory saves. `/wrapup` as a slash command does not self-execute — the steps must be run inline.
+
+**Rule:** Never skip context clear (step 3h). After wrapup, drop all task context, re-read this skill from disk, re-read the next task file from disk before starting it.
 
 **Rule:** Load `## Skills` from the task file before invoking the agent — the agent must operate under those skill constraints, not generic defaults.
 
