@@ -78,7 +78,7 @@ This is the same as loading skills via `@import` — the agent operates under th
 
 ### 3d. Invoke the agent
 
-Dispatch the primary agent from `## Agents` as a subagent. Pass the full task content plus all loaded skill content:
+Dispatch the primary agent from `## Agents` as a subagent. Pass the full task content, all loaded skill content, AND the mandatory post-task sequence inline so the agent executes it without relying on slash commands:
 
 ```markdown
 ## Loaded Skills
@@ -93,97 +93,115 @@ You are executing this task as @<agent-slug>.
 Load and follow ALL skills listed above — they govern how you write code,
 structure output, and enforce quality standards for this task.
 
-Use the commands listed in ## Commands at the appropriate steps:
-- /verify — run after implementation to check correctness
-- /task-handoff — run when done to record decisions
-- Other commands — run as directed in the task steps
-
 Complete every step. Meet every acceptance criterion.
-Do not ask questions — make decisions and document them in the handoff.
-When done, output: TASK COMPLETE — <one-line summary of what was built>
-```
+Do not ask questions — make decisions and document them.
 
-Wait for the agent to finish before continuing.
+## Mandatory Post-Task Sequence (execute in order — do not skip any step)
 
-### 3e. Run /verify
-
-- **PASS** → continue to 3f
-- **FAIL** → re-invoke the same agent with the verification errors appended to the task context (one retry)
-  - **Still failing** → mark task BLOCKED, record the errors at the bottom of the task file, continue to next task:
-    ```
-    Status: BLOCKED — verify failed after retry
-    Errors: <paste verification output>
-    ```
-
-### 3f. Mark task complete
-
-Append to the bottom of the task file:
-```
-Status: COMPLETE
-Completed: <ISO timestamp>
-```
-
-### 3g. Inline wrapup (mandatory — execute every step)
-
-Do NOT call `/wrapup` as a command — it will not execute. Run these steps directly:
-
-**3g-1. Verify NotebookLM CLI:**
+### Step A — Verify NotebookLM CLI
 ```bash
 export PATH="$HOME/bin:$PATH"
-notebooklm --help > /dev/null 2>&1 && notebooklm auth check
+notebooklm --help > /dev/null 2>&1 && echo "CLI OK" || echo "CLI MISSING"
+notebooklm auth check
 ```
-If CLI missing or auth fails, skip NotebookLM steps (3g-2 through 3g-5) but continue with memory saves.
+If CLI missing or auth fails: skip Steps B–E, continue from Step F.
 
-**3g-2. Ensure AI Brain notebook exists:**
+### Step B — Find or create AI Brain notebook
 ```bash
-REPO=$(basename "$(git rev-parse --show-toplevel 2>/dev/null || basename "$PWD")")
+REPO=$(basename "$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")")
 notebooklm list --json
 ```
-Find notebook named `<repo> AI Brain`. If not found, create it:
+Find notebook named `${REPO} AI Brain`. If not found:
 ```bash
 notebooklm create "${REPO} AI Brain" --json
 ```
 Save the notebook ID to `memory/reference_brain_notebook.md` and update `MEMORY.md`.
 
-**3g-3. Write task session summary** to `/tmp/task-summary-NNN.md`:
-```markdown
-# Task NNN Summary — <ISO date>
+### Step C — Write task summary file
+Write `/tmp/task-summary-<NNN>.md` with this content:
+```
+# Task <NNN> Summary — <YYYY-MM-DD>
 
 ## Task
-<title from task file>
+<title of this task>
 
 ## What Was Built
-<bullet points of files created/modified>
+<bullet list of every file created or modified>
 
 ## Decisions Made
-<key decisions and reasoning>
+<key decisions and reasoning from this task>
 
 ## Open Threads
-<anything unresolved>
+<anything unresolved or deferred>
 ```
 
-**3g-4. Push summary to AI Brain:**
+### Step D — Push summary to AI Brain
 ```bash
 notebooklm use <BRAIN_NOTEBOOK_ID>
-notebooklm source add /tmp/task-summary-NNN.md --notebook <BRAIN_NOTEBOOK_ID>
+notebooklm source add /tmp/task-summary-<NNN>.md --notebook <BRAIN_NOTEBOOK_ID>
+```
+Wait for confirmation before continuing.
+
+### Step E — Save memories
+Check `memory/MEMORY.md`. For each item below, update the existing memory file if it exists, or create a new one:
+- Any project decisions made in this task → `memory/project_<slug>.md` (type: project)
+- Any non-obvious implementation choices → `memory/feedback_<slug>.md` (type: feedback)
+Do not create duplicate entries.
+
+### Step F — Mark task complete
+Append to the task file:
+```
+Status: COMPLETE
+Completed: <ISO timestamp>
 ```
 
-**3g-5. Save memories** — check existing memory index, then save/update:
-- `project` memory if work or decisions affect future tasks
-- `feedback` memory if the agent made a non-obvious choice
-- Do not duplicate existing memories — update them
+### Step G — Output completion signal
+Output exactly: `TASK COMPLETE — <one-line summary of what was built>`
+```
 
-Do not advance to 3h until 3g-1 through 3g-5 are complete.
+Wait for the agent to finish and confirm "TASK COMPLETE" before continuing.
 
-### 3h. Clear context (mandatory — execute every step)
+### 3e. Verify output
 
-Do NOT call `/clear` as a command. Run these steps directly:
+Run the test suite or lint checks appropriate to the task (e.g. `pytest`, `ruff check`).
 
-**3h-1.** Record the next task number to resume at.
-**3h-2.** Drop all in-context information from this task (code, decisions, skill content).
-**3h-3.** Re-read this batch-tasks SKILL.md from disk.
-**3h-4.** Re-read the next task file from disk — do not use anything cached from the previous task.
-**3h-5.** Continue the execution loop from step 3a for the next task.
+- **PASS** → continue to 3f
+- **FAIL** → re-invoke the same agent with the errors appended (one retry)
+  - **Still failing** → mark task BLOCKED at the bottom of the task file and continue:
+    ```
+    Status: BLOCKED — verify failed after retry
+    Errors: <paste output>
+    ```
+
+### 3f. Confirm NotebookLM push
+
+After the agent outputs "TASK COMPLETE", confirm the NotebookLM push happened:
+```bash
+notebooklm source list --json | grep "task-summary"
+```
+If the summary source is missing, run Steps A–D from the agent's post-task sequence above directly now before advancing.
+
+### 3g. Clear context (mandatory before next task)
+
+Add this as the final step inside the agent dispatch prompt in 3d, after Step G:
+
+```
+### Step H — Clear context
+You have completed this task. Before this agent session ends, output the following
+exactly so the batch runner knows to clear context:
+
+CONTEXT CLEAR — next task: <NNN>
+
+Then stop. Do not read any more files. Do not continue to the next task.
+The batch runner will start a fresh agent for the next task.
+```
+
+When the batch runner receives "CONTEXT CLEAR — next task: NNN":
+1. Terminate the current agent session entirely.
+2. Start a new agent session (new context window — no carry-over from previous task).
+3. In the new session, re-read this batch-tasks SKILL.md from disk.
+4. Re-read task-NNN.md from disk.
+5. Resume the execution loop from step 3a for task NNN.
 
 ---
 
@@ -214,9 +232,9 @@ Next: open the first blocked task file to diagnose.
 
 **Rule:** Never skip /verify. A task is not complete until verification passes (or is explicitly marked BLOCKED after retry).
 
-**Rule:** Never skip wrapup (step 3g). All 5 sub-steps must run — CLI check, brain notebook, summary file, NotebookLM push, memory saves. `/wrapup` as a slash command does not self-execute — the steps must be run inline.
+**Rule:** Never skip wrapup (Steps A–G in the agent prompt). All steps must complete — CLI check, brain notebook, summary file, NotebookLM push, memory saves, task marked complete. These are inlined in the agent dispatch so the agent cannot return without executing them.
 
-**Rule:** Never skip context clear (step 3h). After wrapup, drop all task context, re-read this skill from disk, re-read the next task file from disk before starting it.
+**Rule:** Never skip clear (Step H in the agent prompt). The agent must output "CONTEXT CLEAR — next task: NNN" as its final line. The batch runner terminates the agent on this signal and starts a fresh agent for the next task. Context from a previous task must never bleed into the next.
 
 **Rule:** Load `## Skills` from the task file before invoking the agent — the agent must operate under those skill constraints, not generic defaults.
 
