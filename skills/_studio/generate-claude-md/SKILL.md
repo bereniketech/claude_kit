@@ -262,7 +262,9 @@ Record `LEAD_COMPANY` and the exact planning skill path for use in Phase 6d.
 
 ### 5b — Select skills
 
-Pick 3–8 skills from `KIT_PATH/skills/` that directly match the project's tech stack and workload. Use the category structure from CLAUDE.md. Examples for a Python FastAPI + AI project: `languages/python-patterns`, `frameworks-backend/fastapi-patterns`, `data-science-ml/ai-engineer`, `testing-quality/tdd-workflow`, `devops/terminal-cli-devops`.
+**Always include (every project):** `KIT_PATH/skills/core/karpathy-principles/SKILL.md`
+
+Pick 3–8 additional skills from `KIT_PATH/skills/` that directly match the project's tech stack and workload. Use the category structure from CLAUDE.md. Examples for a Python FastAPI + AI project: `languages/python-patterns`, `frameworks-backend/fastapi-patterns`, `data-science-ml/ai-engineer`, `testing-quality/tdd-workflow`, `devops/terminal-cli-devops`.
 
 ### 5c — Select agents
 

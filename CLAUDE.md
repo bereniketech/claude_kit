@@ -188,8 +188,8 @@ When working inside the Skill Builder repository itself:
 **Studio / Entry Points** (5)
 `generate-claude-md` · `new-features-updates` · `route-agents` · `brainstorming` · `batch-tasks` — these route project requests to the right department agents and ideation flows
 
-**Core / Meta** (5)
-`continuous-learning` · `strategic-compact` · `eval-harness` · `skill-stocktake` · `configure-ecc`
+**Core / Meta** (6)
+`continuous-learning` · `strategic-compact` · `eval-harness` · `skill-stocktake` · `configure-ecc` · `karpathy-principles`
 
 **Development** (11)
 `code-writing-software-development` · `build-website-web-app` · `api-design` · `systematic-debugging` · `branch-completion` · `api-endpoint-builder` · `framework-migration-*` · ...
