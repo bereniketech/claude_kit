@@ -308,6 +308,9 @@ xcopy /E /I /Y "KIT_PATH\contexts" "PROJECT_ROOT\.kit\contexts"
 
 # Always — rules/common/ in full:
 xcopy /E /I /Y "KIT_PATH\rules\common" "PROJECT_ROOT\.kit\rules\common"
+
+# Always — batch-tasks skill (required for multi-task projects):
+xcopy /E /I /Y "KIT_PATH\skills\_studio\batch-tasks" "PROJECT_ROOT\.kit\skills\_studio\batch-tasks"
 ```
 
 Never modify any file under `KIT_PATH`. Kit is read-only source.
