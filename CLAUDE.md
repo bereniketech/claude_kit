@@ -82,7 +82,7 @@ claude_kit/
 │   │
 │   ├── software-company/               # (61) builds & ships software — CEO: software-cto
 │   │   ├── software-cto.md             # CEO of software-company
-│   │   ├── engineering/                # (17) planner, architect, software-developer, web-front/back, mobile, desktop, mcp-server, systems, python, typescript, polyglot, cinematic-website-builder, code-reviewer, refactor-cleaner, doc-updater, build-error-resolver
+│   │   ├── engineering/                # (16) planner, architect, software-developer, web-front/back (includes cinematic website builder), mobile, desktop, mcp-server, systems, python, typescript, polyglot, code-reviewer, refactor-cleaner, doc-updater, build-error-resolver
 │   │   ├── ai/                         # (5) ai-cto + ai-ml, ai-platform, orchestration, data-scientist
 │   │   ├── devops/                     # (4) devops-infra, cloud-architect, azure, observability-engineer
 │   │   ├── data/                       # (2) database-architect, database-reviewer
@@ -332,7 +332,7 @@ The agent suite is structured as a holding company. The **board** contains cross
 
 #### software-company (62) — `agents/software-company/` — CEO: `software-cto`
 
-**Engineering** (17, `engineering/`) — `architect` · `planner` · `software-developer-expert` · `web-frontend-expert` · `web-backend-expert` · `mobile-expert` · `desktop-expert` · `systems-programming-expert` · `mcp-server-expert` · `python-expert` · `typescript-expert` · `polyglot-expert` · `cinematic-website-builder` · `code-reviewer` · `refactor-cleaner` · `doc-updater` · `build-error-resolver`
+**Engineering** (16, `engineering/`) — `architect` · `planner` · `software-developer-expert` · `web-frontend-expert` (includes cinematic website builder) · `web-backend-expert` · `mobile-expert` · `desktop-expert` · `systems-programming-expert` · `mcp-server-expert` · `python-expert` · `typescript-expert` · `polyglot-expert` · `code-reviewer` · `refactor-cleaner` · `doc-updater` · `build-error-resolver`
 
 **AI / ML** (5, `ai/`) — sub-lead: `ai-cto` · `ai-ml-expert` · `ai-platform-expert` · `orchestration-expert` · `data-scientist-expert`
 
