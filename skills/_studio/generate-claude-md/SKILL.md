@@ -44,11 +44,13 @@ You are NOT done until ALL of these exist on disk:
 |---|---|---|
 | 1 | `PROJECT_ROOT/.git/` | git repo |
 | 2 | `PROJECT_ROOT/.gitignore` | |
-| 3 | `PROJECT_ROOT/.claudeignore` | must include `.kit/` and `.spec/` |
+| 3 | `PROJECT_ROOT/.claude/.claudeignore` | must include `.kit/` and `.spec/` |
 | 4 | `PROJECT_ROOT/.env.example` | |
 | 5 | `PROJECT_ROOT/.claude/CLAUDE.md` | exactly the fixed stub — no analysis, no stack, no skills |
 | 6 | `PROJECT_ROOT/.claude/project-config.md` | all 5 sections populated: Skills, Agents, Commands, Rules, Stack |
+| 6a | `PROJECT_ROOT/.claude/.gitignore` | allows only CLAUDE.md, project-config.md, .gitignore |
 | 7 | `PROJECT_ROOT/.kit/` | contains board-selected skills, agents, commands, rules + full hooks/ + contexts/ |
+| 7a | `PROJECT_ROOT/.kit/.gitignore` | allows only README.md, .gitignore — kit content never committed |
 | 8 | `PROJECT_ROOT/.spec/` | planning artifacts |
 | 9 | `PROJECT_ROOT/.spec/tasks/task-001.md` | has its own ## Skills, ## Agents, ## Commands sections |
 
@@ -140,7 +142,7 @@ Thumbs.db
 
 Add stack-specific entries (Node: `node_modules/ dist/ build/` · Python: `__pycache__/ .venv/ *.pyc dist/ *.egg-info/` · Rust: `target/` · Java/Kotlin: `target/ build/ .gradle/` · Go: `bin/ vendor/`)
 
-### 2c — .claudeignore
+### 2c — `.claude/.claudeignore`
 
 ```
 .kit/
@@ -155,7 +157,7 @@ build/
 .env.*
 ```
 
-`.kit/` is mandatory — kit files must not auto-load.
+`.kit/` is mandatory — kit files must not auto-load into context.
 
 ### 2d — .env.example
 
@@ -165,10 +167,34 @@ Stub with known env vars from the project brief. If none known:
 # Never commit real secrets to this file.
 ```
 
-### 2e — Folders
+### 2e — `.claude/.gitignore`
+
+```
+*
+!CLAUDE.md
+!.gitignore
+!.claudeignore
+!project-config.md
+```
+
+Keeps `.claude/` lean — only Claude config files are committed. No generated files, no sessions, no temp state.
+
+### 2f — `.kit/.gitignore`
+
+```
+*
+!README.md
+!.gitignore
+```
+
+`.kit/` is a local cache populated from `claude_kit`. Never committed. Consumers re-populate on clone via `project-config.md`.
+
+### 2g — Folders
 
 ```bash
 mkdir "PROJECT_ROOT/.claude" "PROJECT_ROOT/.spec" "PROJECT_ROOT/.kit"
+mkdir "PROJECT_ROOT/.kit/skills" "PROJECT_ROOT/.kit/agents" "PROJECT_ROOT/.kit/commands"
+mkdir "PROJECT_ROOT/.kit/rules" "PROJECT_ROOT/.kit/contexts" "PROJECT_ROOT/.kit/hooks"
 ```
 
 Never create `.claude/skills/` — skills live in `.kit/skills/`.
