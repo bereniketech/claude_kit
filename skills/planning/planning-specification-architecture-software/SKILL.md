@@ -563,13 +563,19 @@ Tasks must NOT include: UAT, production deployments, load testing in live enviro
 
 After the user approves `tasks.md`, create individual task files under `.spec/{feature-name}/tasks/`.
 
-**Hard rule — every task file is self-sufficient.** A task file is the single source of truth for executing that task. It must declare every skill, agent, and command it needs in its own header, using plain `.kit/...` paths relative to the project root. Never reference CLAUDE.md or a project-wide skill list from a task file. A fresh session must be able to open the task file and know exactly what context to load — without reading any other file first.
+**Hard rule — every task file is self-sufficient.** A task file is the single source of truth for executing that task. It must declare every skill, agent, and command it needs in its own header, using direct `.kit/...` paths relative to the project root. Never reference CLAUDE.md or a project-wide skill list from a task file. A fresh session must be able to open the task file and load exactly what is listed — without reading any other file first. All paths must point to the exact `.kit/` location — no shortcuts, no variable substitution.
 
 **For each task in `tasks.md`:**
 
 1. Create `.spec/{feature-name}/tasks/task-NNN.md` (zero-padded three digits: `task-001.md`, `task-002.md`, etc.).
-2. Populate `## Skills`, `## Agents`, and `## Commands` with only what this specific task requires (from its `_Skills:_` annotation). Use plain `.kit/...` paths — no `@` imports, no `/skill-name` shortcuts, no `KIT_PATH` variables. Never list skills not needed for this task.
-3. Verify that every `.kit/skills/...` path listed in the task header actually exists inside the project's `.kit/` folder (copied during bootstrap). If a path is missing, flag it — do not write a broken reference.
+2. Populate `## Skills`, `## Agents`, and `## Commands` with only what this specific task requires (from its `_Skills:_` annotation). Use direct `.kit/...` paths pointing to exact locations in the kit:
+   - Skills: `.kit/skills/<category>/<skill-name>/SKILL.md`
+   - Agents: `.kit/agents/<company>/<division>/<agent-name>/AGENT.md`
+   - Commands: `.kit/commands/<category>/<command-name>/COMMAND.md`
+   - Rules: `.kit/rules/<lang-or-common>/<rule-name>.md`
+   
+   Never use `@` imports, `/skill-name` shortcuts, or `KIT_PATH` variables. Never list context not needed for this task.
+3. Verify that every `.kit/...` path listed in the task header actually exists inside the project's `.kit/` directory (which is a zero-copy junction to the main kit). If a path is missing, flag it — do not write a broken reference.
 4. Populate the file using this format:
 
 ```markdown
@@ -587,16 +593,15 @@ depends_on: []
 
 ## Skills
 - .kit/skills/<category>/<skill-name>/SKILL.md
-- .kit/rules/<ruleset>/<rule>.md
+- .kit/rules/<lang-or-common>/<rule-name>.md
 
 ## Agents
-- @<agent-name>
+- .kit/agents/<company>/<division>/<agent-name>/AGENT.md
 
 ## Commands
-- /verify
-- /task-handoff
+- .kit/commands/<category>/<command-name>/COMMAND.md
 
-> Load the skills, agents, and commands listed above before reading anything else. Do not load context not listed here.
+> Load the skills, agents, and commands listed above before reading anything else using their exact `.kit/` paths. Do not load any context not declared here. Do not load CLAUDE.md. Follow paths exactly — no shortcuts, no variable substitution, no @-imports.
 
 ---
 

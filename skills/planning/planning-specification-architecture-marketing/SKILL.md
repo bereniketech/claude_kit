@@ -612,7 +612,7 @@ Use the appropriate framework per channel and funnel stage:
 
 Save to `.spec/{campaign}/tasks/task-NNN.md`.
 
-**Hard rule — every task file is self-sufficient.** Each task file declares every skill, agent, and command it needs in its own header, using plain `.kit/...` paths relative to the project root. Do not rely on CLAUDE.md or a project-wide skill list. A session must be able to open the task file and know exactly what context to load without reading any other file first.
+**Hard rule — every task file is self-sufficient.** Each task file declares every skill, agent, and command it needs in its own header, using direct `.kit/...` paths relative to the project root. Do not rely on CLAUDE.md or a project-wide skill list. A session must be able to open the task file and load exactly what is listed — without reading any other file first. All paths must point to the exact `.kit/` location — no shortcuts, no variable substitution.
 
 Every task file MUST begin with this header, then be followed by the task content:
 
@@ -621,14 +621,15 @@ Every task file MUST begin with this header, then be followed by the task conten
 
 ## Skills
 - .kit/skills/<category>/<skill-name>/SKILL.md
+- .kit/rules/<lang-or-common>/<rule-name>.md
 
 ## Agents
-- @<agent-name>
+- .kit/agents/<company>/<division>/<agent-name>/AGENT.md
 
 ## Commands
-- /task-handoff
+- .kit/commands/<category>/<command-name>/COMMAND.md
 
-> Load the skills, agents, and commands listed above before reading anything else.
+> Load the skills, agents, and commands listed above using their exact `.kit/` paths. Do not load any context not declared here. Do not load CLAUDE.md. Follow paths exactly — no shortcuts, no variable substitution, no @-imports.
 ```
 
 Every task MUST also include:
@@ -825,14 +826,14 @@ When the spec is approved and execution begins:
 
 | Work type | Skill to reference |
 |-----------|-------------------|
-| SEO, keyword research, on-page optimization | `/seo-technical`, `/seo-content` |
-| Paid social ads | `/paid-ads` |
-| Email sequences | `/email-marketing` |
-| Content strategy, blog, social | `/content-strategy`, `/blog-writing-guide` |
-| Growth experiments, funnels | `/growth-engine` |
-| Brand identity, messaging | `/brand-identity` |
-| Analytics, attribution | `/analytics` |
-| CRM, HubSpot, Salesforce | `/hubspot`, `/salesforce-automation` |
+| SEO, keyword research, on-page optimization | `.kit/skills/seo/seo-technical/SKILL.md`, `.kit/skills/seo/seo-content/SKILL.md` |
+| Paid social ads | `.kit/skills/marketing-growth/paid-ads/SKILL.md` |
+| Email sequences | `.kit/skills/integrations/email-marketing/SKILL.md` |
+| Content strategy, blog, social | `.kit/skills/marketing-growth/content-strategy/SKILL.md`, `.kit/skills/research-docs/blog-writing-guide/SKILL.md` |
+| Growth experiments, funnels | `.kit/skills/marketing-growth/growth-engine/SKILL.md` |
+| Brand identity, messaging | `.kit/skills/ui-design/brand-expert/SKILL.md` |
+| Analytics, attribution | `.kit/skills/product-business/analytics/SKILL.md` |
+| CRM, HubSpot, Salesforce | `.kit/skills/integrations/hubspot/SKILL.md`, `.kit/skills/integrations/salesforce-automation/SKILL.md` |
 
 ---
 

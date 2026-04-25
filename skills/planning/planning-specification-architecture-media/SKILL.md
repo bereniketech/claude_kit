@@ -561,7 +561,7 @@ Length: [Duration / Word count]
 
 Save to `.spec/{content-slug}/tasks/task-NNN.md`.
 
-**Hard rule — every task file is self-sufficient.** Each task file declares every skill, agent, and command it needs in its own header, using plain `.kit/...` paths relative to the project root. Do not rely on CLAUDE.md or a project-wide skill list. A session must be able to open the task file and know exactly what context to load without reading any other file first.
+**Hard rule — every task file is self-sufficient.** Each task file declares every skill, agent, and command it needs in its own header, using direct `.kit/...` paths relative to the project root. Do not rely on CLAUDE.md or a project-wide skill list. A session must be able to open the task file and load exactly what is listed — without reading any other file first. All paths must point to the exact `.kit/` location — no shortcuts, no variable substitution.
 
 Every task file MUST begin with this header, then be followed by the task content:
 
@@ -570,14 +570,15 @@ Every task file MUST begin with this header, then be followed by the task conten
 
 ## Skills
 - .kit/skills/<category>/<skill-name>/SKILL.md
+- .kit/rules/<lang-or-common>/<rule-name>.md
 
 ## Agents
-- @<agent-name>
+- .kit/agents/<company>/<division>/<agent-name>/AGENT.md
 
 ## Commands
-- /task-handoff
+- .kit/commands/<category>/<command-name>/COMMAND.md
 
-> Load the skills, agents, and commands listed above before reading anything else.
+> Load the skills, agents, and commands listed above using their exact `.kit/` paths. Do not load any context not declared here. Do not load CLAUDE.md. Follow paths exactly — no shortcuts, no variable substitution, no @-imports.
 ```
 
 Every task MUST also include:
@@ -730,16 +731,16 @@ When the spec is approved and production begins:
 
 | Work type | Skill to reference |
 |-----------|-------------------|
-| Blog writing, articles | `/blog-writing-guide`, `/document-content-writing-editing` |
-| Video scripts, YouTube | `/youtube` |
-| Podcast production | `/podcast-generation` |
-| Newsletter | `/newsletter-expert` |
-| Social media content | `/social-media-expert` |
-| SEO optimization | `/seo-technical`, `/seo-content` |
-| Presentations, decks | `/presentations-ui-design` |
-| Image creation, visuals | `/asset-generation`, `/image-creation-expert` |
-| Content repurposing | `/content-repurposing` |
-| Research | `/research-information-retrieval` |
+| Blog writing, articles | `.kit/skills/research-docs/blog-writing-guide/SKILL.md`, `.kit/skills/research-docs/document-content-writing-editing/SKILL.md` |
+| Video scripts, YouTube | `.kit/skills/media-video/youtube-content-expert/SKILL.md` |
+| Podcast production | `.kit/skills/media-video/podcast-generation/SKILL.md` |
+| Newsletter | `.kit/skills/research-docs/newsletter-expert/SKILL.md` |
+| Social media content | `.kit/skills/media-video/social-media-expert/SKILL.md` |
+| SEO optimization | `.kit/skills/seo/seo-technical/SKILL.md`, `.kit/skills/seo/seo-content/SKILL.md` |
+| Presentations, decks | `.kit/skills/ui-design/presentations-ui-design/SKILL.md` |
+| Image creation, visuals | `.kit/skills/ui-design/asset-generation/SKILL.md`, `.kit/skills/ui-design/image-creation-expert/SKILL.md` |
+| Content repurposing | `.kit/skills/media-video/content-repurposing-expert/SKILL.md` |
+| Research | `.kit/skills/research-docs/research-information-retrieval/SKILL.md` |
 
 ---
 
