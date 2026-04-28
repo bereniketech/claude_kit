@@ -182,7 +182,92 @@ From the classified goal (Step 2) and the full tree (Step 3), identify:
 
 ---
 
-## 5. Output the Call Chain
+## 5. Resolve Required Skills
+
+For every specialist selected in Step 4, identify the 1–4 skills from the library that agent will need. Use the agent→skill mapping table below as a starting point, then add goal-specific skills derived from the idea (tech stack, framework, integration, domain).
+
+### Agent → Primary Skill Mapping
+
+| Agent | Primary skills |
+|---|---|
+| `@architect` | `architecture/software-architecture` · `architecture/microservices-patterns` · `architecture/ddd-*` |
+| `@planner` | `planning/planning-specification-architecture-software` · `planning/autonomous-agents-task-automation` |
+| `@software-developer-expert` | `development/code-writing-software-development` · `development/systematic-debugging` |
+| `@web-frontend-expert` | `frameworks-frontend/react-*` or relevant FE framework · `ui-design/ui-ux-pro-max` |
+| `@web-backend-expert` | `frameworks-backend/` relevant framework · `data-backend/postgres-patterns` |
+| `@mobile-expert` | `frameworks-mobile/flutter-expert` or `react-native-*` or `ios-*` |
+| `@desktop-expert` | `frameworks-desktop/electron-development` or relevant desktop skill |
+| `@systems-programming-expert` | `languages/rust-pro` · `languages/cpp-patterns` · `os-linux-platform/linux-kernel-config-for-custom-os` |
+| `@mcp-server-expert` | `ai-platform/claude-developer-platform` |
+| `@python-expert` | `languages/python-patterns` |
+| `@typescript-expert` | `languages/typescript-*` |
+| `@polyglot-expert` | language skill matching the stack in the idea |
+| `@code-reviewer` | `testing-quality/security-review` · `development/code-writing-software-development` |
+| `@refactor-cleaner` | `development/code-writing-software-development` |
+| `@doc-updater` | `research-docs/document-content-writing-editing` |
+| `@build-error-resolver` | `devops/terminal-cli-devops` |
+| `@ai-ml-expert` | `data-science-ml/ai-engineer` · `data-science-ml/ml-engineer` |
+| `@ai-platform-expert` | `ai-platform/claude-developer-platform` · `data-science-ml/llm-app-patterns` |
+| `@orchestration-expert` | `agents-orchestration/agent-framework-*` · `agents-orchestration/conductor-*` |
+| `@data-scientist-expert` | `data-science-ml/rag-*` · `data-science-ml/hugging-face-*` |
+| `@devops-infra-expert` | `devops/terminal-cli-devops` · `containers-orchestration/docker-expert` · `containers-orchestration/kubernetes-*` |
+| `@cloud-architect` | `cloud/aws-serverless` or `cloud/gcp-cloud-run` or `cloud/terraform-*` |
+| `@azure-expert` | `cloud-azure/` relevant Azure service skills |
+| `@observability-engineer` | `observability/distributed-tracing` · `observability/prometheus-configuration` |
+| `@database-architect` | `data-backend/postgres-patterns` · `data-backend/database-migrations` · `data-backend/vector-database-engineer` |
+| `@database-reviewer` | `data-backend/database-admin` |
+| `@test-expert` | `testing-quality/tdd-workflow` · `testing-quality/e2e-testing` |
+| `@tdd-guide` | `testing-quality/tdd-workflow` |
+| `@e2e-runner` | `testing-quality/e2e-testing` · `testing-quality/playwright-*` |
+| `@security-reviewer` | `testing-quality/security-review` · `security-defensive/semgrep-*` |
+| `@pentest-expert` | `security-offensive/pentest-*` · `security-offensive/burpsuite-*` |
+| `@security-architect` | `security-defensive/threat-modeling-*` · `security-defensive/auth-implementation-patterns` |
+| `@legal-compliance-expert` | `legal-compliance/gdpr-data-handling` · `legal-compliance/legal-advisor` |
+| `@ui-design-expert` | `ui-design/ui-ux-pro-max` · `ui-design/design-system` · `ui-design/accessibility-*` |
+| `@product-manager-expert` | `product-business/product-manager` · `product-business/saas-*` |
+| `@startup-analyst` | `product-business/startup-*` · `product-business/analytics-*` |
+| `@ecommerce-expert` | `ecommerce/shopify-*` or `ecommerce/wordpress-woocommerce` |
+| `@fintech-payments-expert` | `fintech-payments/stripe-integration` · `fintech-payments/plaid-fintech` |
+| `@saas-integrations-expert` | `integrations/` relevant SaaS skills |
+| `@workflow-automation-expert` | `integrations/zapier-*` · `integrations/n8n-*` |
+| `@game-dev-expert` | `game-dev/unity-*` or `game-dev/godot-*` or `game-dev/unreal-engine-cpp-pro` |
+| `@cms-expert` | `cms/wordpress` · `cms/wordpress-plugin` |
+| `@seo-expert` | `seo/seo-technical` · `seo/seo-audit` · `seo/seo-content-*` |
+| `@growth-marketing-expert` | `marketing-growth/growth-engine` · `marketing-growth/viral-generator-builder` |
+| `@paid-ads-expert` | `marketing-growth/paid-ads` |
+| `@email-marketing-expert` | `marketing-growth/cold-email` |
+| `@brand-expert` | `marketing-growth/content-strategy` · `ui-design/design-system` |
+| `@blog-writing-expert` | `research-docs/blog-writing-guide` · `research-docs/document-content-writing-editing` |
+| `@youtube-content-expert` | `media-video/remotion-*` |
+| `@podcast-expert` | `media-video/podcast-generation` |
+| `@technical-writer-expert` | `research-docs/document-content-writing-editing` · `research-docs/wiki-*` |
+| `@social-media-expert` | `marketing-growth/content-strategy` |
+| `@os-userland-architect` | `os-linux-platform/linux-kernel-config-for-custom-os` · `os-linux-platform/drm-kms-and-mesa-basics` |
+| `@linux-platform-expert` | `os-linux-platform/hardware-profiling-and-driver-mapping` · `os-linux-platform/pipewire-wireplumber-session` · `os-linux-platform/input-stack-libinput-udev` |
+
+**Additional skill resolution rules:**
+
+| Signal in the idea | Add these skills |
+|---|---|
+| Specific language mentioned (Go, Rust, Python, etc.) | `languages/<lang>-patterns` or `languages/<lang>-pro` |
+| Specific framework mentioned (React, Next.js, Django, etc.) | `frameworks-<tier>/<framework>-*` |
+| Cloud provider mentioned | `cloud/<provider>-*` or `cloud-azure/<service>` |
+| Auth / login / OAuth | `security-defensive/auth-implementation-patterns` |
+| Real-time / WebSocket | `frameworks-backend/nodejs-*` · `data-backend/event-sourcing-architect` |
+| RAG / embeddings / vector search | `data-science-ml/rag-*` · `data-backend/vector-database-engineer` |
+| Payments | `fintech-payments/stripe-integration` |
+| CI/CD | `devops/github-actions-*` or `devops/gitlab-ci-*` |
+| Scraping / crawling | `integrations-scraping/firecrawl-scraper` or `integrations-scraping/apify-*` |
+| Accessibility | `ui-design/accessibility-*` |
+| Performance | `performance/web-performance` or `performance/app-performance` |
+
+Deduplicate. Cap at 8 skills total per call chain. Prefer specificity over breadth.
+
+Skill import path format: `@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/<category>/<skill-name>/SKILL.md`
+
+---
+
+## 6. Output the Call Chain
 
 Print the chain in this exact format — one block per company, ordered from board to leaf:
 
@@ -202,16 +287,23 @@ Route reason: [why this company owns the work]
 3. @[agent-name] — [one-line reason]
 ...
 
+### Skills Required
+Add these to your project's .claude/CLAUDE.md before execution:
+
+@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/<category>/<skill-name>/SKILL.md
+@C:/Users/Hp/Desktop/Experiment/claude_kit/skills/<category>/<skill-name>/SKILL.md
+...
+
 ### Hierarchy Rule
 ALWAYS follow: board → CEO → [sub-lead if applicable] → specialist
 NEVER skip a level. NEVER invoke specialists directly.
 ```
 
-If the idea spans multiple companies, repeat the specialist block for each company.
+If the idea spans multiple companies, repeat the specialist block and skills block for each company, then deduplicate the combined skills list at the end.
 
 ---
 
-## 6. Provide Ready-to-Use Brief
+## 7. Provide Ready-to-Use Brief
 
 After the call chain, output a copy-paste brief the user can send to the board agent:
 
